@@ -1,32 +1,46 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
-
-/**
- * `p-d`
- * TBD
- *
- * @customElement
- * @polymer
- * @demo demo/index.html
- */
-class PD extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
-        :host {
-          display: block;
+const on = 'on';
+const to = 'to';
+const m = 'm';
+// export class PD extends XtallatX(HTMLElement){
+export class PD extends HTMLElement {
+    static get is() { return 'p-d'; }
+    get on() {
+        return this._on;
+    }
+    set on(val) {
+        this.setAttribute(on, val);
+    }
+    get to() {
+        return this._passDown;
+    }
+    set to(val) {
+        this.passDown = val;
+    }
+    get m() {
+        return this._maxMatches;
+    }
+    set m(val) {
+        this.maxMatches = val;
+    }
+    static get observedAttributes() {
+        return super.observedAttributes.concat([on, to, m]);
+    }
+    attachEventListeners() {
+        const attrFilters = [];
+        const prevSibling = this.previous;
+        this._on.split('|').forEach(token => {
+        });
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        switch (name) {
+            case on:
+                this._on = newVal;
+                this.attachEventListeners();
+                break;
         }
-      </style>
-      <h2>Hello [[prop1]]!</h2>
-    `;
-  }
-  static get properties() {
-    return {
-      prop1: {
-        type: String,
-        value: 'p-d',
-      },
-    };
-  }
+    }
 }
-
-window.customElements.define('p-d', PD);
+if (!customElements.get(PD.is)) {
+    customElements.define(PD.is, PD);
+}
+//# sourceMappingURL=p-d.js.map
