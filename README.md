@@ -1,14 +1,16 @@
 # \<p-d\>, \<p-u\>
 
-This package contains two custom elements:  p-d and p-u, which stand for "pass down" and "pass-up."
+This package contains two custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
 
 These two components dream the impossible dream -- be able to progressively, declaratively, glue components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
 
-They both have an attribute/property, "on" that specifies an event to monitor for.  They both attach an enrnt listener for the specified event to the previous (non p-d) element.
+Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer.
+
+Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an enrnt listener for the specified event to the previous (non p-d) element.
 
 When this event monitoring is enabled, if the previous element is disabled, it will be enabled.
 
-##  Downward flow amoungst siblings with p-d.
+##  Downward flow amongst siblings with p-d.
 
 p-d  passes information from that previous sibling's event down the sibling list.  It stops event propagation.  Sample markup is shown below: 
 
