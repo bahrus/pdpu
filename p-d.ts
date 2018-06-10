@@ -56,13 +56,18 @@ export class PD extends XtallatX(HTMLElement){
         const attrFilters = [];
         const prevSibling = this.getPreviousSib();
         this._boundHandleEvent = this._handleEvent.bind(this);
+        const fakeEvent = <any>{
+            target: prevSibling
+        } as Event;
+        this._handleEvent(fakeEvent);
         prevSibling.addEventListener(this._on, this._boundHandleEvent);
+
         prevSibling.removeAttribute('disabled');
     }
     _lastEvent: Event;
     _boundHandleEvent;
     _handleEvent(e: Event){
-        e.stopPropagation();
+        if(e.stopPropagation) e.stopPropagation();
         if(!this._cssPropMap){
             this._lastEvent = e;
             return;
@@ -135,6 +140,7 @@ export class PD extends XtallatX(HTMLElement){
 
     _addedSiblingMutationObserver: boolean;
     addMutationObserver(){
+        if(!this.parentElement) return; //TODO
         const config = { childList: true};
         this._siblingObserver =  new MutationObserver((mutationsList: MutationRecord[]) =>{
             this.passDownProp(this._lastResult);
