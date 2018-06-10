@@ -422,3 +422,7 @@ wct-browser-legacy@^1.0.0:
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
+
+xtal-latx@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/xtal-latx/-/xtal-latx-0.0.10.tgz#5680411348bd3a50058bad5d6e180387c39850f0"
