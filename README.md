@@ -101,7 +101,7 @@ Suppose you create a little program that will calculate the third number, given 
 <input id="c"/><p-u on="input" to="sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
 ```
 
-The p-u element won't limit itself to siblings -- it will search outside any Shadow DOM.  To seach within the shadow dom of some element use:
+The p-u element will search for the id following an upper flow that is that exact opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc.
 
 ```html
 <p-u on="input" to="#shadow-root#sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
