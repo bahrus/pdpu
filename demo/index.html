@@ -1,33 +1,101 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>p-d demo</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <title>xtal-json-merge demo</title>
 
-    <script type="module">
-      import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
-      import '@polymer/iron-demo-helpers/demo-snippet';
-    </script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script async src="https://unpkg.com/xtal-json-editor@0.0.19/build/ES6/xtal-json-editor.js"></script>
+  <script async type="module" src="https://unpkg.com/xtal-json-merge@0.2.16/xtal-insert-json.js?module"></script>
+  <script async type="module" src="https://unpkg.com/pd.pu@0.0.1/p-d.js"></script>
 
-    <script type="module" src="../p-d.js"></script>
+  <script type="module">
+    import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-pages-shared-styles.js?module";
+    import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-snippet.js?module";
+    import "https://unpkg.com/@polymer/polymer@3.0.2/lib/elements/dom-bind.js?module";
+  </script>
 
-    <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
-    </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic p-d demo</h3>
-      <demo-snippet>
-        <template>
-          <p-d></p-d>
-        </template>
-      </demo-snippet>
-    </div>
-  </body>
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </custom-style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Basic xtal-json-merge demo</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <div>
+                <div>Input:</div>
+                <xtal-insert-json disabled input="[]">
+                <script type="application/json">
+                    [
+                    [
+                        {"name": "Harry Potter", "age":"13"},
+                        {"name": "Albus Dumbledore", "age":"279"}
+                    ]
+                    ]
+                    </script>
+                </xtal-insert-json>
+                <p-d to="#firstEditor{input:detail.value};#insertData{input:detail.value}" on="merged-prop-changed"></p-d>
+                <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
+                <br>
+                <div>Merge with</div>
+                <pre>
+                    [{
+                    "columns":[
+                        {"id": "index",       "name": "Index",      "field": "index"},
+                        {"id": "isActive",    "name": "Active",     "field": "isActive"},
+                        {"id": "balance",     "name": "Balance",    "field": "balance"},
+                        {"id": "age",         "name": "Age",        "field": "age"},
+                        {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+                        {"id": "name",        "name": "Name",       "field": "name"},
+                        {"id": "gender",      "name": "Gender",     "field": "gender"},
+                        {"id": "company",     "name":"Company",     "field": "company"}
+                    ],
+                    "gridOptions":{
+                        "enableCellNavigation": true,
+                        "enableColumnReorder": false
+                    }
+                    }]              
+                </pre>
+                <br>
+                <xtal-insert-json disabled id="insertData" with-path="data" hidden>
+                <script type="application/json">
+                    [{
+                    "columns":[
+                        {"id": "index",       "name": "Index",      "field": "index"},
+                        {"id": "isActive",    "name": "Active",     "field": "isActive"},
+                        {"id": "balance",     "name": "Balance",    "field": "balance"},
+                        {"id": "age",         "name": "Age",        "field": "age"},
+                        {"id": "eyeColor",    "name": "Eye Color",  "field": "eyeColor"},
+                        {"id": "name",        "name": "Name",       "field": "name"},
+                        {"id": "gender",      "name": "Gender",     "field": "gender"},
+                        {"id": "company",     "name":"Company",     "field": "company"}
+                    ],
+                    "gridOptions":{
+                        "enableCellNavigation": true,
+                        "enableColumnReorder": false
+                    }
+                    }]
+                </script>
+                </xtal-insert-json>
+                <p-d to="xtal-json-editor{input:detail.value}" on="merged-prop-changed"></p-d>
+                <br>
+                <div>Output:</div>
+                <xtal-json-editor options="{}"></xtal-json-editor>
+            </div>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+
 </html>
