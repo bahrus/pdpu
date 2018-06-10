@@ -56,12 +56,9 @@ export class PD extends XtallatX(HTMLElement) {
     _handleEvent(e) {
         if (e.stopPropagation)
             e.stopPropagation();
+        this._lastEvent = e;
         if (!this._cssPropMap) {
-            this._lastEvent = e;
             return;
-        }
-        else {
-            delete this._lastEvent;
         }
         //const prevSibling = this.getPreviousSib();
         let nextSibling = this.nextElementSibling;
@@ -78,21 +75,20 @@ export class PD extends XtallatX(HTMLElement) {
             nextSibling = nextSibling.nextElementSibling;
         }
     }
-    passDownProp(val) {
-        let nextSibling = this.nextElementSibling;
-        let count = 0;
-        while (nextSibling) {
-            this._cssPropMap.forEach(map => {
-                if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
-                    count++;
-                    nextSibling[map.propTarget] = this.getPropFromPath(val, map.propSource);
-                }
-            });
-            if (this._hasMax && count >= this._maxMatches)
-                break;
-            nextSibling = nextSibling.nextElementSibling;
-        }
-    }
+    // passDownProp(val: any) {
+    //     let nextSibling = this.nextElementSibling;
+    //     let count = 0;
+    //     while (nextSibling) {
+    //         this._cssPropMap.forEach(map => {
+    //             if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
+    //                 count++;
+    //                 nextSibling[map.propTarget] = this.getPropFromPath(val, map.propSource);
+    //             }
+    //         })
+    //         if(this._hasMax && count >= this._maxMatches) break;
+    //         nextSibling = nextSibling.nextElementSibling;
+    //     }
+    // }
     getPropFromPath(val, path) {
         if (!path)
             return val;
@@ -117,6 +113,14 @@ export class PD extends XtallatX(HTMLElement) {
                 if (this._lastEvent)
                     this._handleEvent(this._lastEvent);
                 break;
+            case m:
+                if (newVal !== null) {
+                    this._m = parseInt(newVal);
+                    this._hasMax = true;
+                }
+                else {
+                    this._hasMax = false;
+                }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropsChange();
@@ -132,11 +136,14 @@ export class PD extends XtallatX(HTMLElement) {
         this.attachEventListeners();
     }
     addMutationObserver() {
-        if (!this.parentElement)
+        if (!this.parentElemen)
             return; //TODO
         const config = { childList: true };
         this._siblingObserver = new MutationObserver((mutationsList) => {
-            this.passDownProp(this._lastResult);
+            if (!this._lastEvent)
+                return;
+            //this.passDownProp(this._lastResult);
+            this._handleEvent(this._lastEvent);
         });
         this._siblingObserver.observe(this.parentElement, config);
     }
@@ -162,7 +169,8 @@ export class PD extends XtallatX(HTMLElement) {
             let cssSelector = mapTokens[0];
             if (!cssSelector) {
                 cssSelector = "*";
-                this.maxMatches = 1;
+                this._m = 1;
+                this._hasMax = true;
             }
             this._cssPropMap.push({
                 cssSelector: cssSelector,
