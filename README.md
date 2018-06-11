@@ -18,7 +18,7 @@ p-d  passes information from that previous sibling's event down the sibling list
 <!--- verbose syntax -->
 <div style="display:grid">
     <input/>                                                                    <p-d on="input"          to="prepend-string{input:target.value}" m="1"></p-d>
-    <prepend-string prepend="api/allEmployees?startsWidth="></prepend-string>   <p-d on="value-changed"  to="fetch-data{url:detail.value}" m="1"></p-d>
+    <prepend-string prepend="api/allEmployees?startsWith="></prepend-string>    <p-d on="value-changed"  to="fetch-data{url:detail.value}" m="1"></p-d>
     <fetch-data></fetch-data>                                                   <p-d on="fetch-complete" to="my-filter{input:detail.value}" m="2"></p-d>
     <my-filter select="isActive"></my-filter>                                   <p-d on="value-changed"  to="#activeList{items:detail.value}" m="1"></p-d>
     <my-filter select="!isActive"></my-filter>                                  <p-d on="value-changed"  to="#inactiveList{items:target.value}" m="1"> </p-d>
@@ -40,11 +40,13 @@ It appears that the css flex/grid doesn't count elements with display:none as co
 }
 </style>
 ```
-## Compact notation [TODO]
+## Compact notation
 One can't help noticing quite a bit of redundancy in the markup above.  We can reduce this redundancy if we apply some default settings.
 
-1)  If no css specifier is defined, it will pass to the next element.
-2)  If no value is specified, it will see if event.detail exists.  If not it will try target.value.  What we end up with is shown below:
+1)  If no css specifier is defined, it will pass the properties to the next element.
+2)  If no value is specified, it will see if event.detail exists.  If not it will try target.value.  
+
+What we end up with is shown below:
 
 ```html
 <!-- abreviated syntax -->
@@ -70,9 +72,10 @@ One can't help noticing quite a bit of redundancy in the markup above.  We can r
 ## Sibling cascade [TODO]
 
 ```html
-    <text-box></text-box>                                                               <p-d on="input" to="div" for-all="prepend-string{input}"></p-d>
+    <text-box></text-box>                                                               <p-d on="input" cd="div/prepend-string" to="my-filter{input}"></p-d>
     <div>
         <prepend-string prepend="api/allEmployees?startsWidth="></prepend-string>
+        <my-filter></my-filter>
     </div>
 ```
 
@@ -93,16 +96,29 @@ I think the answer is using ID's.  ID's must be unique, outside of the shadow DO
 Suppose you create a little program that will calculate the third number, given a + b = c, where the user can edit a, b, or c (one at a time):
 
 ```html
-<solve-algebra-problem nv id="sumSolver"></solve-algebra-problem><p-d on="first-operand-changed" to="#a"></p-d><p-d on="second-operand-changed" to="#b"></p-d>
+<solve-algebra-problem nv id="sumSolver"></solve-algebra-problem>
+<p-d on="first-operand-changed" to="#a"></p-d><p-d on="second-operand-changed" to="#b"></p-d>
 <input id="a"/><p-d on="input" to="#c{leftOperand}"></p-d>
 <input id="b"/><p-d on="input" to="#c{rightOperand}"</p-d>
-<input id="c"/><p-u on="input" to="sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
+<sum-input id="c"></sum-input>
+<p-u on="input" to="sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
 ```
 
-The p-u element will search for the id following an upper flow that is that exact opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc.
+The p-u element will search for the id following an upper flow that is that exe opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc, until a matching ID is found, then unload there and stop.
 
 ```html
 <p-u on="input" to="#shadow-root#sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
+```
+
+## Inline Script Props
+
+```html
+<script type="module ish">
+({
+    fn: () => alert('iah')
+})
+</script>
+<p-d on="eval" to="{myFunction:fn}">
 ```
 
 ## Install the Polymer-CLI

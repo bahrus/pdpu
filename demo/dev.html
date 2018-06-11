@@ -35,15 +35,21 @@
                 <div>Input:</div>
                 <xtal-insert-json input="[]">
                 <script type="application/json">
-                    [
+                  [
                     [
                         {"name": "Harry Potter", "age":"13"},
                         {"name": "Albus Dumbledore", "age":"279"}
                     ]
-                    ]
+                  ]
                     </script>
                 </xtal-insert-json>
                 <p-d to="#firstEditor{input:target.mergedProp};#insertData{input:target.mergedProp}" on="merged-prop-changed"></p-d>
+                <script type="module ish">
+                  (
+                    {testFn: n => n+1}
+                  )
+                </script>
+                <p-d to="{testFunction:testFn}" on="eval"></p-d>
                 <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
                 <br>
                 <div>Merge with</div>

@@ -45,13 +45,19 @@ export class PD extends XtallatX(HTMLElement) {
     attachEventListeners() {
         const attrFilters = [];
         const prevSibling = this.getPreviousSib();
-        this._boundHandleEvent = this._handleEvent.bind(this);
-        const fakeEvent = {
-            target: prevSibling
-        };
-        this._handleEvent(fakeEvent);
-        prevSibling.addEventListener(this._on, this._boundHandleEvent);
-        prevSibling.removeAttribute('disabled');
+        if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
+            const evalObj = eval(prevSibling.innerText);
+            this._handleEvent(evalObj);
+        }
+        else {
+            this._boundHandleEvent = this._handleEvent.bind(this);
+            const fakeEvent = {
+                target: prevSibling
+            };
+            this._handleEvent(fakeEvent);
+            prevSibling.addEventListener(this._on, this._boundHandleEvent);
+            prevSibling.removeAttribute('disabled');
+        }
     }
     _handleEvent(e) {
         if (e.stopPropagation)
@@ -67,6 +73,12 @@ export class PD extends XtallatX(HTMLElement) {
             this._cssPropMap.forEach(map => {
                 if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
                     count++;
+                    if (!map.propSource) {
+                        let defaultProp = this.getPropFromPath(e, 'detail.value');
+                        if (!defaultProp)
+                            defaultProp = this.getPropFromPath(e, 'target.value');
+                        nextSibling[map.propTarget] = defaultProp;
+                    }
                     nextSibling[map.propTarget] = this.getPropFromPath(e, map.propSource);
                 }
             });
@@ -75,20 +87,6 @@ export class PD extends XtallatX(HTMLElement) {
             nextSibling = nextSibling.nextElementSibling;
         }
     }
-    // passDownProp(val: any) {
-    //     let nextSibling = this.nextElementSibling;
-    //     let count = 0;
-    //     while (nextSibling) {
-    //         this._cssPropMap.forEach(map => {
-    //             if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
-    //                 count++;
-    //                 nextSibling[map.propTarget] = this.getPropFromPath(val, map.propSource);
-    //             }
-    //         })
-    //         if(this._hasMax && count >= this._maxMatches) break;
-    //         nextSibling = nextSibling.nextElementSibling;
-    //     }
-    // }
     getPropFromPath(val, path) {
         if (!path)
             return val;
@@ -162,10 +160,6 @@ export class PD extends XtallatX(HTMLElement) {
                 return;
             const mapTokens = passDownSelectorAndProp.split('{');
             const splitPropPointer = mapTokens[1].split(':');
-            // if(splitPropPointer.length > 0){
-            //     const rhs = splitPropPointer[1]
-            //     splitPropPointer[1] = rhs.substr(0, rhs.length - 1);
-            // }
             let cssSelector = mapTokens[0];
             if (!cssSelector) {
                 cssSelector = "*";
