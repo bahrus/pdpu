@@ -1,15 +1,9 @@
-import { XtallatX } from 'xtal-latx/xtal-latx.js';
-const on = 'on';
+//import {XtallatX} from 'xtal-latx/xtal-latx.js';
+import { PrevElementListener } from './PrevElListener.js';
 const to = 'to';
 const m = 'm';
-export class PD extends XtallatX(HTMLElement) {
+export class PD extends PrevElementListener {
     static get is() { return 'p-d'; }
-    get on() {
-        return this._on;
-    }
-    set on(val) {
-        this.setAttribute(on, val);
-    }
     get to() {
         return this._to;
     }
@@ -23,18 +17,17 @@ export class PD extends XtallatX(HTMLElement) {
         this.setAttribute(val.toString());
     }
     static get observedAttributes() {
-        return super.observedAttributes.concat([on, to, m]);
+        return super.observedAttributes.concat([to, m]);
     }
-    detatchEventListeners() {
-        if (this._siblingObserver)
-            this._siblingObserver.disconnect();
-        const prevSibling = this.previousElementSibling;
-        this._on.split('|').forEach(token => {
-            if (!token.startsWith('@')) {
-                prevSibling.removeEventListener(token, this._handleEvent);
-            }
-        });
-    }
+    // detatchEventListeners(){
+    //     if(this._siblingObserver) this._siblingObserver.disconnect();
+    //     const prevSibling = (<any>this as HTMLElement).previousElementSibling;
+    //     this._on.split('|').forEach(token =>{
+    //         if(!token.startsWith('@')){
+    //             prevSibling.removeEventListener(token, this._handleEvent);
+    //         }
+    //     })
+    // }
     getPreviousSib() {
         let prevSibling = this;
         while (prevSibling && prevSibling.tagName === 'P-D') {
@@ -42,22 +35,8 @@ export class PD extends XtallatX(HTMLElement) {
         }
         return prevSibling;
     }
-    attachEventListeners() {
-        const attrFilters = [];
-        const prevSibling = this.getPreviousSib();
-        if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
-            const evalObj = eval(prevSibling.innerText);
-            this._handleEvent(evalObj);
-        }
-        else {
-            this._boundHandleEvent = this._handleEvent.bind(this);
-            const fakeEvent = {
-                target: prevSibling
-            };
-            this._handleEvent(fakeEvent);
-            prevSibling.addEventListener(this._on, this._boundHandleEvent);
-            prevSibling.removeAttribute('disabled');
-        }
+    detach(prevSibling) {
+        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
     }
     _handleEvent(e) {
         if (e.stopPropagation)
@@ -99,10 +78,6 @@ export class PD extends XtallatX(HTMLElement) {
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
-            case on:
-                this._on = newVal;
-                //this.attachEventListeners();
-                break;
             case to:
                 if (newVal.endsWith('}'))
                     newVal += ';';
@@ -124,13 +99,20 @@ export class PD extends XtallatX(HTMLElement) {
         this.onPropsChange();
     }
     connectedCallback() {
+        this._upgradeProperties([to, m]);
         this._connected = true;
         this.onPropsChange();
+    }
+    disconnectedCallback() {
+        const prevSibling = this.getPreviousSib();
+        if (prevSibling && this._boundHandleEvent)
+            this.detach(prevSibling);
+        this.disconnectSiblingObserver();
     }
     onPropsChange() {
         if (!this._connected || !this._on || !this._to)
             return;
-        this.parseTo();
+        //this.parseTo();
         this.attachEventListeners();
     }
     addMutationObserver() {

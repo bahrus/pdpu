@@ -4,9 +4,9 @@ This package contains two custom elements:  p-d and p-u, which stand for "pass d
 
 These two components dream the impossible dream -- be able to progressively, declaratively, glue components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
 
-Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer.
+Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer.  It should be noted that Polymer's binding support placed great emphasis on performance -- so it could be used inside a rapidly scrolling virtual list, for example.  These components emphasize simplicity and small size -- to be used for 10,000 component gluing.  Think connecting a TV to a Roku, rather than connecting micro chips together.
 
-Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an enrnt listener for the specified event to the previous (non p-d) element.
+Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-d) element.
 
 When this event monitoring is enabled, if the previous element is disabled, it will be enabled.
 
@@ -69,10 +69,14 @@ What we end up with is shown below:
 ```
 
 
-## Sibling cascade [TODO]
+## Sibling drilldown [TODO]
 
 ```html
-    <text-box></text-box>                                                               <p-d on="input" cd="div/prepend-string" to="my-filter{input}"></p-d>
+<!-- verbose match syntax -->
+    <text-box></text-box>                                                               
+    <d-d on="input" match-next="div" then-query-for="prepend-string"></d-d>
+    <p-d on="d-d-complete" val="{input}"></p-d>
+    <h3>Search Employees</h3>
     <div>
         <prepend-string prepend="api/allEmployees?startsWidth="></prepend-string>
         <my-filter></my-filter>
