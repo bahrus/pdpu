@@ -41,19 +41,18 @@ export class PD extends Prev{
     _lastEvent: Event;
     
     _handleEvent(e: Event){
-        if(e.stopPropagation) e.stopPropagation();
+        if(e.stopPropagation && !this._noblock) e.stopPropagation();
         this._lastEvent = e;
         if(!this._cssPropMap){
             return;
         }
         //const prevSibling = this.getPreviousSib();
-        this.passDown(this.nextElementSibling, e);
+        this.passDown(this.nextElementSibling, e, 0);
         
     }
 
-    passDown(start: HTMLElement, e){
+    passDown(start: HTMLElement, e: Event, count: number){
         let nextSibling = start;
-        let count = 0;
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
                 if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
@@ -68,7 +67,7 @@ export class PD extends Prev{
                 if(this.id && nextSibling.firstElementChild && nextSibling.hasAttribute(p_d_if)){
                     if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
                     if(nextSibling[PDIf].contains(this.id)){
-                        this.passDown(nextSibling.firstElementChild as HTMLElement, e);
+                        this.passDown(nextSibling.firstElementChild as HTMLElement, e, count);
                     }
                 }
             })
