@@ -96,7 +96,7 @@ It is common to want to set properties and objects on a custom element.  This ca
 <my-virtual-list></my-virtual-list>
 ```
 
-p-d is ~1.8KB minified and gzipped.
+p-d is ~1.9KB minified and gzipped.
 
 ## Loops [TODO]
 
