@@ -71,10 +71,10 @@ export class PD extends Prev{
                     }
                     nextSibling[map.propTarget] = this.getPropFromPath(e, map.propSource);
                 }
-                if(this.id && nextSibling.hasAttribute(p_d_if)){
+                if(this.id && nextSibling.firstElementChild && nextSibling.hasAttribute(p_d_if)){
                     if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
                     if(nextSibling[PDIf].contains(this.id)){
-                        this.passDown(nextSibling, e);
+                        this.passDown(nextSibling.firstElementChild as HTMLElement, e);
                     }
                 }
             })
