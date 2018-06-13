@@ -1,5 +1,6 @@
 import {XtallatX} from 'xtal-latx/xtal-latx.js';
 const on = 'on';
+const noblock = 'noblock';
 export abstract class Prev extends XtallatX(HTMLElement){
     _on: string;
     get on(){
@@ -7,6 +8,17 @@ export abstract class Prev extends XtallatX(HTMLElement){
     }
     set on(val){
         this.setAttribute(on, val)
+    }
+    _noblock: boolean;
+    get noblock(){
+        return this._noblock;
+    }
+    set noblock(val){
+        if(val){
+            this.setAttribute(noblock, '');
+        }else{
+            this.removeAttribute(noblock);
+        }
     }
     static get observedAttributes(){
         return super.observedAttributes.concat([on]);
@@ -17,11 +29,27 @@ export abstract class Prev extends XtallatX(HTMLElement){
                 this._on = newVal;
                 //this.attachEventListeners();
                 break;
+            case noblock:
+
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
+
+    getPreviousSib() : HTMLElement{
+        let prevSibling = this;
+        while(prevSibling && prevSibling.tagName === 'P-D'){
+            prevSibling = prevSibling.previousElementSibling;
+        }
+        return <any>prevSibling as HTMLElement;
+    }
     connectedCallback(){
         this._upgradeProperties([on]);
+    }
+
+    disconnectedCallback(){
+        const prevSibling = this.getPreviousSib();
+        if(prevSibling && this._boundHandleEvent) this.detach(prevSibling);
+        this.disconnectSiblingObserver();
     }
     _boundHandleEvent;
     abstract _handleEvent(e: Event);

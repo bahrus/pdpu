@@ -21,13 +21,6 @@ export class PD extends Prev {
     static get observedAttributes() {
         return super.observedAttributes.concat([to, m]);
     }
-    getPreviousSib() {
-        let prevSibling = this;
-        while (prevSibling && prevSibling.tagName === 'P-D') {
-            prevSibling = prevSibling.previousElementSibling;
-        }
-        return prevSibling;
-    }
     detach(prevSibling) {
         prevSibling.removeEventListener(this._on, this._boundHandleEvent);
     }
@@ -102,15 +95,10 @@ export class PD extends Prev {
         this.onPropsChange();
     }
     connectedCallback() {
+        super.connectedCallback();
         this._upgradeProperties([to, m]);
         this._connected = true;
         this.onPropsChange();
-    }
-    disconnectedCallback() {
-        const prevSibling = this.getPreviousSib();
-        if (prevSibling && this._boundHandleEvent)
-            this.detach(prevSibling);
-        this.disconnectSiblingObserver();
     }
     onPropsChange() {
         if (!this._connected || !this._on || !this._to)
