@@ -1,8 +1,10 @@
 //import {XtallatX} from 'xtal-latx/xtal-latx.js';
-import { PrevElementListener } from './PrevElListener.js';
+import { Prev } from './Prev.js';
 const to = 'to';
 const m = 'm';
-export class PD extends PrevElementListener {
+const p_d_if = 'p-d-if';
+const PDIf = 'PDIf';
+export class PD extends Prev {
     static get is() { return 'p-d'; }
     get to() {
         return this._to;
@@ -19,15 +21,6 @@ export class PD extends PrevElementListener {
     static get observedAttributes() {
         return super.observedAttributes.concat([to, m]);
     }
-    // detatchEventListeners(){
-    //     if(this._siblingObserver) this._siblingObserver.disconnect();
-    //     const prevSibling = (<any>this as HTMLElement).previousElementSibling;
-    //     this._on.split('|').forEach(token =>{
-    //         if(!token.startsWith('@')){
-    //             prevSibling.removeEventListener(token, this._handleEvent);
-    //         }
-    //     })
-    // }
     getPreviousSib() {
         let prevSibling = this;
         while (prevSibling && prevSibling.tagName === 'P-D') {
@@ -46,7 +39,10 @@ export class PD extends PrevElementListener {
             return;
         }
         //const prevSibling = this.getPreviousSib();
-        let nextSibling = this.nextElementSibling;
+        this.passDown(this.nextElementSibling, e);
+    }
+    passDown(start, e) {
+        let nextSibling = start;
         let count = 0;
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
@@ -59,6 +55,13 @@ export class PD extends PrevElementListener {
                         nextSibling[map.propTarget] = defaultProp;
                     }
                     nextSibling[map.propTarget] = this.getPropFromPath(e, map.propSource);
+                }
+                if (this.id && nextSibling.hasAttribute(p_d_if)) {
+                    if (!nextSibling[PDIf])
+                        nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
+                    if (nextSibling[PDIf].contains(this.id)) {
+                        this.passDown(nextSibling, e);
+                    }
                 }
             });
             if (this._hasMax && count >= this._m)

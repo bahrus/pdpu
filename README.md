@@ -2,17 +2,17 @@
 
 This package contains two custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
 
-These two components dream the impossible dream -- be able to progressively, declaratively, glue components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
+These two components dream the impossible dream -- be able to progressively, declaratively, glue native DOM / web components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
 
-Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer.  It should be noted that Polymer's binding support placed great emphasis on performance -- so it could be used inside a rapidly scrolling virtual list, for example.  These components emphasize simplicity and small size -- to be used for 10,000 component gluing.  Think connecting a TV to a Roku, rather than connecting micro chips together.
+Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer.  It should be noted that Polymer's binding support places great emphasis on performance -- so it could be used inside a rapidly scrolling virtual list, for example.  These components emphasize simplicity and small size -- to be used for 10,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-d) element.
 
-When this event monitoring is enabled, if the previous element is disabled, it will be enabled.
+When this event monitoring is enabled, if the previous element is disabled, the disabled attribute is removed.
 
 ##  Downward flow amongst siblings with p-d.
 
-p-d  passes information from that previous sibling's event down the sibling list.  It stops event propagation.  Sample markup is shown below: 
+p-d  passes information from that previous sibling's event down the p-d instance's sibling list.  It stops event propagation (by default).  Sample markup is shown below: 
 
 ```html
 <!--- verbose syntax -->
@@ -57,7 +57,7 @@ What we end up with is shown below:
 </style>
 <div style="display:grid">
     <input/>                                                                    <p-d on="input"          to="{input}"></p-d>
-    <prepend-string prepend="api/allEmployees?startsWidth="></prepend-string>   <p-d on="value-changed"  to="{url}"></p-d>
+    <prepend-string prepend="api/allEmployees?startsWith="></prepend-string>   <p-d on="value-changed"  to="{url}"></p-d>
     <fetch-data></fetch-data>                                                   <p-d on="fetch-complete" to="my-filter{input}" m="2"></p-d>
     <my-filter select="isActive"></my-filter>                                   <p-d on="value-changed"  to="#activeList{items}" m="1"></p-d>
     <my-filter select="!isActive"></my-filter>                                  <p-d on="value-changed"  to="#inactiveList{items}" m="1"> </p-d>
@@ -69,19 +69,34 @@ What we end up with is shown below:
 ```
 
 
-## Sibling drilldown [TODO]
+## Recursive sibling drilldown
 
-```html
-<!-- verbose match syntax -->
+```html   
     <text-box></text-box>                                                               
-    <d-d on="input" match-next="div" then-query-for="prepend-string"></d-d>
-    <p-d on="d-d-complete" val="{input}"></p-d>
+    <p-d id="myPassDownTag" on="input" to="prepend-string{input}"></p-d>
     <h3>Search Employees</h3>
-    <div>
-        <prepend-string prepend="api/allEmployees?startsWidth="></prepend-string>
+    <div p-d-if='["myPassDownTag"]'>
+        <prepend-string></prepend-string>
         <my-filter></my-filter>
     </div>
 ```
+
+
+## Inline Script Props
+
+It is common to want to set properties and objects on a custom element.  This can be done as shown below:
+
+```html
+<script type="module ish">
+({
+    fn: (obj, idx) => `<div>Row with index ${idx}</div>`
+})
+</script>
+<p-d on="eval" to="{rowGenerator:fn}">
+<my-virtual-list></my-virtual-list>
+```
+
+p-d is ~1.8KB minified and gzipped.
 
 ## Loops [TODO]
 
@@ -101,29 +116,19 @@ Suppose you create a little program that will calculate the third number, given 
 
 ```html
 <solve-algebra-problem nv id="sumSolver"></solve-algebra-problem>
-<p-d on="first-operand-changed" to="#a"></p-d><p-d on="second-operand-changed" to="#b"></p-d>
+<p-d on="first-operand-changed" to="#a{value}"></p-d><p-d on="second-operand-changed" to="#b{value}"></p-d>
 <input id="a"/><p-d on="input" to="#c{leftOperand}"></p-d>
 <input id="b"/><p-d on="input" to="#c{rightOperand}"</p-d>
 <sum-input id="c"></sum-input>
 <p-u on="input" to="sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
 ```
 
-The p-u element will search for the id following an upper flow that is that exe opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc, until a matching ID is found, then unload there and stop.
+The p-u element will search for the id following an upper flow that is that opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc, until a matching ID is found, then unload there and stop.
 
 ```html
 <p-u on="input" to="#shadow-root#sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
 ```
 
-## Inline Script Props
-
-```html
-<script type="module ish">
-({
-    fn: () => alert('iah')
-})
-</script>
-<p-d on="eval" to="{myFunction:fn}">
-```
 
 ## Install the Polymer-CLI
 
