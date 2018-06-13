@@ -4,6 +4,7 @@ const to = 'to';
 const m = 'm';
 const p_d_if = 'p-d-if';
 const PDIf = 'PDIf';
+const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
 export class PD extends Prev {
     static get is() { return 'p-d'; }
     get to() {
@@ -48,11 +49,19 @@ export class PD extends Prev {
                     }
                     nextSibling[map.propTarget] = this.getPropFromPath(e, map.propSource);
                 }
-                if (this.id && nextSibling.firstElementChild && nextSibling.hasAttribute(p_d_if)) {
+                const fec = nextSibling.firstElementChild;
+                if (this.id && fec && nextSibling.hasAttribute(p_d_if)) {
                     if (!nextSibling[PDIf])
                         nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
                     if (nextSibling[PDIf].contains(this.id)) {
-                        this.passDown(nextSibling.firstElementChild, e, count);
+                        this.passDown(fec, e, count);
+                        let addedSMOTracker = nextSibling[_addedSMO];
+                        if (!addedSMOTracker)
+                            addedSMOTracker = nextSibling[_addedSMO] = {};
+                        if (!addedSMOTracker[this.id]) {
+                            this.addMutationObserver(nextSibling);
+                            nextSibling[_addedSMO][this.id] = true;
+                        }
                     }
                 }
             });
@@ -105,8 +114,8 @@ export class PD extends Prev {
         //this.parseTo();
         this.attachEventListeners();
     }
-    addMutationObserver() {
-        if (!this.parentElemen)
+    addMutationObserver(baseElement) {
+        if (!baseElement.parentElement)
             return; //TODO
         const config = { childList: true };
         this._siblingObserver = new MutationObserver((mutationsList) => {
@@ -144,8 +153,9 @@ export class PD extends Prev {
                 propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
             });
         });
-        if (!this._addedSiblingMutationObserver) {
-            this.addMutationObserver();
+        if (!this._addedSMO) {
+            this.addMutationObserver(this);
+            this._addedSMO = true;
         }
     }
 }

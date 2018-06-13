@@ -4,7 +4,11 @@ This package contains two custom elements:  p-d and p-u, which stand for "pass d
 
 These two components dream the impossible dream -- be able to progressively, declaratively, glue native DOM / web components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
 
-Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer.  It should be noted that Polymer's binding support places great emphasis on performance -- so it could be used inside a rapidly scrolling virtual list, for example.  These components emphasize simplicity and small size -- to be used for 10,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.
+Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  These components emphasize simplicity and small size -- to be used for 10,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.
+
+Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who stll uses the word lasslorn? 
+
+It's kind of like [metaprogramming in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial), only a hell of a lot easier.
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-d) element.
 
@@ -17,11 +21,16 @@ p-d  passes information from that previous sibling's event down the p-d instance
 ```html
 <!--- verbose syntax -->
 <div style="display:grid">
-    <input/>                                                                    <p-d on="input"          to="prepend-string{input:target.value}" m="1"></p-d>
-    <prepend-string prepend="api/allEmployees?startsWith="></prepend-string>    <p-d on="value-changed"  to="fetch-data{url:detail.value}" m="1"></p-d>
-    <fetch-data></fetch-data>                                                   <p-d on="fetch-complete" to="my-filter{input:detail.value}" m="2"></p-d>
-    <my-filter select="isActive"></my-filter>                                   <p-d on="value-changed"  to="#activeList{items:detail.value}" m="1"></p-d>
-    <my-filter select="!isActive"></my-filter>                                  <p-d on="value-changed"  to="#inactiveList{items:target.value}" m="1"> </p-d>
+    <input/>                                                                    
+    <p-d on="input" to="url-builder{input:target.value}" m="1"></p-d>
+    <url-builder prepend="api/allEmployees?startsWith="></url-builder>    
+    <p-d on="value-changed"  to="fetch-data{url:detail.value}" m="1"></p-d>
+    <fetch-data></fetch-data>                                                   
+    <p-d on="fetch-complete" to="my-filter{input:detail.value}" m="2"></p-d>
+    <my-filter select="isActive"></my-filter>                                   
+    <p-d on="value-changed"  to="#activeList{items:detail.value}" m="1"></p-d>
+    <my-filter select="!isActive"></my-filter>                                  
+    <p-d on="value-changed"  to="#inactiveList{items:target.value}" m="1"></p-d>
     <h3>Active</h3>
     <my-grid id="activeList"></my-grid>
     <h3>Inactive</h3>
@@ -29,7 +38,7 @@ p-d  passes information from that previous sibling's event down the p-d instance
 </div>
 ```
 
-m is an optional attribute that indicates the maximum number of matching elements that are expected to be found.
+m is an optional attribute that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wastefull.
 
 It appears that the css flex/grid doesn't count elements with display:none as columns or rows.  So all the non visual components could use an attribute, nv (non visual) and apply a style for them, i.e.: 
 
@@ -56,11 +65,16 @@ What we end up with is shown below:
 }
 </style>
 <div style="display:grid">
-    <input/>                                                                    <p-d on="input"          to="{input}"></p-d>
-    <prepend-string prepend="api/allEmployees?startsWith="></prepend-string>   <p-d on="value-changed"  to="{url}"></p-d>
-    <fetch-data></fetch-data>                                                   <p-d on="fetch-complete" to="my-filter{input}" m="2"></p-d>
-    <my-filter select="isActive"></my-filter>                                   <p-d on="value-changed"  to="#activeList{items}" m="1"></p-d>
-    <my-filter select="!isActive"></my-filter>                                  <p-d on="value-changed"  to="#inactiveList{items}" m="1"> </p-d>
+    <input/>                                                                    
+    <p-d on="input" to="{input}"></p-d>
+    <url-builder prepend="api/allEmployees?startsWith="></url-builder>   
+    <p-d on="value-changed"  to="{url}"></p-d>
+    <fetch-data></fetch-data>                                                   
+    <p-d on="fetch-complete" to="my-filter{input}" m="2"></p-d>
+    <my-filter select="isActive"></my-filter>                                   
+    <p-d on="value-changed"  to="#activeList{items}" m="1"></p-d>
+    <my-filter select="!isActive"></my-filter>                                  
+    <p-d on="value-changed"  to="#inactiveList{items}" m="1"></p-d>
     <h3>Active</h3>
     <my-grid id="activeList"></my-grid>
     <h3>Inactive</h3>
