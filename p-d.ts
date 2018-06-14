@@ -73,7 +73,7 @@ export class PD extends Prev{
                         let addedSMOTracker = nextSibling[_addedSMO];
                         if(!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
                         if(!addedSMOTracker[this.id]){
-                            this.addMutationObserver(nextSibling);
+                            this.addMutationObserver(fec);
                             nextSibling[_addedSMO][this.id] = true;
                         }
                     }
@@ -130,13 +130,12 @@ export class PD extends Prev{
     _addedSMO: boolean; //addedSiblingMutationObserver
     addMutationObserver(baseElement: HTMLElement){
         if(!baseElement.parentElement) return; //TODO
-        const config = { childList: true};
         this._siblingObserver =  new MutationObserver((mutationsList: MutationRecord[]) =>{
             if(!this._lastEvent) return;
             //this.passDownProp(this._lastResult);
             this._handleEvent(this._lastEvent);
         });
-        this._siblingObserver.observe(this.parentElement, config);
+        this._siblingObserver.observe(this.parentElement,  { childList: true});
     }
     disconnectSiblingObserver(){
         if(this._siblingObserver)  this._siblingObserver.disconnect();

@@ -8,7 +8,7 @@ Actually, Polymer proved that the dream isn't that far fetched.  These component
 
 Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who stll uses the word lasslorn? 
 
-It's kind of like [metaprogramming in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial), only a hell of a lot easier.
+It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial) or [sweet.js](https://www.sweetjs.org/), only a hell of a lot easier.
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-d) element.
 

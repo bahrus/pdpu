@@ -21,7 +21,7 @@ export abstract class Prev extends XtallatX(HTMLElement){
         }
     }
     static get observedAttributes(){
-        return super.observedAttributes.concat([on]);
+        return super.observedAttributes.concat([on, noblock]);
     }
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         switch(name){
@@ -30,7 +30,7 @@ export abstract class Prev extends XtallatX(HTMLElement){
                 //this.attachEventListeners();
                 break;
             case noblock:
-
+                this._noblock = newVal !== null;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -43,7 +43,7 @@ export abstract class Prev extends XtallatX(HTMLElement){
         return <any>prevSibling as HTMLElement;
     }
     connectedCallback(){
-        this._upgradeProperties([on]);
+        this._upgradeProperties([on, noblock]);
     }
 
     disconnectedCallback(){
