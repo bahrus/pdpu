@@ -137,12 +137,21 @@ Suppose you create a little program that will calculate the third number, given 
 <p-u on="input" to="sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
 ```
 
-The p-u element will search for the id following an upper flow that is that opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc, until a matching ID is found, then unload there and stop.
+The p-u element will search for the id following an upper flow that is that opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc, until a matching ID is found, then unload there and stop.  Okay, actually, it isn't so strict about sticking to previous siblings, but no harm done if the data flows downward, right?
 
 ```html
-<p-u on="input" to="#shadow-root#sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
+<p-u on="input" to="/sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
 ```
 
+searches from the root of the document, outside any shadow DOM.
+
+```html
+<p-u on="input" to="../../sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
+```
+
+goes up two levels of Shadow DOM, and then searches for element with id sumSolver.
+
+goes up two levels of shadow DOM
 
 ## Install the Polymer-CLI
 
