@@ -144,5 +144,9 @@ export class P extends XtallatX(HTMLElement) {
         });
         return context;
     }
+    disconnectSiblingObserver() {
+        if (this._siblingObserver)
+            this._siblingObserver.disconnect();
+    }
 }
 //# sourceMappingURL=p.js.map

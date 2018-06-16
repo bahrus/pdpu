@@ -8,6 +8,14 @@ const m = 'm';
 const p_d_if = 'p-d-if';
 const PDIf = 'PDIf';
 const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
+/**
+ * `p-d`
+ *  Pass data from one element down the DOM tree to other elements
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
 export class PD extends P{
     static get is(){return 'p-d';}
     
@@ -23,14 +31,9 @@ export class PD extends P{
         return super.observedAttributes.concat([m]);
     }
     
-
-
     detach(prevSibling: HTMLElement){
         prevSibling.removeEventListener(this._on, this._boundHandleEvent);
     }
-
-    
-    
 
     pass(e){
         this.passDown(this.nextElementSibling, e, 0);
@@ -46,8 +49,8 @@ export class PD extends P{
                 }
                 const fec = nextSibling.firstElementChild as HTMLElement;
                 if(this.id && fec && nextSibling.hasAttribute(p_d_if)){
-                    if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                    if(nextSibling[PDIf].contains(this.id)){
+                    //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
+                    if(this.matches(nextSibling.getAttribute(p_d_if))){
                         this.passDown(fec, e, count);
                         let addedSMOTracker = nextSibling[_addedSMO];
                         if(!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
@@ -63,7 +66,6 @@ export class PD extends P{
             nextSibling = nextSibling.nextElementSibling as HTMLElement;
         }
     }
-
 
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         switch(name){
@@ -87,7 +89,6 @@ export class PD extends P{
         this.onPropsChange();
     }
 
-
     onPropsChange(){
         if(!this._connected || !this._on || !this._to) return;
         //this.parseTo();
@@ -104,11 +105,7 @@ export class PD extends P{
         });
         this._siblingObserver.observe(this.parentElement,  { childList: true});
     }
-    disconnectSiblingObserver(){
-        if(this._siblingObserver)  this._siblingObserver.disconnect();
-    }
 
-    _siblingObserver: MutationObserver;
 
 }
 if(!customElements.get(PD.is)){

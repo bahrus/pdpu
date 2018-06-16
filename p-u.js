@@ -18,13 +18,14 @@ export class PU extends P {
                     if (!targetElement)
                         targetElement = host.getElementById(id);
                 }
+                else if (host) {
+                    targetElement = host.getElementById(id);
+                }
             }
             if (targetElement) {
                 this.setVal(e, targetElement, map);
             }
         });
-    }
-    findElement(start, map) {
     }
     getHost(el, level, maxLevel) {
         let parent;

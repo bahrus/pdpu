@@ -150,4 +150,10 @@ export abstract class P extends XtallatX(HTMLElement){
         })
         return context;
     }
+
+    disconnectSiblingObserver(){
+        if(this._siblingObserver)  this._siblingObserver.disconnect();
+    }
+
+    _siblingObserver: MutationObserver;
 }

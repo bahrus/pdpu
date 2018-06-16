@@ -1,6 +1,14 @@
 import {P, ICssPropMap} from './p.js';
 
 const on = 'on';
+/**
+ * `p-u`
+ *  Pass data from one element to a targeted DOM element elsewhere
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
 export class PU extends P{
     static get is(){return 'p-u';}
     pass(e: Event){
@@ -17,6 +25,8 @@ export class PU extends P{
                 if(host.shadowRoot){
                     targetElement = host.shadowRoot.getElementById(id);
                     if(!targetElement) targetElement = host.getElementById(id);
+                }else if(host){
+                    targetElement = host.getElementById(id);
                 }
             }
             if(targetElement){
@@ -25,9 +35,6 @@ export class PU extends P{
         })
     }
 
-    findElement(start: HTMLElement, map: ICssPropMap){
-
-    }
     _host: HTMLElement
     getHost(el: HTMLElement, level: number, maxLevel : number){
         let parent : HTMLElement;

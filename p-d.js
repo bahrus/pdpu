@@ -31,9 +31,8 @@ export class PD extends P {
                 }
                 const fec = nextSibling.firstElementChild;
                 if (this.id && fec && nextSibling.hasAttribute(p_d_if)) {
-                    if (!nextSibling[PDIf])
-                        nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                    if (nextSibling[PDIf].contains(this.id)) {
+                    //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
+                    if (this.matches(nextSibling.getAttribute(p_d_if))) {
                         this.passDown(fec, e, count);
                         let addedSMOTracker = nextSibling[_addedSMO];
                         if (!addedSMOTracker)
@@ -86,10 +85,6 @@ export class PD extends P {
             this._handleEvent(this._lastEvent);
         });
         this._siblingObserver.observe(this.parentElement, { childList: true });
-    }
-    disconnectSiblingObserver() {
-        if (this._siblingObserver)
-            this._siblingObserver.disconnect();
     }
 }
 if (!customElements.get(PD.is)) {

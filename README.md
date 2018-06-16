@@ -1,3 +1,8 @@
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/bahrus/p-d.p-u)
+
+<a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npmp-d.p-u.png"></a>
+
+
 # \<p-d\>, \<p-u\>
 
 This package contains two custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
@@ -49,6 +54,7 @@ It appears that the css flex/grid doesn't count elements with display:none as co
 }
 </style>
 ```
+
 ## Compact notation
 One can't help noticing quite a bit of redundancy in the markup above.  We can reduce this redundancy if we apply some default settings.
 
@@ -89,7 +95,7 @@ What we end up with is shown below:
     <text-box></text-box>                                                               
     <p-d id="myPassDownTag" on="input" to="prepend-string{input}"></p-d>
     <h3>Search Employees</h3>
-    <div p-d-if='["myPassDownTag"]'>
+    <div p-d-if="#myPassDownTag">
         <prepend-string></prepend-string>
         <my-filter></my-filter>
     </div>
@@ -98,7 +104,7 @@ What we end up with is shown below:
 
 ## Inline Script Props
 
-It is common to want to set properties and objects on a custom element.  This can be done as shown below:
+It is common to want to set function and object properties on a custom element.  This can be done as shown below:
 
 ```html
 <script type="module ish">
@@ -112,46 +118,12 @@ It is common to want to set properties and objects on a custom element.  This ca
 
 p-d is ~1.9KB minified and gzipped.
 
-## Loops [TODO]
+## Targeted Passing [Initial implementation]    
 
-I'm not talking here about generating a list of items, but rather a circular flow of data, which I can't see how an application would avoid.  If one page hyperlinks to another page, which links to a third page, which links back to the first page, we have data flowing in a circular fashion.  
+p-u can pass data in any direction, but the primary intention is to pass it up the DOM tree to a precise single target.  The CSS selector before the opening brace points to an ID.  If the selector starts with  a slash, it searches from document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.
 
-Every programming language I'm familiar with allows this to happen via clearly defined cycles.  I.e. the direction of the data doesn't suddenly reverse, but rather, the control goes back to a cleary marked starting point again. Recursive functions or for loops are the classic example. 
 
-In the DOM world, one could argue that using events is more confusing than a programming language, because in a way the direction of the data flow *does* suddenly go into reverse, and it's not obvious inspecting the tree of DOM what impact the event will have. Where does it stop?  Some intermediate DOM elements could take action on the event, passing down new data, but allow the event to continue propagating up, which could do something similar.   At least I'm guessing that's what causes people to reach for global state management so eagerly.  Honestly, this whole discussion is quite foreign to me, as I've not really experienced any issues with any two-way binding system.  I'm just relying on people's vague hand waving "unidirectional dataflow plus a global state management system avoids difficult to debug scenarios, take my word for it".  Okay.
 
-But relying on a central place to manage state seems like more jumping around between files, more opportunities for accidental conflicts, more challenging performance issues.   Or why would we have local variables? 
-
-So what would an alternative, declarative looping mechanism look like that doesn't involve events or global state management?
-
-I think the answer is using ID's.  ID's must be unique, outside of the shadow DOM, and within each Shadow DOM realm.  In a nod to the people who don't like data to flow any direction other than top down, the element is called p-u.
-
-Suppose you create a little program that will calculate the third number, given a + b = c, where the user can edit a, b, or c (one at a time):
-
-```html
-<solve-algebra-problem nv id="sumSolver"></solve-algebra-problem>
-<p-d on="first-operand-changed" to="#a{value}"></p-d><p-d on="second-operand-changed" to="#b{value}"></p-d>
-<input id="a"/><p-d on="input" to="#c{leftOperand}"></p-d>
-<input id="b"/><p-d on="input" to="#c{rightOperand}"</p-d>
-<sum-input id="c"></sum-input>
-<p-u on="input" to="sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
-```
-
-The p-u element will search for the id following an upper flow that is that opposite of downward flow.  Ie go to previous siblings, then the parent, then previous siblings of the parent, etc, until a matching ID is found, then unload there and stop.  Okay, actually, it isn't so strict about sticking to previous siblings, but no harm done if the data flows downward, right?
-
-```html
-<p-u on="input" to="/sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
-```
-
-searches from the root of the document, outside any shadow DOM.
-
-```html
-<p-u on="input" to="../../sumSolver{leftOperand:leftOperand;rightOperand:rightOperand;sum:value}"></p-u>
-```
-
-goes up two levels of Shadow DOM, and then searches for element with id sumSolver.
-
-goes up two levels of shadow DOM
 
 ## Install the Polymer-CLI
 
