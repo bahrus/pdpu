@@ -1,7 +1,9 @@
 {
   "sources":[
-   "Prev.js",
-   "p-d.js"
+   "p.js",
+   "p-d.js",
+   "p-u.js",
+   "p-d.p-u.js"
   ],
   "npm": true,
   "lint": {

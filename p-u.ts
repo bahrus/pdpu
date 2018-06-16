@@ -1,6 +1,5 @@
 import {P, ICssPropMap} from './p.js';
 
-const on = 'on';
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere

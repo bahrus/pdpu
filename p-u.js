@@ -1,5 +1,12 @@
 import { P } from './p.js';
-const on = 'on';
+/**
+ * `p-u`
+ *  Pass data from one element to a targeted DOM element elsewhere
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
 export class PU extends P {
     static get is() { return 'p-u'; }
     pass(e) {

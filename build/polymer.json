@@ -2,8 +2,10 @@
   "entrypoint": "index.html",
   "fragments": [],
   "sources": [
-    "Prev.js",
+    "p.js",
     "p-d.js",
+    "p-u.js",
+    "p-d.p-u.js",
     "index.html"
   ],
   "extraDependencies": [
