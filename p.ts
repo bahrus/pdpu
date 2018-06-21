@@ -57,7 +57,7 @@ export abstract class P extends XtallatX(HTMLElement){
 
     getPreviousSib() : HTMLElement{
         let prevSibling = this;
-        while(prevSibling && prevSibling.tagName === 'P-D'){
+        while(prevSibling && prevSibling.tagName.startsWith('P-')){
             prevSibling = prevSibling.previousElementSibling;
         }
         return <any>prevSibling as HTMLElement;
@@ -106,6 +106,14 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     _cssPropMap: ICssPropMap[];
     _lastTo: string;
+    parseMapping(mapTokens: string[], cssSelector: string){
+        const splitPropPointer = mapTokens[1].split(':');
+        this._cssPropMap.push({
+            cssSelector: cssSelector,
+            propTarget:splitPropPointer[0],
+            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+        });
+    }
     parseTo() {
         if(this._cssPropMap && this._to === this._lastTo) return;
         this._lastTo = this._to;
@@ -114,18 +122,13 @@ export abstract class P extends XtallatX(HTMLElement){
         splitPassDown.forEach(passDownSelectorAndProp => {
             if (!passDownSelectorAndProp) return;
             const mapTokens = passDownSelectorAndProp.split('{');
-            const splitPropPointer = mapTokens[1].split(':');
             let cssSelector = mapTokens[0];
             if(!cssSelector){
                 cssSelector = "*";
                 this._m = 1;
                 this._hasMax = true;
             }
-            this._cssPropMap.push({
-                cssSelector: cssSelector,
-                propTarget:splitPropPointer[0],
-                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
-            });
+           this.parseMapping(mapTokens, cssSelector);
         })
         if(!this._addedSMO){
             this.addMutationObserver(<any>this as HTMLElement);
@@ -136,18 +139,26 @@ export abstract class P extends XtallatX(HTMLElement){
         if(!map.propSource){
             let defaultProp = this.getPropFromPath(e, 'detail.value');
             if(!defaultProp) defaultProp = this.getPropFromPath(e, 'target.value');
-            target[map.propTarget] = defaultProp;
+            //target[map.propTarget] = defaultProp;
+            this.commit(target, map, defaultProp);
         }else{
-            target[map.propTarget] = this.getPropFromPath(e, map.propSource);
+            //target[map.propTarget] = this.getPropFromPath(e, map.propSource);
+            this.commit(target, map, this.getPropFromPath(e, map.propSource));
         }
        
     }
+    commit(target: HTMLElement, map: ICssPropMap, val: any){
+        target[map.propTarget] = val;
+    }
     getPropFromPath(val: any, path: string){
         if(!path) return val;
+        return this.getPropFromPathTokens(val, path.split('.'));
+    }
+    getPropFromPathTokens(val: any, pathTokens: string[]){
         let context = val;
-        path.split('.').forEach(token =>{
+        pathTokens.forEach(token =>{
             if(context) context = context[token];
-        })
+        });
         return context;
     }
 

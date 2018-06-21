@@ -6,6 +6,7 @@
     "p-d.js",
     "p-u.js",
     "p-d.p-u.js",
+    "p-d.p-d-x.p-u.js",
     "index.html"
   ],
   "extraDependencies": [

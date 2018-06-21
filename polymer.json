@@ -3,7 +3,8 @@
    "p.js",
    "p-d.js",
    "p-u.js",
-   "p-d.p-u.js"
+   "p-d.p-u.js",
+   "p-d.p-d-x.p-u.js"
   ],
   "npm": true,
   "lint": {

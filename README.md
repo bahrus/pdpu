@@ -122,7 +122,18 @@ p-d is ~1.9KB minified and gzipped.
 
 p-u can pass data in any direction, but the primary intention is to pass it up the DOM tree to a precise single target.  The CSS selector before the opening brace points to an ID.  If the selector starts with  a slash, it searches from document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.
 
-The two components are combined into one IIFE.js file, which totals ~2KB minified and gzipped.
+The two components are combined into one IIFE.js file, which totals ~2.1KB minified and gzipped.
+
+## Deluxe version [untested]
+
+Another custom element, p-d-x, extends p-d and adds these additional features;
+
+1)  You can specify adding / removing a css class.
+2)  You can specify a nested path that needs setting.
+3)  You can  specify multiple properties that need setting on the same element, more compactly.
+4)  You can observe attribute changes, in lieue of listening for an event.   
+
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.3KB minified and gzipped.
 
 ## Install the Polymer-CLI
 
