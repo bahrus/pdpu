@@ -11,11 +11,14 @@ function XtallatX(superClass) {
             return this._disabled;
         }
         set disabled(val) {
+            this.attr(disabled, val, '');
+        }
+        attr(name, val, trueVal) {
             if (val) {
-                this.setAttribute(disabled, '');
+                this.setAttribute(name, trueVal || val);
             }
             else {
-                this.removeAttribute(disabled);
+                this.removeAttribute(name);
             }
         }
         attributeChangedCallback(name, oldVal, newVal) {
@@ -54,24 +57,26 @@ class P extends XtallatX(HTMLElement) {
         return this._on;
     }
     set on(val) {
-        this.setAttribute(on, val);
+        this.attr(on, val);
     }
     get to() {
         return this._to;
     }
     set to(val) {
-        this.setAttribute(to, val);
+        this.attr(to, val);
     }
     get noblock() {
         return this._noblock;
     }
     set noblock(val) {
-        if (val) {
-            this.setAttribute(noblock, '');
-        }
-        else {
-            this.removeAttribute(noblock);
-        }
+        this.attr(noblock, val, '');
+    }
+    get input() {
+        return this._input;
+    }
+    set input(val) {
+        this._input = val;
+        this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
         return super.observedAttributes.concat([on, to, noblock]);
@@ -103,7 +108,7 @@ class P extends XtallatX(HTMLElement) {
         return prevSibling;
     }
     connectedCallback() {
-        this._upgradeProperties([on, to, noblock]);
+        this._upgradeProperties([on, to, noblock, 'input']);
     }
     disconnectedCallback() {
         const prevSibling = this.getPreviousSib();

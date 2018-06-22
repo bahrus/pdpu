@@ -2,22 +2,6 @@ import { PD } from './p-d.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
     static get is() { return 'p-d-a'; }
-    // static get observedAttributes(){
-    //     return super.observedAttributes.concat([attrib_filter]);
-    // }
-    // _attribFilter:string;
-    // get attribFilter(){return this._attribFilter;}
-    // set attribFilter(newVal){
-    //     this.setAttribute(attrib_filter, newVal);
-    // }
-    // attributeChangedCallback(name: string, oldVal: string, newVal: string){
-    //     switch(name){
-    //         case attrib_filter:
-    //             this._attribFilter = newVal;
-    //             break;
-    //     }
-    //     super.attributeChangedCallback(name, oldVal, newVal);
-    // }
     parseMapping(mapTokens, cssSelector) {
         const splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(token => {
