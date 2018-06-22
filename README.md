@@ -116,6 +116,7 @@ It is common to want to set function and object properties on a custom element. 
 <my-virtual-list></my-virtual-list>
 ```
 
+If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
 p-d is ~1.9KB minified and gzipped.
 
 ## Targeted Passing [Initial implementation]    
@@ -133,7 +134,7 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 3)  You can  specify multiple properties that need setting on the same element, more compactly.
 4)  You can observe attribute changes, in lieue of listening for an event.   
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.3KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.4KB minified and gzipped.
 
 ## Install the Polymer-CLI
 
