@@ -21,12 +21,14 @@ export class PU extends P{
                 const split = cssSel.split('/');
                 const id = split[split.length - 1];
                 const host = this.getHost(<any>this as HTMLElement, 0, split.length);
-                if(host.shadowRoot){
-                    targetElement = host.shadowRoot.getElementById(id);
-                    if(!targetElement) targetElement = host.getElementById(id);
-                }else if(host){
-                    targetElement = host.getElementById(id);
-                }
+				if(host){
+					if(host.shadowRoot){
+						targetElement = host.shadowRoot.getElementById(id);
+						if(!targetElement) targetElement = host.getElementById(id);
+					}else{
+						targetElement = host.getElementById(id);
+					}
+				}
             }
             if(targetElement){
                 this.setVal(e, targetElement, map);

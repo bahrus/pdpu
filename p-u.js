@@ -20,13 +20,15 @@ export class PU extends P {
                 const split = cssSel.split('/');
                 const id = split[split.length - 1];
                 const host = this.getHost(this, 0, split.length);
-                if (host.shadowRoot) {
-                    targetElement = host.shadowRoot.getElementById(id);
-                    if (!targetElement)
+                if (host) {
+                    if (host.shadowRoot) {
+                        targetElement = host.shadowRoot.getElementById(id);
+                        if (!targetElement)
+                            targetElement = host.getElementById(id);
+                    }
+                    else {
                         targetElement = host.getElementById(id);
-                }
-                else if (host) {
-                    targetElement = host.getElementById(id);
+                    }
                 }
             }
             if (targetElement) {

@@ -1,6 +1,6 @@
 [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/bahrus/p-d.p-u)
 
-<a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npmp-d.p-u.png"></a>
+<a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
 
 # \<p-d\>, \<p-u\>

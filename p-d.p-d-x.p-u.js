@@ -124,7 +124,10 @@ class P extends XtallatX(HTMLElement) {
         const attrFilters = [];
         const prevSibling = this.getPreviousSib();
         if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
-            const evalObj = eval(prevSibling.innerText);
+            let evalObj = eval(prevSibling.innerText);
+            if (typeof (evalObj) === 'function') {
+                evalObj = evalObj(this);
+            }
             this._handleEvent(evalObj);
         }
         else {
@@ -404,13 +407,15 @@ class PU extends P {
                 const split = cssSel.split('/');
                 const id = split[split.length - 1];
                 const host = this.getHost(this, 0, split.length);
-                if (host.shadowRoot) {
-                    targetElement = host.shadowRoot.getElementById(id);
-                    if (!targetElement)
+                if (host) {
+                    if (host.shadowRoot) {
+                        targetElement = host.shadowRoot.getElementById(id);
+                        if (!targetElement)
+                            targetElement = host.getElementById(id);
+                    }
+                    else {
                         targetElement = host.getElementById(id);
-                }
-                else if (host) {
-                    targetElement = host.getElementById(id);
+                    }
                 }
             }
             if (targetElement) {
