@@ -1,7 +1,4 @@
-//import {XtallatX} from 'xtal-latx/xtal-latx.js';
 import {P, ICssPropMap} from './p.js';
-
-
 
 
 const m = 'm';
