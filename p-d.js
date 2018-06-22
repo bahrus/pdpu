@@ -1,4 +1,3 @@
-//import {XtallatX} from 'xtal-latx/xtal-latx.js';
 import { P } from './p.js';
 const m = 'm';
 const p_d_if = 'p-d-if';

@@ -216,7 +216,6 @@ class P extends XtallatX(HTMLElement) {
     }
 }
 //# sourceMappingURL=p.js.map
-//import {XtallatX} from 'xtal-latx/xtal-latx.js';
 const m = 'm';
 const p_d_if = 'p-d-if';
 const PDIf = 'PDIf';
