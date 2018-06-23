@@ -1,7 +1,7 @@
 import { PD } from './p-d.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
-    static get is() { return 'p-d-a'; }
+    static get is() { return 'p-d-x'; }
     parseMapping(mapTokens, cssSelector) {
         const splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(token => {
@@ -28,6 +28,11 @@ export class PDX extends PD {
         else {
             target[targetPath] = val;
         }
+    }
+    _handleEvent(e) {
+        if (this.hasAttribute('debug'))
+            debugger;
+        super._handleEvent(e);
     }
     attachEventListeners() {
         if (!this._on.startsWith('@')) {
@@ -57,4 +62,6 @@ export class PDX extends PD {
         super.disconnectedCallback();
     }
 }
+if (!customElements.get(PDX.is))
+    customElements.define(PDX.is, PDX);
 //# sourceMappingURL=p-d-x.js.map

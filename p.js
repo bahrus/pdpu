@@ -114,13 +114,14 @@ export class P extends XtallatX(HTMLElement) {
         this._lastTo = this._to;
         this._cssPropMap = [];
         const splitPassDown = this._to.split('};');
+        const onlyOne = splitPassDown.length <= 2;
         splitPassDown.forEach(passDownSelectorAndProp => {
             if (!passDownSelectorAndProp)
                 return;
             const mapTokens = passDownSelectorAndProp.split('{');
             let cssSelector = mapTokens[0];
-            if (!cssSelector) {
-                cssSelector = "*";
+            if (!cssSelector && onlyOne) {
+                cssSelector = '*';
                 this._m = 1;
                 this._hasMax = true;
             }

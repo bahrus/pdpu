@@ -38,9 +38,11 @@ export class PD extends P{
 
     passDown(start: HTMLElement, e: Event, count: number){
         let nextSibling = start;
+        console.log(start);
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
-                if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
+                if(!map.cssSelector) debugger;
+                if (map.cssSelector === '*' || (nextSibling.matches && nextSibling.matches(map.cssSelector))) {
                     count++;
                     this.setVal(e, nextSibling, map)
                 }

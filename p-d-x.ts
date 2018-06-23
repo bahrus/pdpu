@@ -1,9 +1,8 @@
 import {PD} from './p-d.js';
 import {ICssPropMap} from './p.js';
 //const attrib_filter = 'attrib-filter';
-
 export class PDX extends PD{
-    static get is(){return 'p-d-a';}
+    static get is(){return 'p-d-x';}
     parseMapping(mapTokens: string[], cssSelector: string){
         const splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(token =>{
@@ -30,6 +29,10 @@ export class PDX extends PD{
             target[targetPath] = val;
         }
         
+    }
+    _handleEvent(e : Event){
+        if(this.hasAttribute('debug')) debugger;
+        super._handleEvent(e);
     }
     _attributeObserver : MutationObserver;
     attachEventListeners(){
@@ -58,5 +61,5 @@ export class PDX extends PD{
         this.disconnect();
         super.disconnectedCallback();
     }
-
 }
+if(!customElements.get(PDX.is)) customElements.define(PDX.is, PDX);

@@ -9,8 +9,9 @@
 
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script async src="https://unpkg.com/xtal-json-editor@0.0.19/xtal-json-editor.js"></script>
-  <script async type="module" src="https://unpkg.com/xtal-json-merge@0.2.19/xtal-insert-json.js?module"></script>
-  <script async type="module" src="../p-d.js"></script>
+  <script type="module" src="https://unpkg.com/xtal-json-merge@0.2.19/xtal-insert-json.js?module"></script>
+  <script type="module" src="../p-d.js"></script>
+  <script type="module" src="../p-d-x.js"></script>
 
   <script type="module">
     import "https://unpkg.com/@polymer/iron-demo-helpers@3.0.0-pre.19/demo-pages-shared-styles.js?module";
@@ -43,7 +44,7 @@
                   ]
                     </script>
                 </xtal-insert-json>
-                <p-d to="#firstEditor{input:target.mergedProp};#insertData{input:target.mergedProp}" on="merged-prop-changed"></p-d>
+                <p-d-x to="#firstEditor{input:target.mergedProp};#insertData{input:target.mergedProp}" on="merged-prop-changed"></p-d-x>
                 <script type="module ish">
                   (
                     {testFn: n => n+1}
