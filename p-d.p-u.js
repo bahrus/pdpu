@@ -164,13 +164,14 @@ class P extends XtallatX(HTMLElement) {
         this._lastTo = this._to;
         this._cssPropMap = [];
         const splitPassDown = this._to.split('};');
+        const onlyOne = splitPassDown.length <= 2;
         splitPassDown.forEach(passDownSelectorAndProp => {
             if (!passDownSelectorAndProp)
                 return;
             const mapTokens = passDownSelectorAndProp.split('{');
             let cssSelector = mapTokens[0];
-            if (!cssSelector) {
-                cssSelector = "*";
+            if (!cssSelector && onlyOne) {
+                cssSelector = '*';
                 this._m = 1;
                 this._hasMax = true;
             }
@@ -247,9 +248,12 @@ class PD extends P {
     }
     passDown(start, e, count) {
         let nextSibling = start;
+        console.log(start);
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
-                if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
+                if (!map.cssSelector)
+                    debugger;
+                if (map.cssSelector === '*' || (nextSibling.matches && nextSibling.matches(map.cssSelector))) {
                     count++;
                     this.setVal(e, nextSibling, map);
                 }

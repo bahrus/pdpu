@@ -164,13 +164,14 @@ class P extends XtallatX(HTMLElement) {
         this._lastTo = this._to;
         this._cssPropMap = [];
         const splitPassDown = this._to.split('};');
+        const onlyOne = splitPassDown.length <= 2;
         splitPassDown.forEach(passDownSelectorAndProp => {
             if (!passDownSelectorAndProp)
                 return;
             const mapTokens = passDownSelectorAndProp.split('{');
             let cssSelector = mapTokens[0];
-            if (!cssSelector) {
-                cssSelector = "*";
+            if (!cssSelector && onlyOne) {
+                cssSelector = '*';
                 this._m = 1;
                 this._hasMax = true;
             }
@@ -247,9 +248,12 @@ class PD extends P {
     }
     passDown(start, e, count) {
         let nextSibling = start;
+        console.log(start);
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
-                if (map.cssSelector === '*' || nextSibling.matches(map.cssSelector)) {
+                if (!map.cssSelector)
+                    debugger;
+                if (map.cssSelector === '*' || (nextSibling.matches && nextSibling.matches(map.cssSelector))) {
                     count++;
                     this.setVal(e, nextSibling, map);
                 }
@@ -317,7 +321,7 @@ if (!customElements.get(PD.is)) {
 //# sourceMappingURL=p-d.js.map
 //const attrib_filter = 'attrib-filter';
 class PDX extends PD {
-    static get is() { return 'p-d-a'; }
+    static get is() { return 'p-d-x'; }
     parseMapping(mapTokens, cssSelector) {
         const splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(token => {
@@ -344,6 +348,11 @@ class PDX extends PD {
         else {
             target[targetPath] = val;
         }
+    }
+    _handleEvent(e) {
+        if (this.hasAttribute('debug'))
+            debugger;
+        super._handleEvent(e);
     }
     attachEventListeners() {
         if (!this._on.startsWith('@')) {
@@ -373,6 +382,8 @@ class PDX extends PD {
         super.disconnectedCallback();
     }
 }
+if (!customElements.get(PDX.is))
+    customElements.define(PDX.is, PDX);
 //# sourceMappingURL=p-d-x.js.map
 /**
  * `p-u`

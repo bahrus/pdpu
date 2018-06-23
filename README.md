@@ -125,16 +125,17 @@ p-u can pass data in any direction, but the primary intention is to pass it up t
 
 The two components are combined into one IIFE.js file, p-d.p-u.js which totals ~2.1KB minified and gzipped.
 
-## Deluxe version [untested]
+## Deluxe version [partially untested]
 
 Another custom element, p-d-x, extends p-d and adds these additional features;
 
 1)  You can specify adding / removing a css class.
 2)  You can specify a nested path that needs setting.
 3)  You can  specify multiple properties that need setting on the same element, more compactly.
-4)  You can observe attribute changes, in lieue of listening for an event.   
+4)  You can observe attribute changes, in lieue of listening for an event. 
+5)  You can debug the event handler by adding attribute "debug"  
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.4KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.5KB minified and gzipped.
 
 ## Install the Polymer-CLI
 
