@@ -81,7 +81,7 @@ export class P extends XtallatX(HTMLElement) {
                 this._handleEvent(lastEvent);
         }
         if (!this._addedSMO && this.addMutationObserver) {
-            this.addMutationObserver(this);
+            this.addMutationObserver(this, false);
             this._addedSMO = true;
         }
     }

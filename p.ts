@@ -90,7 +90,7 @@ export abstract class P extends XtallatX(HTMLElement){
             if(this._handleEvent) this._handleEvent(lastEvent);
         }        
         if(!this._addedSMO && this.addMutationObserver){
-            this.addMutationObserver(<any>this as HTMLElement);
+            this.addMutationObserver(<any>this as HTMLElement, false);
             this._addedSMO = true;
         }
     }

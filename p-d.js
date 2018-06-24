@@ -47,7 +47,7 @@ export class PD extends P {
                         if (!addedSMOTracker)
                             addedSMOTracker = nextSibling[_addedSMO] = {};
                         if (!addedSMOTracker[this.id]) {
-                            this.addMutationObserver(fec);
+                            this.addMutationObserver(nextSibling, true);
                             nextSibling[_addedSMO][this.id] = true;
                         }
                     }
@@ -78,8 +78,9 @@ export class PD extends P {
         this._connected = true;
         this.onPropsChange();
     }
-    addMutationObserver(baseElement) {
-        if (!baseElement.parentElement)
+    addMutationObserver(baseElement, isParent) {
+        let elementToObserve = isParent ? baseElement : baseElement.parentElement;
+        if (!elementToObserve)
             return; //TODO
         this._siblingObserver = new MutationObserver((mutationsList) => {
             if (!this._lastEvent)
@@ -87,7 +88,7 @@ export class PD extends P {
             //this.passDownProp(this._lastResult);
             this._handleEvent(this._lastEvent);
         });
-        this._siblingObserver.observe(this.parentElement, { childList: true });
+        this._siblingObserver.observe(elementToObserve, { childList: true });
     }
 }
 if (!customElements.get(PD.is)) {
