@@ -30,7 +30,6 @@ export class PD extends P {
     }
     passDown(start, e, count) {
         let nextSibling = start;
-        console.log(start);
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
                 if (!map.cssSelector)

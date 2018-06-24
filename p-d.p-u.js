@@ -51,6 +51,7 @@ function XtallatX(superClass) {
 //# sourceMappingURL=xtal-latx.js.map
 const on = 'on';
 const noblock = 'noblock';
+const noinit = 'noinit';
 const to = 'to';
 class P extends XtallatX(HTMLElement) {
     get on() {
@@ -71,6 +72,12 @@ class P extends XtallatX(HTMLElement) {
     set noblock(val) {
         this.attr(noblock, val, '');
     }
+    get noinit() {
+        return this._noinit;
+    }
+    set noinit(val) {
+        this.attr(noinit, val, '');
+    }
     get input() {
         return this._input;
     }
@@ -79,7 +86,7 @@ class P extends XtallatX(HTMLElement) {
         this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
-        return super.observedAttributes.concat([on, to, noblock]);
+        return super.observedAttributes.concat([on, to, noblock, noinit]);
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -95,8 +102,9 @@ class P extends XtallatX(HTMLElement) {
                 if (this._lastEvent)
                     this._handleEvent(this._lastEvent);
                 break;
+            case noinit:
             case noblock:
-                this._noblock = newVal !== null;
+                this['_' + name] = newVal !== null;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -109,13 +117,15 @@ class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this._upgradeProperties([on, to, noblock, 'input']);
-        const prevSibling = this.getPreviousSib();
-        const fakeEvent = {
-            target: prevSibling
-        };
-        if (this._handleEvent)
-            this._handleEvent(fakeEvent);
-        if (!this._addedSMO) {
+        if (!this._noinit) {
+            const prevSibling = this.getPreviousSib();
+            const fakeEvent = {
+                target: prevSibling
+            };
+            if (this._handleEvent)
+                this._handleEvent(fakeEvent);
+        }
+        if (!this._addedSMO && this.addMutationObserver) {
             this.addMutationObserver(this);
             this._addedSMO = true;
         }
@@ -250,7 +260,6 @@ class PD extends P {
     }
     passDown(start, e, count) {
         let nextSibling = start;
-        console.log(start);
         while (nextSibling) {
             this._cssPropMap.forEach(map => {
                 if (!map.cssSelector)

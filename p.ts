@@ -7,6 +7,7 @@ export interface ICssPropMap {
 }
 const on = 'on';
 const noblock = 'noblock';
+const noinit = 'noinit';
 const to = 'to';
 export abstract class P extends XtallatX(HTMLElement){
     _on: string;
@@ -30,6 +31,13 @@ export abstract class P extends XtallatX(HTMLElement){
     set noblock(val){
         this.attr(noblock, val, '')
     }
+    _noinit: boolean;
+    get noinit(){
+        return this._noinit;
+    }
+    set noinit(val){
+        this.attr(noinit, val, '');
+    }
     _input: any;
     get input(){
         return this._input;
@@ -39,7 +47,7 @@ export abstract class P extends XtallatX(HTMLElement){
         this._handleEvent(this._lastEvent);
     }
     static get observedAttributes(){
-        return super.observedAttributes.concat([on, to, noblock]);
+        return super.observedAttributes.concat([on, to, noblock, noinit]);
     }
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         switch(name){
@@ -53,8 +61,9 @@ export abstract class P extends XtallatX(HTMLElement){
                 this.parseTo();
                 if(this._lastEvent) this._handleEvent(this._lastEvent);
                 break;
+            case noinit:
             case noblock:
-                this._noblock = newVal !== null;
+                this['_' + name] = newVal !== null;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -68,12 +77,14 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     connectedCallback(){
         this._upgradeProperties([on, to, noblock, 'input']);
-        const prevSibling = this.getPreviousSib();
-        const fakeEvent = <any>{
-            target: prevSibling
-        } as Event;
-        if(this._handleEvent) this._handleEvent(fakeEvent);
-        if(!this._addedSMO){
+        if(!this._noinit){
+            const prevSibling = this.getPreviousSib();
+            const fakeEvent = <any>{
+                target: prevSibling
+            } as Event;
+            if(this._handleEvent) this._handleEvent(fakeEvent);
+        }        
+        if(!this._addedSMO && this.addMutationObserver){
             this.addMutationObserver(<any>this as HTMLElement);
             this._addedSMO = true;
         }

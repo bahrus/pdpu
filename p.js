@@ -1,6 +1,7 @@
 import { XtallatX } from 'xtal-latx/xtal-latx.js';
 const on = 'on';
 const noblock = 'noblock';
+const noinit = 'noinit';
 const to = 'to';
 export class P extends XtallatX(HTMLElement) {
     get on() {
@@ -21,6 +22,12 @@ export class P extends XtallatX(HTMLElement) {
     set noblock(val) {
         this.attr(noblock, val, '');
     }
+    get noinit() {
+        return this._noinit;
+    }
+    set noinit(val) {
+        this.attr(noinit, val, '');
+    }
     get input() {
         return this._input;
     }
@@ -29,7 +36,7 @@ export class P extends XtallatX(HTMLElement) {
         this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
-        return super.observedAttributes.concat([on, to, noblock]);
+        return super.observedAttributes.concat([on, to, noblock, noinit]);
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -45,8 +52,9 @@ export class P extends XtallatX(HTMLElement) {
                 if (this._lastEvent)
                     this._handleEvent(this._lastEvent);
                 break;
+            case noinit:
             case noblock:
-                this._noblock = newVal !== null;
+                this['_' + name] = newVal !== null;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -59,13 +67,15 @@ export class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this._upgradeProperties([on, to, noblock, 'input']);
-        const prevSibling = this.getPreviousSib();
-        const fakeEvent = {
-            target: prevSibling
-        };
-        if (this._handleEvent)
-            this._handleEvent(fakeEvent);
-        if (!this._addedSMO) {
+        if (!this._noinit) {
+            const prevSibling = this.getPreviousSib();
+            const fakeEvent = {
+                target: prevSibling
+            };
+            if (this._handleEvent)
+                this._handleEvent(fakeEvent);
+        }
+        if (!this._addedSMO && this.addMutationObserver) {
             this.addMutationObserver(this);
             this._addedSMO = true;
         }
