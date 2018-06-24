@@ -5,11 +5,13 @@
 
 # \<p-d\>, \<p-u\>
 
-This package contains two custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
+This package contains two (and a half) custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
 
 These two components dream the impossible dream -- be able to progressively, declaratively, glue native DOM / web components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
 
-Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  These components emphasize simplicity and small size -- to be used for 10,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.
+Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  
+
+These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree)  
 
 Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who stll uses the word lasslorn? 
 
@@ -117,25 +119,25 @@ It is common to want to set function and object properties on a custom element. 
 ```
 
 If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
-p-d is ~1.9KB minified and gzipped.
+p-d is ~2.2KB minified and gzipped.
 
-## Targeted Passing [Initial implementation]    
+## Targeted Passing    
 
 p-u can pass data in any direction, but the primary intention is to pass it up the DOM tree to a precise single target.  The CSS selector before the opening brace points to an ID.  If the selector starts with  a slash, it searches from document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.
 
-The two components are combined into one IIFE.js file, p-d.p-u.js which totals ~2.2KB minified and gzipped.
+The two components are combined into one IIFE.js file, p-d.p-u.js which totals ~2.3KB minified and gzipped.
 
 ## Deluxe version [partially untested]
 
 Another custom element, p-d-x, extends p-d and adds these additional features;
 
-1)  You can specify adding / removing a css class.
-2)  You can specify a nested path that needs setting.
-3)  You can  specify multiple properties that need setting on the same element, more compactly.
-4)  You can observe attribute changes, in lieue of listening for an event. 
-5)  You can debug the event handler by adding attribute "debug"  
+1)  You can specify adding / removing a css class (untested).
+2)  You can specify a nested path that needs setting (untested).
+3)  You can  specify multiple properties that need setting on the same element, more compactly (tested).
+4)  You can observe attribute changes, in lieu of listening for an event (untested). 
+5)  You can debug the event handler by adding attribute "debug" (tested) 
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.5KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.6KB minified and gzipped.
 
 ## Install the Polymer-CLI
 
