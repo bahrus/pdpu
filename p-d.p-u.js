@@ -109,6 +109,16 @@ class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this._upgradeProperties([on, to, noblock, 'input']);
+        const prevSibling = this.getPreviousSib();
+        const fakeEvent = {
+            target: prevSibling
+        };
+        if (this._handleEvent)
+            this._handleEvent(fakeEvent);
+        if (!this._addedSMO) {
+            this.addMutationObserver(this);
+            this._addedSMO = true;
+        }
     }
     disconnectedCallback() {
         const prevSibling = this.getPreviousSib();
@@ -142,10 +152,6 @@ class P extends XtallatX(HTMLElement) {
             else {
                 this._boundHandleEvent = this._handleEvent.bind(this);
             }
-            const fakeEvent = {
-                target: prevSibling
-            };
-            this._handleEvent(fakeEvent);
             prevSibling.addEventListener(this._on, this._boundHandleEvent);
             prevSibling.removeAttribute('disabled');
         }
@@ -177,10 +183,6 @@ class P extends XtallatX(HTMLElement) {
             }
             this.parseMapping(mapTokens, cssSelector);
         });
-        if (!this._addedSMO) {
-            this.addMutationObserver(this);
-            this._addedSMO = true;
-        }
     }
     setVal(e, target, map) {
         if (!map.propSource) {

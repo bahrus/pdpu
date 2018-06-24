@@ -15,7 +15,7 @@ Here I am defining a "framework" as a "common, centrally managed language used t
 
 It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial) or [sweet.js](https://www.sweetjs.org/), only a hell of a lot easier.
 
-Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-d) element.
+Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
 When this event monitoring is enabled, if the previous element is disabled, the disabled attribute is removed.
 

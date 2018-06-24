@@ -68,6 +68,15 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     connectedCallback(){
         this._upgradeProperties([on, to, noblock, 'input']);
+        const prevSibling = this.getPreviousSib();
+        const fakeEvent = <any>{
+            target: prevSibling
+        } as Event;
+        if(this._handleEvent) this._handleEvent(fakeEvent);
+        if(!this._addedSMO){
+            this.addMutationObserver(<any>this as HTMLElement);
+            this._addedSMO = true;
+        }
     }
 
     disconnectedCallback(){
@@ -102,10 +111,7 @@ export abstract class P extends XtallatX(HTMLElement){
             }else{
                 this._boundHandleEvent = this._handleEvent.bind(this);
             }
-            const fakeEvent = <any>{
-                target: prevSibling
-            } as Event;
-            this._handleEvent(fakeEvent);
+
             prevSibling.addEventListener(this._on, this._boundHandleEvent);
             prevSibling.removeAttribute('disabled');
         }
@@ -138,10 +144,7 @@ export abstract class P extends XtallatX(HTMLElement){
             }
            this.parseMapping(mapTokens, cssSelector);
         })
-        if(!this._addedSMO){
-            this.addMutationObserver(<any>this as HTMLElement);
-            this._addedSMO = true;
-        }
+
     }
     setVal(e: Event, target: HTMLElement, map: ICssPropMap){
         if(!map.propSource){
