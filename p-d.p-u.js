@@ -121,12 +121,14 @@ class P extends XtallatX(HTMLElement) {
     }
     doFake() {
         if (!this._noinit) {
-            const prevSibling = this.getPreviousSib();
-            const fakeEvent = {
-                target: prevSibling
-            };
+            let lastEvent = this._lastEvent;
+            if (!lastEvent) {
+                const lastEvent = {
+                    target: this.getPreviousSib(),
+                };
+            }
             if (this._handleEvent)
-                this._handleEvent(fakeEvent);
+                this._handleEvent(lastEvent);
         }
         if (!this._addedSMO && this.addMutationObserver) {
             this.addMutationObserver(this);

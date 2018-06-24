@@ -81,11 +81,13 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     doFake(){
         if(!this._noinit){
-            const prevSibling = this.getPreviousSib();
-            const fakeEvent = <any>{
-                target: prevSibling
-            } as Event;
-            if(this._handleEvent) this._handleEvent(fakeEvent);
+            let lastEvent = this._lastEvent;
+            if(!lastEvent){
+                const lastEvent = <any>{
+                    target: this.getPreviousSib(),
+                } as Event;
+            }
+            if(this._handleEvent) this._handleEvent(lastEvent);
         }        
         if(!this._addedSMO && this.addMutationObserver){
             this.addMutationObserver(<any>this as HTMLElement);
