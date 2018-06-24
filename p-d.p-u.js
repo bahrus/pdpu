@@ -117,6 +117,9 @@ class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this._upgradeProperties([on, to, noblock, 'input']);
+        setTimeout(() => this.doFake(), 50);
+    }
+    doFake() {
         if (!this._noinit) {
             const prevSibling = this.getPreviousSib();
             const fakeEvent = {
