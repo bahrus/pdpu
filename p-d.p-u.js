@@ -135,6 +135,9 @@ class P extends XtallatX(HTMLElement) {
             this._addedSMO = true;
         }
     }
+    detach(prevSibling) {
+        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
+    }
     disconnectedCallback() {
         const prevSibling = this.getPreviousSib();
         if (prevSibling && this._boundHandleEvent)
@@ -261,9 +264,6 @@ class PD extends P {
     }
     static get observedAttributes() {
         return super.observedAttributes.concat([m]);
-    }
-    detach(prevSibling) {
-        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
     }
     pass(e) {
         this.passDown(this.nextElementSibling, e, 0);

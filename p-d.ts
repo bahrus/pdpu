@@ -28,9 +28,7 @@ export class PD extends P{
         return super.observedAttributes.concat([m]);
     }
     
-    detach(prevSibling: HTMLElement){
-        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
-    }
+
 
     pass(e){
         this.passDown(this.nextElementSibling, e, 0);
