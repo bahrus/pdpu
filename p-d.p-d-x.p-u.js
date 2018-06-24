@@ -166,6 +166,11 @@ class P extends XtallatX(HTMLElement) {
             prevSibling.removeAttribute('disabled');
         }
     }
+    onPropsChange() {
+        if (!this._connected || !this._on || !this._to)
+            return;
+        this.attachEventListeners();
+    }
     parseMapping(mapTokens, cssSelector) {
         const splitPropPointer = mapTokens[1].split(':');
         this._cssPropMap.push({
@@ -308,12 +313,6 @@ class PD extends P {
         this._connected = true;
         this.onPropsChange();
     }
-    onPropsChange() {
-        if (!this._connected || !this._on || !this._to)
-            return;
-        //this.parseTo();
-        this.attachEventListeners();
-    }
     addMutationObserver(baseElement) {
         if (!baseElement.parentElement)
             return; //TODO
@@ -447,6 +446,11 @@ class PU extends P {
                 return parent;
             }
         } while (parent);
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this._connected = true;
+        this.onPropsChange();
     }
 }
 if (!customElements.get(PU.is)) {

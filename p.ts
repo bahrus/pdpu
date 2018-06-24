@@ -128,6 +128,10 @@ export abstract class P extends XtallatX(HTMLElement){
         }
 
     }
+    onPropsChange(){
+        if(!this._connected || !this._on || !this._to) return;
+        this.attachEventListeners();
+    }
     _cssPropMap: ICssPropMap[];
     _lastTo: string;
     parseMapping(mapTokens: string[], cssSelector: string){

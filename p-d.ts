@@ -87,11 +87,7 @@ export class PD extends P{
         this.onPropsChange();
     }
 
-    onPropsChange(){
-        if(!this._connected || !this._on || !this._to) return;
-        //this.parseTo();
-        this.attachEventListeners();
-    }
+
 
     _addedSMO: boolean; //addedSiblingMutationObserver
     addMutationObserver(baseElement: HTMLElement){

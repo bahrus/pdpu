@@ -116,6 +116,11 @@ export class P extends XtallatX(HTMLElement) {
             prevSibling.removeAttribute('disabled');
         }
     }
+    onPropsChange() {
+        if (!this._connected || !this._on || !this._to)
+            return;
+        this.attachEventListeners();
+    }
     parseMapping(mapTokens, cssSelector) {
         const splitPropPointer = mapTokens[1].split(':');
         this._cssPropMap.push({

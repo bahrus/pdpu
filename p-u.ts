@@ -50,6 +50,11 @@ export class PU extends P{
             }
         }while(parent)
     }
+    connectedCallback(){
+        super.connectedCallback();
+        this._connected = true;
+        this.onPropsChange();
+    }
 
     
 }
