@@ -73,7 +73,7 @@ export class P extends XtallatX(HTMLElement) {
         if (!this._noinit) {
             let lastEvent = this._lastEvent;
             if (!lastEvent) {
-                const lastEvent = {
+                lastEvent = {
                     target: this.getPreviousSib(),
                 };
             }
