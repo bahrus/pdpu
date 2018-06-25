@@ -44,7 +44,8 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     set input(val){
         this._input = val;
-        this._handleEvent(this._lastEvent);
+        if(this._evalFn) this._evalFn(this);
+        //this._handleEvent(this._lastEvent);
     }
     static get observedAttributes(){
         return super.observedAttributes.concat([on, to, noblock, noinit]);
@@ -106,6 +107,7 @@ export abstract class P extends XtallatX(HTMLElement){
     abstract pass(e: Event);
     _lastEvent: Event;
     _handleEvent(e: Event){
+        if(!e) return;
         if(e.stopPropagation && !this._noblock) e.stopPropagation();
         this._lastEvent = e;
         if(!this._cssPropMap){
@@ -113,16 +115,19 @@ export abstract class P extends XtallatX(HTMLElement){
         }
         this.pass(e);
     }
-
+    _evalFn
     attachEventListeners(){
         const attrFilters = [];
         const prevSibling = this.getPreviousSib();
         if(this._on === 'eval' && prevSibling.tagName === 'SCRIPT'){
             let evalObj = eval(prevSibling.innerText);
             if(typeof(evalObj) === 'function'){
-                evalObj = evalObj(this);
+                this._evalFn = evalObj;
+                evalObj(this);
+            }else{
+                this._handleEvent(evalObj);
             }
-            this._handleEvent(evalObj);
+            
         }else{
             if(this._boundHandleEvent){
                 return;
