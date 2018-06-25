@@ -7,7 +7,8 @@ export interface ICssPropMap {
 }
 const on = 'on';
 const noblock = 'noblock';
-const noinit = 'noinit';
+//const noinit = 'noinit';
+const iff = 'if';
 const to = 'to';
 export abstract class P extends XtallatX(HTMLElement){
     _on: string;
@@ -31,12 +32,17 @@ export abstract class P extends XtallatX(HTMLElement){
     set noblock(val){
         this.attr(noblock, val, '')
     }
-    _noinit: boolean;
-    get noinit(){
-        return this._noinit;
-    }
-    set noinit(val){
-        this.attr(noinit, val, '');
+    // _noinit: boolean;
+    // get noinit(){
+    //     return this._noinit;
+    // }
+    // set noinit(val){
+    //     this.attr(noinit, val, '');
+    // }
+    _if: string;
+    get if(){return this._if;}
+    set if(val){
+        this.attr(iff, val);
     }
     _input: any;
     get input(){
@@ -48,7 +54,7 @@ export abstract class P extends XtallatX(HTMLElement){
         //this._handleEvent(this._lastEvent);
     }
     static get observedAttributes(){
-        return super.observedAttributes.concat([on, to, noblock, noinit]);
+        return super.observedAttributes.concat([on, to, noblock, iff]);
     }
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         switch(name){
@@ -62,7 +68,7 @@ export abstract class P extends XtallatX(HTMLElement){
                 this.parseTo();
                 if(this._lastEvent) this._handleEvent(this._lastEvent);
                 break;
-            case noinit:
+            case iff:
             case noblock:
                 this['_' + name] = newVal !== null;
         }
@@ -77,11 +83,11 @@ export abstract class P extends XtallatX(HTMLElement){
         return <any>prevSibling as HTMLElement;
     }
     connectedCallback(){
-        this._upgradeProperties([on, to, noblock, 'input']);
+        this._upgradeProperties([on, to, noblock, 'input', iff]);
         setTimeout(() => this.doFake(), 50);
     }
     doFake(){
-        if(!this._noinit){
+        if(!this._if){
             let lastEvent = this._lastEvent;
             if(!lastEvent){
                 lastEvent = <any>{
@@ -109,6 +115,7 @@ export abstract class P extends XtallatX(HTMLElement){
     _handleEvent(e: Event){
         if(!e) return;
         if(e.stopPropagation && !this._noblock) e.stopPropagation();
+        if(this._if && !(e.target as HTMLElement).matches(this._if)) return;
         this._lastEvent = e;
         if(!this._cssPropMap){
             return;

@@ -1,7 +1,8 @@
 import { XtallatX } from 'xtal-latx/xtal-latx.js';
 const on = 'on';
 const noblock = 'noblock';
-const noinit = 'noinit';
+//const noinit = 'noinit';
+const iff = 'if';
 const to = 'to';
 export class P extends XtallatX(HTMLElement) {
     get on() {
@@ -22,11 +23,9 @@ export class P extends XtallatX(HTMLElement) {
     set noblock(val) {
         this.attr(noblock, val, '');
     }
-    get noinit() {
-        return this._noinit;
-    }
-    set noinit(val) {
-        this.attr(noinit, val, '');
+    get if() { return this._if; }
+    set if(val) {
+        this.attr(iff, val);
     }
     get input() {
         return this._input;
@@ -38,7 +37,7 @@ export class P extends XtallatX(HTMLElement) {
         //this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
-        return super.observedAttributes.concat([on, to, noblock, noinit]);
+        return super.observedAttributes.concat([on, to, noblock, iff]);
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -54,7 +53,7 @@ export class P extends XtallatX(HTMLElement) {
                 if (this._lastEvent)
                     this._handleEvent(this._lastEvent);
                 break;
-            case noinit:
+            case iff:
             case noblock:
                 this['_' + name] = newVal !== null;
         }
@@ -68,11 +67,11 @@ export class P extends XtallatX(HTMLElement) {
         return prevSibling;
     }
     connectedCallback() {
-        this._upgradeProperties([on, to, noblock, 'input']);
+        this._upgradeProperties([on, to, noblock, 'input', iff]);
         setTimeout(() => this.doFake(), 50);
     }
     doFake() {
-        if (!this._noinit) {
+        if (!this._if) {
             let lastEvent = this._lastEvent;
             if (!lastEvent) {
                 lastEvent = {
@@ -101,6 +100,8 @@ export class P extends XtallatX(HTMLElement) {
             return;
         if (e.stopPropagation && !this._noblock)
             e.stopPropagation();
+        if (this._if && !e.target.matches(this._if))
+            return;
         this._lastEvent = e;
         if (!this._cssPropMap) {
             return;
