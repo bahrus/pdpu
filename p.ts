@@ -57,10 +57,11 @@ export abstract class P extends XtallatX(HTMLElement){
         return super.observedAttributes.concat([on, to, noblock, iff]);
     }
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
+        const f = '_' + name;
         switch(name){
+            case iff:
             case on:
-                this._on = newVal;
-                //this.attachEventListeners();
+                this[f] = newVal;
                 break;
             case to:
                 if(newVal.endsWith('}')) newVal += ';';
@@ -68,9 +69,8 @@ export abstract class P extends XtallatX(HTMLElement){
                 this.parseTo();
                 if(this._lastEvent) this._handleEvent(this._lastEvent);
                 break;
-            case iff:
             case noblock:
-                this['_' + name] = newVal !== null;
+                this[f] = newVal !== null;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
