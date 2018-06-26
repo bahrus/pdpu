@@ -130,11 +130,13 @@ If instead of defining an object, one defines a function:
 ```html
 <script type="module ish">
 (
-    fn: (obj, idx) => `<div>Row with index ${idx}</div>`
-}
+    pd => {
+        return pd._input;
+    }
+)
 </script>
-<p-d on="eval" to="{rowGenerator:fn}">
-```html
+<p-d on="eval" to="{input}">
+```
 
 then that function will be invoked everytime anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
 
