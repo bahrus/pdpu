@@ -82,8 +82,12 @@ class P extends XtallatX(HTMLElement) {
     }
     set input(val) {
         this._input = val;
-        if (this._evalFn)
-            this._evalFn(this);
+        if (this._evalFn) {
+            const returnObj = this._evalFn(this);
+            if (returnObj) {
+                this._handleEvent(returnObj);
+            }
+        }
         //this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
@@ -447,19 +451,18 @@ class PU extends P {
         });
     }
     getHost(el, level, maxLevel) {
-        let parent;
-        do {
-            parent = el.parentNode;
+        let parent = el;
+        while (parent = parent.parentElement) {
             if (parent.nodeType === 11) {
                 const newLevel = level + 1;
                 if (newLevel === maxLevel)
                     return parent['host'];
                 return this.getHost(parent['host'], newLevel, maxLevel);
             }
-            else if (parent.tagName === 'BODY') {
+            else if (parent.tagName === 'HTML') {
                 return parent;
             }
-        } while (parent);
+        }
     }
     connectedCallback() {
         super.connectedCallback();
