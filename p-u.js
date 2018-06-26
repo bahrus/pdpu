@@ -37,19 +37,18 @@ export class PU extends P {
         });
     }
     getHost(el, level, maxLevel) {
-        let parent;
-        do {
-            parent = el.parentNode;
+        let parent = el;
+        while (parent = parent.parentElement) {
             if (parent.nodeType === 11) {
                 const newLevel = level + 1;
                 if (newLevel === maxLevel)
                     return parent['host'];
                 return this.getHost(parent['host'], newLevel, maxLevel);
             }
-            else if (parent.tagName === 'BODY') {
+            else if (parent.tagName === 'HTML') {
                 return parent;
             }
-        } while (parent);
+        }
     }
     connectedCallback() {
         super.connectedCallback();
