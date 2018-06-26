@@ -121,6 +121,23 @@ It is common to want to set function and object properties on a custom element. 
 If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
 p-d is ~2.2KB minified and gzipped.
 
+## Inline Script Pipeline Processing
+
+In the previous section, we described how you can define an object within script tags, and that object can be passed down to lower siblings.
+
+If instead of defining an object, one defines a function:
+
+```html
+<script type="module ish">
+(
+    fn: (obj, idx) => `<div>Row with index ${idx}</div>`
+}
+</script>
+<p-d on="eval" to="{rowGenerator:fn}">
+```html
+
+then that function will be invoked everytime anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
+
 ## Targeted Passing    
 
 p-u can pass data in any direction, but the primary intention is to pass it up the DOM tree to a precise single target.  The CSS selector before the opening brace points to an ID.  If the selector starts with  a slash, it searches from document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.

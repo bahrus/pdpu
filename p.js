@@ -32,8 +32,12 @@ export class P extends XtallatX(HTMLElement) {
     }
     set input(val) {
         this._input = val;
-        if (this._evalFn)
-            this._evalFn(this);
+        if (this._evalFn) {
+            const returnObj = this._evalFn(this);
+            if (returnObj) {
+                this._handleEvent(returnObj);
+            }
+        }
         //this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
