@@ -74,15 +74,15 @@ What we end up with is shown below:
 </style>
 <div style="display:grid">
     <input/>                                                                    
-    <p-d on="input" to="{input}"></p-d>
-    <url-builder prepend="api/allEmployees?startsWith="></url-builder>   
-    <p-d on="value-changed"  to="{url}"></p-d>
+    <p-d on="input" to="{input}" nv></p-d>
+    <url-builder prepend="api/allEmployees?startsWith=" nv></url-builder>   
+    <p-d on="value-changed"  to="{url}" nv></p-d>
     <fetch-data></fetch-data>                                                   
-    <p-d on="fetch-complete" to="my-filter{input}" m="2"></p-d>
-    <my-filter select="isActive"></my-filter>                                   
-    <p-d on="value-changed"  to="#activeList{items}" m="1"></p-d>
-    <my-filter select="!isActive"></my-filter>                                  
-    <p-d on="value-changed"  to="#inactiveList{items}" m="1"></p-d>
+    <p-d on="fetch-complete" to="my-filter{input}" m="2" nv></p-d>
+    <my-filter select="isActive" nv></my-filter>                                   
+    <p-d on="value-changed"  to="#activeList{items}" m="1" nv></p-d>
+    <my-filter select="!isActive" nv></my-filter>                                  
+    <p-d on="value-changed"  to="#inactiveList{items}" m="1" nv></p-d>
     <h3>Active</h3>
     <my-grid id="activeList"></my-grid>
     <h3>Inactive</h3>
@@ -98,7 +98,7 @@ What we end up with is shown below:
     <p-d id="myPassDownTag" on="input" to="prepend-string{input}"></p-d>
     <h3>Search Employees</h3>
     <div p-d-if="#myPassDownTag">
-        <prepend-string></prepend-string>
+        <url-builder></url-builder>
         <my-filter></my-filter>
     </div>
 ```
@@ -118,8 +118,6 @@ It is common to want to set function and object properties on a custom element. 
 <my-virtual-list></my-virtual-list>
 ```
 
-If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
-p-d is ~2.2KB minified and gzipped.
 
 ## Inline Script Pipeline Processing
 
@@ -129,22 +127,51 @@ If instead of defining an object, one defines a function:
 
 ```html
 <script type="module ish">
-(
     pd => {
         return pd._input;
     }
-)
 </script>
 <p-d on="eval" to="{input}">
 ```
 
 then that function will be invoked everytime anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
 
-## Targeted Passing    
+Suppose we want to do something that has been easily done since JavaScript was introduced, and is certainly made easy using any of the popular frameworks:  Attach a simple JavaScript event handler to a DOM element.  Using p-d, it is possible to do this (if a bit strange looking):
 
-p-u can pass data in any direction, but the primary intention is to pass it up the DOM tree to a precise single target.  The CSS selector before the opening brace points to an ID.  If the selector starts with  a slash, it searches from document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.
+```html
+<button>Click Me</button>
+<p-d on="click" to="#eventHandler{input:target}"></p-d>
+<script type="module ish">
+    pd =>{
+        console.log('the button that was clicked was:');
+        console.log(pd._input);
+    }
+</script>
+<pd id="eventHandler" on="eval" to="{wherever}">
+```
 
-The two components are combined into one IIFE.js file, p-d.p-u.js which totals ~2.3KB minified and gzipped.
+If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
+p-d is ~2.2KB minified and gzipped.
+
+
+
+## Targeted Passing with p-u    
+
+I would suggst that for most applications, most of time, data will naturally flow in one direction.  Those of us who read and write in a downward direction [read](https://www.quora.com/Are-there-any-languages-that-read-from-bottom-to-top) will probably want to stick with that direction when arranging their elements.  But there will inevitably be points where the data flow must go up -- typically in response to a user action.  
+
+That's what p-u provides.  
+
+p-u can pass data in any direction, but the primary intent is to pass it up the DOM tree to a precise single target.  The CSS selector before the opening brace points to an ID.  If the selector starts with  a slash, it searches from (root) document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.
+
+Sample markup:
+
+```html
+ <p-u on="click" to="/myTree{toggledNode:target.node}"></p-u>
+```
+
+Unlike p-d, p-u doesn't worry about DOM nodes getting created after any passing of data takes place.  If you are using p-u to pass data to previous siblings, or parents of the p-u element, or prevsiou siblings of the parent, etc, then it is quite likely that the DOM element will already have been created, as a natural result of how the browser, and frameworks, typically render DOM.  If, however, you choose to target DOM elements out of this range, it's more of a crap shoot, and do at your own risk.
+
+The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.3KB minified and gzipped.
 
 ## Deluxe version [partially untested]
 
