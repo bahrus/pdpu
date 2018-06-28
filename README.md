@@ -45,7 +45,19 @@ p-d  passes information from that previous sibling's event down the p-d instance
 </div>
 ```
 
+##  The anatomy of the p-d attributes.
+
 m is an optional attribute that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wasteful.
+
+on specifies an event to listen for.
+
+The most interesting attribute is the to attribute.  The stuff that comes before the opening brace is the css selector, similar to css selectors in a css file.  Only the way that selector is used is as a test on each of the next siblings after the p-d element.  The code uses the "matches" method to test each element for a match.
+
+The stuff inside the braces is a name value pair:  To the left of the colon is the name of the property that should be set on matching elements.  To the right is a JavaScript path / expression for where to get the value used for setting.  Only very simple "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.
+
+##  But what if the way my elements should display isn't related to how data should flow?
+
+Not that we are suggesting, in the markup above, the use of the CSS grid (display: grid).  The CSS grid allows you to specify where each element inside the CSS Grid container should be displayed.
 
 It appears that the css flex/grid doesn't count elements with display:none as columns or rows.  So all the non visual components could use an attribute, nv (non visual) and apply a style for them, i.e.: 
 
