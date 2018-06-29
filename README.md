@@ -49,9 +49,9 @@ p-d  passes information from that previous sibling's event down the p-d instance
 
 "m" is an optional attribute that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wasteful.
 
-on specifies an event to listen for.
+"on" specifies the name of the event to listen for.
 
-The most interesting attribute is the to attribute.  The stuff that comes before the opening brace is the css selector, similar to css selectors in a css file.  Only the way that selector is used is as a test on each of the next siblings after the p-d element.  The code uses the "matches" method to test each element for a match.
+The most interesting attribute is the "to" attribute.  The stuff that comes before the opening brace is the css selector, similar to css selectors in a css file.  Only the way that selector is used is as a test on each of the next siblings after the p-d element.  The code uses the "matches" method to test each element for a match.
 
 The stuff inside the braces is a name value pair:  To the left of the colon is the name of the property that should be set on matching elements.  To the right is a JavaScript path / expression for where to get the value used for setting.  Only very simple "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.
 
