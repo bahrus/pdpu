@@ -13,7 +13,7 @@ Actually, Polymer proved that the dream isn't that far fetched.  These component
 
 These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree)  
 
-Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who stll uses the word lasslorn? 
+Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who still uses the word lasslorn? 
 
 It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial) or [sweet.js](https://www.sweetjs.org/), only a hell of a lot easier.
 
@@ -47,7 +47,7 @@ p-d  passes information from that previous sibling's event down the p-d instance
 
 ##  The anatomy of the p-d attributes.
 
-m is an optional attribute that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wasteful.
+"m" is an optional attribute that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wasteful.
 
 on specifies an event to listen for.
 
@@ -57,7 +57,7 @@ The stuff inside the braces is a name value pair:  To the left of the colon is t
 
 ##  But what if the way my elements should display isn't related to how data should flow?
 
-Not that we are suggesting, in the markup above, the use of the CSS grid (display: grid).  The CSS grid allows you to specify where each element inside the CSS Grid container should be displayed.
+Note that we are suggesting, in the markup above, the use of the CSS grid (display: grid).  The CSS grid allows you to specify where each element inside the CSS Grid container should be displayed.
 
 It appears that the css flex/grid doesn't count elements with display:none as columns or rows.  So all the non visual components could use an attribute, nv (non visual) and apply a style for them, i.e.: 
 
@@ -146,9 +146,11 @@ If instead of defining an object, one defines a function:
 <p-d on="eval" to="{input}">
 ```
 
-then that function will be invoked everytime anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
+then that function will be invoked every time anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
 
-Suppose we want to do something that has been easily done since JavaScript was introduced, and is certainly made easy using any of the popular frameworks:  Attach a simple JavaScript event handler to a DOM element.  Using p-d, it is possible to do this (if a bit strange looking):
+If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
+
+Suppose we want to attach a simple JavaScript event handler to a DOM Element.   Using p-d, it is possible to do this (if a bit strange looking):
 
 ```html
 <button>Click Me</button>
@@ -159,10 +161,22 @@ Suppose we want to do something that has been easily done since JavaScript was i
         console.log(pd._input);
     }
 </script>
-<pd id="eventHandler" on="eval" to="{wherever}">
+<pd id="eventHandler" on="eval" to="{NA}">
 ```
 
-If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
+## Conditional Processing
+
+p-d will can be configured to test the event target to make sure it matches a test.  This is done with the "if" attribute / property:
+
+```html
+<div>
+    <a href="link1">Link 1</a>
+    <a href="link2">Link 2</a>
+</div>
+<p-d on="click" if="a"></pd>
+```
+
+
 p-d is ~2.2KB minified and gzipped.
 
 
@@ -171,7 +185,7 @@ p-d is ~2.2KB minified and gzipped.
 
 I would suggest that for most applications, most of time, data will naturally flow in one direction.  Those of us who read and write in a [downward direction](https://www.quora.com/Are-there-any-languages-that-read-from-bottom-to-top) will probably want to stick with that direction when arranging their elements.  But there will inevitably be points where the data flow must go up -- typically in response to a user action.  
 
-That's what p-u provides.  
+That's what p-u provides.  As the name suggests, it should be used sparingly, only when p-d isn't able to pass the data where it needs to go.  
 
 p-u can pass data in any direction, but the primary intent is to pass it up the DOM tree to a precise single target.  What was the CSS selector, before the opening brace, now becomes a simple ID.  No # before the ID is required (in fact it will assume the ID starts with # if you do this).  If the selector starts with  a slash, it searches for an element with that ID from (root) document, outside any shadow DOM.  If it has no slashes, it searches within the shadow DOM it belongs to  ../ goes up one level. ../../ goes up two levels, etc.
 
@@ -183,9 +197,7 @@ Sample markup:
 
 Unlike p-d, p-u doesn't worry about DOM nodes getting created after any passing of data takes place.  If you are using p-u to pass data to previous siblings, or parents of the p-u element, or prevsiou siblings of the parent, etc, then it is quite likely that the DOM element will already have been created, as a natural result of how the browser, and frameworks, typically render DOM.  If, however, you choose to target DOM elements out of this range, it's more of a crap shoot, and do at your own risk.
 
-Another objection to this approach is that there needs to be coordination between  these two components as far as what the agreed ID should be.  This is obviously not a good approach if you are designing a generic component.  Do you really want to tell the person using your component that they need to plop a DOM element with a specific ID, in order to receive the data?
-
-## Emitting event if p-u doesn't find target element [TODO]
+Another objection to this approach is that there needs to be coordination between  these two components as far as what the agreed ID should be.  This is obviously not a good approach if you are designing a generic component.  Do you really want to tell the person using your component that they need to plop a DOM element with a specific ID, in order to receive the data?  I agree that's a concern.  So p-u should probably not be used for this use case (a way of passing information from a generic, reusable component).
 
 The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.3KB minified and gzipped.
 

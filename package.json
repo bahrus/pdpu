@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "p-d.js",
   "dependencies": {
-    "xtal-latx": "0.0.13"
+    "xtal-latx": "0.0.17"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
