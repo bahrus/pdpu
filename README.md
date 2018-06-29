@@ -166,7 +166,7 @@ Suppose we want to attach a simple JavaScript event handler to a DOM Element.   
 
 ## Conditional Processing
 
-p-d will can be configured to test the event target to make sure it matches a test.  This is done with the "if" attribute / property:
+p-d can be configured to test the event target to make sure it matches a css test.  This is done with the "if" attribute / property:
 
 ```html
 <div>
