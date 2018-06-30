@@ -15,11 +15,12 @@ export class PU extends P{
         this._cssPropMap.forEach(map =>{
             const cssSel = map.cssSelector;
             let targetElement: HTMLElement
+            const split = cssSel.split('/');
+            const id = split[split.length - 1];
             if(cssSel.startsWith('/')){
-                targetElement = self[cssSel.substr(1)];
+                targetElement = self[id];
             }else{
-                const split = cssSel.split('/');
-                const id = split[split.length - 1];
+                const len = cssSel.startsWith('./') ? 0 : split.length; 
                 const host = this.getHost(<any>this as HTMLElement, 0, split.length);
 				if(host){
 					if(host.shadowRoot){
@@ -42,7 +43,7 @@ export class PU extends P{
         while(parent = parent.parentElement){
             if(parent.nodeType === 11){
                 const newLevel = level + 1;
-                if(newLevel === maxLevel) return parent['host'];
+                if(newLevel >= maxLevel) return parent['host'];
                 return this.getHost(parent['host'], newLevel, maxLevel);
             }else if(parent.tagName === 'HTML'){
                 return parent;
