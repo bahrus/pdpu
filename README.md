@@ -156,14 +156,14 @@ Suppose we want to attach a simple JavaScript event handler to a DOM Element.   
 
 ```html
 <button>Click Me</button>
-<p-d on="click" to="#eventHandler{input:target}"></p-d>
+<p-d on="click" to="{input:target}"></p-d>
 <script type="module ish">
     pd =>{
         console.log('the button that was clicked was:');
         console.log(pd._input);
     }
 </script>
-<p-d id="eventHandler" on="eval" to="{NA}"></p-d>
+<p-d on="eval" to="{NA}"></p-d>
 ```
 
 ## Conditional Processing
@@ -221,7 +221,7 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 4)  You can observe attribute changes, in lieu of listening for an event (untested). 
 5)  You can debug the event handler by adding attribute "debug" (tested) 
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.6KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.7KB minified and gzipped.
 
 
 

@@ -37,28 +37,29 @@ export class PD extends P{
     passDown(start: HTMLElement, e: Event, count: number){
         let nextSibling = start;
         while (nextSibling) {
-            this._cssPropMap.forEach(map => {
-                if(!map.cssSelector) debugger;
-                if (map.cssSelector === '*' || (nextSibling.matches && nextSibling.matches(map.cssSelector))) {
-                    count++;
-                    this.setVal(e, nextSibling, map)
-                }
-                const fec = nextSibling.firstElementChild as HTMLElement;
-                if(this.id && fec && nextSibling.hasAttribute(p_d_if)){
-                    //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                    if(this.matches(nextSibling.getAttribute(p_d_if))){
-                        this.passDown(fec, e, count);
-                        let addedSMOTracker = nextSibling[_addedSMO];
-                        if(!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
-                        if(!addedSMOTracker[this.id]){
-                            this.addMutationObserver(nextSibling, true);
-                            nextSibling[_addedSMO][this.id] = true;
-                        }
+            if(nextSibling.tagName!=='SCRIPT'){
+                this._cssPropMap.forEach(map => {
+                    if (map.cssSelector === '*' || (nextSibling.matches && nextSibling.matches(map.cssSelector))) {
+                        count++;
+                        this.setVal(e, nextSibling, map)
                     }
-                   
-                }
-            })
-            if(this._hasMax && count >= this._m) break;
+                    const fec = nextSibling.firstElementChild as HTMLElement;
+                    if(this.id && fec && nextSibling.hasAttribute(p_d_if)){
+                        //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
+                        if(this.matches(nextSibling.getAttribute(p_d_if))){
+                            this.passDown(fec, e, count);
+                            let addedSMOTracker = nextSibling[_addedSMO];
+                            if(!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
+                            if(!addedSMOTracker[this.id]){
+                                this.addMutationObserver(nextSibling, true);
+                                nextSibling[_addedSMO][this.id] = true;
+                            }
+                        }
+                       
+                    }
+                })
+                if(this._hasMax && count >= this._m) break;
+            }
             nextSibling = nextSibling.nextElementSibling as HTMLElement;
         }
     }
