@@ -4,6 +4,10 @@
     const disabled = 'disabled';
 function XtallatX(superClass) {
     return class extends superClass {
+        constructor() {
+            super(...arguments);
+            this._evCount = {};
+        }
         static get observedAttributes() {
             return [disabled];
         }
@@ -21,6 +25,16 @@ function XtallatX(superClass) {
                 this.removeAttribute(name);
             }
         }
+        incAttr(name) {
+            const ec = this._evCount;
+            if (name in ec) {
+                ec[name]++;
+            }
+            else {
+                ec[name] = 0;
+            }
+            this.attr(name, ec[name].toString());
+        }
         attributeChangedCallback(name, oldVal, newVal) {
             switch (name) {
                 case disabled:
@@ -29,12 +43,14 @@ function XtallatX(superClass) {
             }
         }
         de(name, detail) {
-            const newEvent = new CustomEvent(name + '-changed', {
+            const eventName = name + '-changed';
+            const newEvent = new CustomEvent(eventName, {
                 detail: detail,
                 bubbles: true,
                 composed: false,
             });
             this.dispatchEvent(newEvent);
+            this.incAttr(eventName);
             return newEvent;
         }
         _upgradeProperties(props) {
@@ -150,6 +166,8 @@ class P extends XtallatX(HTMLElement) {
         this.disconnectSiblingObserver();
     }
     _handleEvent(e) {
+        if (this.hasAttribute('debug'))
+            debugger;
         if (!e)
             return;
         if (e.stopPropagation && !this._noblock)
@@ -377,11 +395,6 @@ class PDX extends PD {
             target[targetPath] = val;
         }
     }
-    _handleEvent(e) {
-        if (this.hasAttribute('debug'))
-            debugger;
-        super._handleEvent(e);
-    }
     attachEventListeners() {
         if (!this._on.startsWith('@')) {
             super.attachEventListeners();
@@ -427,12 +440,13 @@ class PU extends P {
         this._cssPropMap.forEach(map => {
             const cssSel = map.cssSelector;
             let targetElement;
+            const split = cssSel.split('/');
+            const id = split[split.length - 1];
             if (cssSel.startsWith('/')) {
-                targetElement = self[cssSel.substr(1)];
+                targetElement = self[id];
             }
             else {
-                const split = cssSel.split('/');
-                const id = split[split.length - 1];
+                const len = cssSel.startsWith('./') ? 0 : split.length;
                 const host = this.getHost(this, 0, split.length);
                 if (host) {
                     if (host.shadowRoot) {
@@ -455,7 +469,7 @@ class PU extends P {
         while (parent = parent.parentElement) {
             if (parent.nodeType === 11) {
                 const newLevel = level + 1;
-                if (newLevel === maxLevel)
+                if (newLevel >= maxLevel)
                     return parent['host'];
                 return this.getHost(parent['host'], newLevel, maxLevel);
             }

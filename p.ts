@@ -118,6 +118,7 @@ export abstract class P extends XtallatX(HTMLElement){
     abstract pass(e: Event);
     _lastEvent: Event;
     _handleEvent(e: Event){
+        if(this.hasAttribute('debug')) debugger;
         if(!e) return;
         if(e.stopPropagation && !this._noblock) e.stopPropagation();
         if(this._if && !(e.target as HTMLElement).matches(this._if)) return;

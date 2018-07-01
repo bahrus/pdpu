@@ -29,11 +29,6 @@ export class PDX extends PD {
             target[targetPath] = val;
         }
     }
-    _handleEvent(e) {
-        if (this.hasAttribute('debug'))
-            debugger;
-        super._handleEvent(e);
-    }
     attachEventListeners() {
         if (!this._on.startsWith('@')) {
             super.attachEventListeners();

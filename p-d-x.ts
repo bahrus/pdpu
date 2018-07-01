@@ -30,10 +30,7 @@ export class PDX extends PD{
         }
         
     }
-    _handleEvent(e : Event){
-        if(this.hasAttribute('debug')) debugger;
-        super._handleEvent(e);
-    }
+
     _attributeObserver : MutationObserver;
     attachEventListeners(){
         if(!this._on.startsWith('@')){

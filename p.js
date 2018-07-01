@@ -100,6 +100,8 @@ export class P extends XtallatX(HTMLElement) {
         this.disconnectSiblingObserver();
     }
     _handleEvent(e) {
+        if (this.hasAttribute('debug'))
+            debugger;
         if (!e)
             return;
         if (e.stopPropagation && !this._noblock)

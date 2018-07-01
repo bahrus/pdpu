@@ -45,15 +45,17 @@ p-d  passes information from that previous sibling's event down the p-d instance
 </div>
 ```
 
-##  The anatomy of the p-d attributes.
+##  The anatomy of the p-d attributes / properties.
 
-"m" is an optional attribute that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wasteful.
+"m" is an optional attribute/property that indicates the maximum number of matching elements that are expected to be found.  If not specified, all the downstream siblings are checked, which can be wasteful.
 
 "on" specifies the name of the event to listen for.
 
-The most interesting attribute is the "to" attribute.  The stuff that comes before the opening brace is the css selector, similar to css selectors in a css file.  Only the way that selector is used is as a test on each of the next siblings after the p-d element.  The code uses the "matches" method to test each element for a match.
+The most interesting attribute/property is the "to" attribute.  The stuff that comes before the opening brace is the css selector, similar to css selectors in a css file.  Only the way that selector is used is as a test on each of the next siblings after the p-d element.  The code uses the "matches" method to test each element for a match.
 
-The stuff inside the braces is a name value pair:  To the left of the colon is the name of the property that should be set on matching elements.  To the right is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  Only very simple "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  
+The stuff inside the braces is a name value pair:  To the left of the colon is the name of the property that should be set on matching elements.  To the right is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  Only very simple "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.
+
+All the components described in this document support an attribute (not a property), "debug".  If the attribute is present, the code will break everytime the event it is monitoring for fires.
 
 ##  But what if the way my elements should display isn't related to how data should flow?
 
