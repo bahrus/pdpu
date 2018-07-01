@@ -172,23 +172,15 @@ export class P extends XtallatX(HTMLElement) {
         });
     }
     setVal(e, target, map) {
-        if (!map.propSource) {
-            let defaultProp = this.getPropFromPath(e, 'detail.value');
-            if (!defaultProp)
-                defaultProp = this.getPropFromPath(e, 'target.value');
-            //target[map.propTarget] = defaultProp;
-            this.commit(target, map, defaultProp);
-        }
-        else {
-            //target[map.propTarget] = this.getPropFromPath(e, map.propSource);
-            this.commit(target, map, this.getPropFromPath(e, map.propSource));
-        }
+        const gpfp = this.getPropFromPath;
+        const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
+        this.commit(target, map, propFromEvent);
     }
     commit(target, map, val) {
         target[map.propTarget] = val;
     }
     getPropFromPath(val, path) {
-        if (!path)
+        if (!path || path === '.')
             return val;
         return this.getPropFromPathTokens(val, path.split('.'));
     }

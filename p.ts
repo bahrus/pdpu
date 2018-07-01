@@ -187,22 +187,16 @@ export abstract class P extends XtallatX(HTMLElement){
 
     }
     setVal(e: Event, target: HTMLElement, map: ICssPropMap){
-        if(!map.propSource){
-            let defaultProp = this.getPropFromPath(e, 'detail.value');
-            if(!defaultProp) defaultProp = this.getPropFromPath(e, 'target.value');
-            //target[map.propTarget] = defaultProp;
-            this.commit(target, map, defaultProp);
-        }else{
-            //target[map.propTarget] = this.getPropFromPath(e, map.propSource);
-            this.commit(target, map, this.getPropFromPath(e, map.propSource));
-        }
+        const gpfp = this.getPropFromPath;
+        const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
+        this.commit(target, map, propFromEvent);
        
     }
     commit(target: HTMLElement, map: ICssPropMap, val: any){
         target[map.propTarget] = val;
     }
     getPropFromPath(val: any, path: string){
-        if(!path) return val;
+        if(!path || path==='.') return val;
         return this.getPropFromPathTokens(val, path.split('.'));
     }
     getPropFromPathTokens(val: any, pathTokens: string[]){
