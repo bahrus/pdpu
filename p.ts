@@ -187,7 +187,7 @@ export abstract class P extends XtallatX(HTMLElement){
 
     }
     setVal(e: Event, target: HTMLElement, map: ICssPropMap){
-        const gpfp = this.getPropFromPath;
+        const gpfp = this.getPropFromPath.bind(this);
         const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
         this.commit(target, map, propFromEvent);
        

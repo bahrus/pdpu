@@ -238,7 +238,7 @@ class P extends XtallatX(HTMLElement) {
         });
     }
     setVal(e, target, map) {
-        const gpfp = this.getPropFromPath;
+        const gpfp = this.getPropFromPath.bind(this);
         const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
         this.commit(target, map, propFromEvent);
     }
