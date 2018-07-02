@@ -98,7 +98,7 @@ class P extends XtallatX(HTMLElement) {
     }
     set input(val) {
         this._input = val;
-        if (this._evalFn) {
+        if (this._evalFn && (!this._destIsNA || !val.isFake)) {
             const returnObj = this._evalFn(this);
             if (returnObj) {
                 this._handleEvent(returnObj);
@@ -117,6 +117,7 @@ class P extends XtallatX(HTMLElement) {
                 this[f] = newVal;
                 break;
             case to:
+                this._destIsNA = newVal === '{NA}';
                 if (newVal.endsWith('}'))
                     newVal += ';';
                 this._to = newVal;
@@ -146,6 +147,7 @@ class P extends XtallatX(HTMLElement) {
             if (!lastEvent) {
                 lastEvent = {
                     target: this.getPreviousSib(),
+                    isFake: true
                 };
             }
             if (this._handleEvent)
@@ -187,7 +189,9 @@ class P extends XtallatX(HTMLElement) {
             let evalObj = eval(prevSibling.innerText);
             if (typeof (evalObj) === 'function') {
                 this._evalFn = evalObj;
-                evalObj(this);
+                if (!this._destIsNA) {
+                    evalObj(this);
+                }
             }
             else {
                 this._handleEvent(evalObj);

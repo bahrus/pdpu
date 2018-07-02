@@ -14,6 +14,10 @@ export class PDX extends PD {
         });
     }
     commit(target, map, val) {
+        if (map.propSource === '.' && map.propTarget === '.') {
+            Object.assign(target, val);
+            return;
+        }
         const targetPath = map.propTarget;
         if (targetPath.startsWith('.')) {
             const cssClass = targetPath.substr(1);

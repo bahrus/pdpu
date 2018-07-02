@@ -16,6 +16,10 @@ export class PDX extends PD{
 
     }
     commit(target: HTMLElement, map: ICssPropMap, val: any){
+        if(map.propSource === '.' && map.propTarget === '.'){
+            Object.assign(target, val);
+            return;
+        }
         const targetPath = map.propTarget;
         if(targetPath.startsWith('.')){
             const cssClass = targetPath.substr(1);

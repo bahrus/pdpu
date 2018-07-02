@@ -89,7 +89,8 @@
         }
       })
     </script>
-    <p-d-x on="eval" to="{childrenFn:childrenFn;isOpenFn:isOpenFn;levelSetterFn:levelSetterFn;toggleNodeFn:toggleNodeFn;testNodeFn:testNodeFn;compareFn:compareFn}"></p-d-x>
+    <!-- <p-d-x on="eval" to="{childrenFn:childrenFn;isOpenFn:isOpenFn;levelSetterFn:levelSetterFn;toggleNodeFn:toggleNodeFn;testNodeFn:testNodeFn;compareFn:compareFn}"></p-d-x> -->
+    <p-d-x on="eval" to="{.:.}"></p-d-x>
     <xtal-tree id="myTree"></xtal-tree>
     <p-d on="viewable-nodes-changed" to="iron-list{items};#viewNodesChangeHandler{input}"></p-d>
     <p-d on="toggled-node-changed" to="#toggledNodeChangeHandler{input}"></p-d>

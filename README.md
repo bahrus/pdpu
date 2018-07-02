@@ -21,7 +21,7 @@ Both p-d and p-u have an attribute/property, "on" that specifies an event to mon
 
 When this event monitoring is enabled, if the previous element is disabled, the disabled attribute is removed.
 
-##  Downward flow amongst siblings with p-d.
+##  Downward flow amongst siblings with p-d. 
 
 p-d  passes information from that previous sibling's event down the p-d instance's sibling list.  It stops event propagation (by default).  Sample markup is shown below: 
 
@@ -105,7 +105,9 @@ What we end up with is shown below:
 ```
 
 
-## Recursive sibling drilldown
+## Recursive sibling drilldown -- Invitation Only
+
+To keep performance optimal and scalable, the p-d element only tests downstream siblings -- not children of siblings.  However, the use case for being able to drilldown inside a DOM node is quite high.  Unlike Polymer, permission to do this must be granted explicitly, using the p-d-if attribute on elements where drilldown is needed.  The value of the attribute is used to test against the p-d element (hence you will want to specify some marker, like an ID, on the p-d element, which can be used to validate the invitation.)
 
 ```html   
     <text-box></text-box>                                                               
@@ -116,7 +118,6 @@ What we end up with is shown below:
         <my-filter></my-filter>
     </div>
 ```
-
 
 ## Inline Script Props
 
@@ -178,6 +179,17 @@ p-d can be configured to test the event target to make sure it matches a css tes
 <p-d on="click" if="a"></pd>
 ```
 
+## Disabling the default behavior of initialization (Warning:  Wonky discussion)
+
+One of the goals of these components is they can load asynchronously, and the output should, as much as possible, not depend on when these components load.
+
+So what happens if an element fires an event, before p-d has loaded and started listening?  What if you want to monitor a property that starts out with some initial value?
+
+To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefullness of these components.  However, there are situations where we definitely don't want that before (for example, with button clicks). To prevent that from happening, add a condition as described above.
+
+
+
+
 
 p-d is ~2.2KB minified and gzipped.
 
@@ -220,8 +232,9 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 3)  You can  specify multiple properties that need setting on the same element, more compactly (tested).
 4)  You can observe attribute changes, in lieu of listening for an event (untested). 
 5)  You can debug the event handler by adding attribute "debug" (tested) 
+6)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested)
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.7KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.8KB minified and gzipped.
 
 
 
