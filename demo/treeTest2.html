@@ -131,7 +131,7 @@
         isSelectedFn: node => node.isSelected,
       })
     </script>
-    <p-d-x on="eval" to="{isSelectedFn:isSelectedFn;keyFn:keyFn;childrenFn:childrenFn;toggleIndeterminateFn:toggleIndeterminateFn;toggleNodeSelectionFn:toggleNodeSelectionFn;isIndeterminateFn:isIndeterminateFn}"></p-d-x>
+    <p-d-x on="eval" to="{.:.}"></p-d-x>
     
     <xtal-cascade id="myCascade" comment="Use xtal-cascade to manage node selection with checkboxes."></xtal-cascade>
     <p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>

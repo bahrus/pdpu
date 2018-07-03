@@ -230,9 +230,10 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 1)  You can specify adding / removing a css class (untested).
 2)  You can specify a nested path that needs setting (untested).
 3)  You can  specify multiple properties that need setting on the same element, more compactly (tested).
-4)  You can observe attribute changes, in lieu of listening for an event (untested). 
-5)  You can debug the event handler by adding attribute "debug" (tested) 
-6)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested)
+4)  You can observe attribute changes, in lieu of listening for an event (untested).
+    a)  If attribute/property "from-host/fromHost" is present/true, then the element will search for the shadow DOM Host, and observe attributes on that element. (not implemented)
+    b)  If no host is found, the monitoring will be done on query string and hash string parameters (using the & separator).
+5)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested).
 
 p-d, p-u and p-d-x, when combined into a single file, totals ~2.8KB minified and gzipped.
 
