@@ -32,7 +32,7 @@ export class P extends XtallatX(HTMLElement) {
     }
     set input(val) {
         this._input = val;
-        if (this._evalFn && (!this._destIsNA || !val.isFake)) {
+        if (this._evalFn && (!this._destIsNA || (val && !val.isFake))) {
             const returnObj = this._evalFn(this);
             if (returnObj) {
                 this._handleEvent(returnObj);
