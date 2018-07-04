@@ -4,7 +4,8 @@
    "p-d.js",
    "p-u.js",
    "p-d.p-u.js",
-   "p-d.p-d-x.p-u.js"
+   "p-d.p-d-x.p-u.js",
+   "p-d.p-d-x.p-u.p-destal.js"
   ],
   "npm": true,
   "lint": {

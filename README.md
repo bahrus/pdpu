@@ -188,9 +188,24 @@ So what happens if an element fires an event, before p-d has loaded and started 
 To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefullness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add a condition as described above.
 
 
-p-d is ~2.2KB minified and gzipped.
+p-d is ~2.3KB minified and gzipped.
 
+##  Another impossible dream
 
+p-destal (prounced "pedestal") is another web component in shining armor.  Its quest is to allow some types of web components to serve dual roles -- they could work as stand alone web pages, but also as web components, embedded within other pages / apps.  Much like iFrames.  The type of scenario where this would be useful is *not* highly reusable generic web components, like those found on webcomponents.org, but rather business domain, markup-centric, dynamic (server-generated?) HTML content.  The definition of such a component would be in the form of an html file:  *.html, or *.cshtml, or *.jsp or *.pug, etc.
+
+A key piece of the puzzle p-destal unlocks is how to pass information to these pages / web components that wear two hats?
+
+Whereas p-d works at ground level -- monitoring for events from its elder sibling, and passing along information to its fellow downstream siblings -- p-destal climbs up the tree before starting its lookout.  The markup may look like this:
+
+```html
+<p-destal on="@period@emp_id" to="fetch-data{period:target.period,empID:target.emp_id}"></p-destal>
+```
+
+What p-destal does is:
+
+1)  Traverses up the DOM tree, searching for a custom element container.  It identifies an element as a custom element if it either is a host of Shadow DOM, or has a dash in the element name. If it locates such a container, it monitors that element for attribute mutations (period and emp_id), and passes the values to down stream siblings of the p-destal element.
+2)  If no such custom element container is found, it monitors location.search (the query string in the address bar) for parameters with the same names (period, emp_id), and passes those values to downstream siblings as they change.
 
 ## Targeted, tightly-coupled passing with p-u ("partly-untested")   
 
