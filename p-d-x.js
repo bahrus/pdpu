@@ -38,17 +38,20 @@ export class PDX extends PD {
             super.attachEventListeners();
             return;
         }
-        const split = this._on.split(',').map(token => token.substr(1));
+        const prevSibling = this.getPreviousSib();
+        if (!prevSibling)
+            return;
+        const split = this._on.split('@');
         const config = {
             attributes: true,
             attributeFilter: split
         };
-        const prevSibling = this.getPreviousSib();
         this._attributeObserver = new MutationObserver(mutationRecords => {
             const fakeEvent = {
                 mutationRecords: mutationRecords,
                 target: prevSibling
             };
+            this._handleEvent(fakeEvent);
         });
         this._attributeObserver.observe(prevSibling, config);
     }

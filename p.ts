@@ -135,6 +135,7 @@ export abstract class P extends XtallatX(HTMLElement){
     attachEventListeners(){
         const attrFilters = [];
         const prevSibling = this.getPreviousSib();
+        if(!prevSibling) return;
         if(this._on === 'eval' && prevSibling.tagName === 'SCRIPT'){
             let evalObj = eval(prevSibling.innerText);
             if(typeof(evalObj) === 'function'){

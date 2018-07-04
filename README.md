@@ -185,10 +185,7 @@ One of the goals of these components is they can load asynchronously, and the ou
 
 So what happens if an element fires an event, before p-d has loaded and started listening?  What if you want to monitor a property that starts out with some initial value?
 
-To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefullness of these components.  However, there are situations where we definitely don't want that before (for example, with button clicks). To prevent that from happening, add a condition as described above.
-
-
-
+To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefullness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add a condition as described above.
 
 
 p-d is ~2.2KB minified and gzipped.
