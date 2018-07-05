@@ -256,11 +256,16 @@ class P extends XtallatX(HTMLElement) {
             return val;
         return this.getPropFromPathTokens(val, path.split('.'));
     }
-    getPropFromPathTokens(val, pathTokens) {
+    getPropFromPathTokens(val, pathTokens, createIfNotFound) {
         let context = val;
         pathTokens.forEach(token => {
-            if (context)
-                context = context[token];
+            if (context) {
+                let newContext = context[token];
+                if (!newContext && createIfNotFound) {
+                    newContext = context[token] = {};
+                }
+                context = newContext;
+            }
         });
         return context;
     }
@@ -391,7 +396,7 @@ class PDX extends PD {
         else if (targetPath.indexOf('.') > -1) {
             const pathTokens = targetPath.split('.');
             const lastToken = pathTokens.pop();
-            this.getPropFromPathTokens(target, pathTokens)[lastToken] = val;
+            this.getPropFromPathTokens(target, pathTokens, true)[lastToken] = val;
         }
         else {
             target[targetPath] = val;

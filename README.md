@@ -247,9 +247,9 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
     b)  If no host is found, the monitoring will be done on query string and hash string parameters (using the & separator).
 5)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested).
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.8KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~2.9KB minified and gzipped.
 
-
+When p-destal is added, the total is 3.1 kb minified and gzipped.
 
 ## Install the Polymer-CLI
 
