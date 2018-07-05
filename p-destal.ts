@@ -8,7 +8,7 @@ export class PDestal extends PDX {
     _useLocation: boolean;
     getPreviousSib() {
         let parent = this;
-        while (parent = parent.parentElement) {
+        while (parent = parent.parentNode) {
             if (parent.nodeType === 11) {
                 return parent['host'];
             } else if (parent.tagName.indexOf('-') > -1) {
