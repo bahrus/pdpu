@@ -27,7 +27,7 @@ export class PDX extends PD {
         else if (targetPath.indexOf('.') > -1) {
             const pathTokens = targetPath.split('.');
             const lastToken = pathTokens.pop();
-            this.getPropFromPathTokens(target, pathTokens)[lastToken] = val;
+            this.getPropFromPathTokens(target, pathTokens, true)[lastToken] = val;
         }
         else {
             target[targetPath] = val;

@@ -206,10 +206,16 @@ export abstract class P extends XtallatX(HTMLElement){
         if(!path || path==='.') return val;
         return this.getPropFromPathTokens(val, path.split('.'));
     }
-    getPropFromPathTokens(val: any, pathTokens: string[]){
+    getPropFromPathTokens(val: any, pathTokens: string[], createIfNotFound?: boolean){
         let context = val;
         pathTokens.forEach(token =>{
-            if(context) context = context[token];
+            if(context) {
+                let newContext = context[token];
+                if(!newContext && createIfNotFound){
+                    newContext = context[token] = {};
+                }
+                context = newContext;
+            }
         });
         return context;
     }
