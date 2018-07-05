@@ -247,7 +247,7 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 
 p-d, p-u and p-d-x, when combined into a single file, totals ~2.9KB minified and gzipped.
 
-When p-destal is added, the total is 3.1 kb minified and gzipped.
+When p-destal is added, the total is 3.2 kb minified and gzipped.
 
 ## Install the Polymer-CLI
 

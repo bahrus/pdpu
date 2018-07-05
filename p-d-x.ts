@@ -29,12 +29,29 @@ export class PDX extends PD {
             target.classList[method](cssClass);
         } else if (targetPath.indexOf('.') > -1) {
             const pathTokens = targetPath.split('.');
-            const lastToken = pathTokens.pop();
-            this.getPropFromPathTokens(target, pathTokens, true)[lastToken] = val;
+            // const lastToken = pathTokens.pop();
+            this.createNestedProp(target, pathTokens, val);
         } else {
             target[targetPath] = val;
         }
 
+    }
+
+    createNestedProp(target: any, pathTokens: string[], val: any){
+        const firstToken = pathTokens.shift();
+        const tft = target[firstToken];
+        const returnObj =  {[firstToken]: tft ? tft : {}};
+        let targetContext = returnObj[firstToken];
+        const lastToken = pathTokens.pop();
+        pathTokens.forEach(token =>{
+                let newContext = targetContext[token];
+                if(!newContext){
+                    newContext = targetContext[token] = {};
+                }
+                targetContext = newContext;
+        });
+        targetContext[lastToken] = val;
+        Object.assign(target, returnObj);
     }
 
     _attributeObserver: MutationObserver;

@@ -256,16 +256,11 @@ class P extends XtallatX(HTMLElement) {
             return val;
         return this.getPropFromPathTokens(val, path.split('.'));
     }
-    getPropFromPathTokens(val, pathTokens, createIfNotFound) {
+    getPropFromPathTokens(val, pathTokens) {
         let context = val;
         pathTokens.forEach(token => {
-            if (context) {
-                let newContext = context[token];
-                if (!newContext && createIfNotFound) {
-                    newContext = context[token] = {};
-                }
-                context = newContext;
-            }
+            if (context)
+                context = context[token];
         });
         return context;
     }
@@ -395,12 +390,28 @@ class PDX extends PD {
         }
         else if (targetPath.indexOf('.') > -1) {
             const pathTokens = targetPath.split('.');
-            const lastToken = pathTokens.pop();
-            this.getPropFromPathTokens(target, pathTokens, true)[lastToken] = val;
+            // const lastToken = pathTokens.pop();
+            this.createNestedProp(target, pathTokens, val);
         }
         else {
             target[targetPath] = val;
         }
+    }
+    createNestedProp(target, pathTokens, val) {
+        const firstToken = pathTokens.shift();
+        const tft = target[firstToken];
+        const returnObj = { [firstToken]: tft ? tft : {} };
+        let targetContext = returnObj[firstToken];
+        const lastToken = pathTokens.pop();
+        pathTokens.forEach(token => {
+            let newContext = targetContext[token];
+            if (!newContext) {
+                newContext = targetContext[token] = {};
+            }
+            targetContext = newContext;
+        });
+        targetContext[lastToken] = val;
+        Object.assign(target, returnObj);
     }
     attachEventListeners() {
         if (!this._on.startsWith('@')) {

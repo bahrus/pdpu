@@ -190,16 +190,11 @@ export class P extends XtallatX(HTMLElement) {
             return val;
         return this.getPropFromPathTokens(val, path.split('.'));
     }
-    getPropFromPathTokens(val, pathTokens, createIfNotFound) {
+    getPropFromPathTokens(val, pathTokens) {
         let context = val;
         pathTokens.forEach(token => {
-            if (context) {
-                let newContext = context[token];
-                if (!newContext && createIfNotFound) {
-                    newContext = context[token] = {};
-                }
-                context = newContext;
-            }
+            if (context)
+                context = context[token];
         });
         return context;
     }
