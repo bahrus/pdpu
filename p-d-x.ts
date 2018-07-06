@@ -69,8 +69,13 @@ export class PDX extends PD {
         } as MutationObserverInit;
         
         this._attributeObserver = new MutationObserver(mutationRecords => {
+            const values = {};
+            split.forEach(attrib =>{
+                values[attrib] = prevSibling.getAttribute(attrib);
+            })
             const fakeEvent = <any>{
                 mutationRecords: mutationRecords,
+                values: values,
                 target: prevSibling
             } as Event;
             this._handleEvent(fakeEvent);

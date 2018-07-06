@@ -427,8 +427,13 @@ class PDX extends PD {
             attributeFilter: split
         };
         this._attributeObserver = new MutationObserver(mutationRecords => {
+            const values = {};
+            split.forEach(attrib => {
+                values[attrib] = prevSibling.getAttribute(attrib);
+            });
             const fakeEvent = {
                 mutationRecords: mutationRecords,
+                values: values,
                 target: prevSibling
             };
             this._handleEvent(fakeEvent);
