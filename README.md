@@ -11,7 +11,7 @@ These two components dream the impossible dream -- be able to progressively, dec
 
 Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  
 
-These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree)  
+These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree) 
 
 Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who still uses the word lasslorn? 
 
@@ -185,7 +185,7 @@ One of the goals of these components is they can load asynchronously, and the ou
 
 So what happens if an element fires an event, before p-d has loaded and started listening?  What if you want to monitor a property that starts out with some initial value?
 
-To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefullness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add a condition as described above.
+To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add a condition as described above.
 
 
 p-d is ~2.3KB minified and gzipped.
@@ -248,6 +248,10 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 p-d, p-u and p-d-x, when combined into a single file, totals ~2.9KB minified and gzipped.
 
 When p-destal is added, the total is 3.2 kb minified and gzipped.
+
+##  Differences to other "frameworks"
+
+While these components provide a kind of "framework built with web components", similar to Polymer, there's a fundamental difference.  Unlike Polymer (and other competing frameworks), these components don't depend on the existence of a controlling component which manages state.  Instead, it is a little more JQuery like.  This may be more appealing for some people / use cases, less appealing to others.   But these components should be compatible with such frameworks, and may be useful for filling in some cracks with less boilerplate code.
 
 ## Install the Polymer-CLI
 
