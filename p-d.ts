@@ -16,8 +16,8 @@ const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
 export class PD extends P{
     static get is(){return 'p-d';}
     
-    _hasMax: boolean;
-    _m: number
+    _hasMax!: boolean;
+    _m!: number
     get m(){
         return this._m;
     }
@@ -30,7 +30,7 @@ export class PD extends P{
     
 
 
-    pass(e){
+    pass(e: Event){
         this.passDown(this.nextElementSibling, e, 0);
     }
 
@@ -48,11 +48,11 @@ export class PD extends P{
                         //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
                         if(this.matches(nextSibling.getAttribute(p_d_if))){
                             this.passDown(fec, e, count);
-                            let addedSMOTracker = nextSibling[_addedSMO];
-                            if(!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
+                            let addedSMOTracker = (<any>nextSibling)[_addedSMO];
+                            if(!addedSMOTracker) addedSMOTracker = (<any>nextSibling)[_addedSMO] = {};
                             if(!addedSMOTracker[this.id]){
                                 this.addMutationObserver(nextSibling, true);
-                                nextSibling[_addedSMO][this.id] = true;
+                                (<any>nextSibling)[_addedSMO][this.id] = true;
                             }
                         }
                        
@@ -78,7 +78,7 @@ export class PD extends P{
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropsChange();
     }
-    _connected: boolean;
+    _connected!: boolean;
     connectedCallback(){
         super.connectedCallback();
         this._upgradeProperties([m])
@@ -88,7 +88,7 @@ export class PD extends P{
 
 
 
-    _addedSMO: boolean; //addedSiblingMutationObserver
+    _addedSMO!: boolean; //addedSiblingMutationObserver
     addMutationObserver(baseElement: HTMLElement, isParent: boolean){
         let elementToObserve = isParent ? baseElement : baseElement.parentElement;
         if(!elementToObserve) return; //TODO

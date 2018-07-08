@@ -25,16 +25,17 @@ export class PU extends P {
                     if (host.shadowRoot) {
                         targetElement = host.shadowRoot.getElementById(id);
                         if (!targetElement)
-                            targetElement = host.getElementById(id);
+                            targetElement = host.querySelector('#' + id);
                     }
                     else {
-                        targetElement = host.getElementById(id);
+                        targetElement = host.querySelector('#' + id);
                     }
                 }
+                else {
+                    throw 'Target Element Not found';
+                }
             }
-            if (targetElement) {
-                this.setVal(e, targetElement, map);
-            }
+            this.setVal(e, targetElement, map);
         });
     }
     getHost(el, level, maxLevel) {

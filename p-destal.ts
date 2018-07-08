@@ -4,8 +4,8 @@ import { PDX } from './p-d-x.js';
 export class PDestal extends PDX {
     static get is() { return 'p-destal'; }
 
-    _host: HTMLElement;
-    _useLocation: boolean;
+    _host!: HTMLElement;
+    _useLocation!: boolean;
     getPreviousSib() {
         let parent = this;
         while (parent = parent.parentNode) {
@@ -20,7 +20,7 @@ export class PDestal extends PDX {
         }
         this._useLocation
     }
-    _previousValues: { [key: string]: string } = {};
+    _previousValues: { [key: string]: string | null } = {};
     doFakeEvent() {
         const split = this._on.split('@');
         const searchParams = new URLSearchParams(location.search);

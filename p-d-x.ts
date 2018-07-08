@@ -12,7 +12,7 @@ export class PDX extends PD {
             this._cssPropMap.push({
                 cssSelector: cssSelector,
                 propTarget: splitPropPointer[0],
-                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
             });
         })
     }
@@ -32,17 +32,17 @@ export class PDX extends PD {
             // const lastToken = pathTokens.pop();
             this.createNestedProp(target, pathTokens, val);
         } else {
-            target[targetPath] = val;
+            (<any>target)[targetPath] = val;
         }
 
     }
 
     createNestedProp(target: any, pathTokens: string[], val: any){
-        const firstToken = pathTokens.shift();
+        const firstToken = pathTokens.shift() as string;
         const tft = target[firstToken];
         const returnObj =  {[firstToken]: tft ? tft : {}};
         let targetContext = returnObj[firstToken];
-        const lastToken = pathTokens.pop();
+        const lastToken = pathTokens.pop() as string;
         pathTokens.forEach(token =>{
                 let newContext = targetContext[token];
                 if(!newContext){
@@ -54,7 +54,7 @@ export class PDX extends PD {
         Object.assign(target, returnObj);
     }
 
-    _attributeObserver: MutationObserver;
+    _attributeObserver!: MutationObserver;
     attachEventListeners() {
         if (!this._on.startsWith('@')) {
             super.attachEventListeners();
@@ -69,7 +69,7 @@ export class PDX extends PD {
         } as MutationObserverInit;
         
         this._attributeObserver = new MutationObserver(mutationRecords => {
-            const values = {};
+            const values : {[key:string] : string | null} = {};
             split.forEach(attrib =>{
                 values[attrib] = prevSibling.getAttribute(attrib);
             })

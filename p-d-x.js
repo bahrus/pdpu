@@ -9,7 +9,7 @@ export class PDX extends PD {
             this._cssPropMap.push({
                 cssSelector: cssSelector,
                 propTarget: splitPropPointer[0],
-                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
             });
         });
     }

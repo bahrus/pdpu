@@ -14,41 +14,42 @@ export class PU extends P{
         
         this._cssPropMap.forEach(map =>{
             const cssSel = map.cssSelector;
-            let targetElement: HTMLElement
+            let targetElement: HTMLElement;
             const split = cssSel.split('/');
             const id = split[split.length - 1];
             if(cssSel.startsWith('/')){
-                targetElement = self[id];
+                targetElement = (<any>self)[id];
             }else{
                 const len = cssSel.startsWith('./') ? 0 : split.length; 
-                const host = this.getHost(<any>this as HTMLElement, 0, split.length);
+                const host = this.getHost(<any>this as HTMLElement, 0, split.length) as HTMLElement;
 				if(host){
 					if(host.shadowRoot){
-						targetElement = host.shadowRoot.getElementById(id);
-						if(!targetElement) targetElement = host.getElementById(id);
+						targetElement = host.shadowRoot.getElementById(id) as HTMLElement;
+						if(!targetElement) targetElement = host.querySelector('#' + id) as HTMLElement;
 					}else{
-						targetElement = host.getElementById(id);
+						targetElement = host.querySelector('#' + id) as HTMLElement;
 					}
-				}
+				}else{
+                    throw 'Target Element Not found';
+                }
             }
-            if(targetElement){
-                this.setVal(e, targetElement, map);
-            }
+            this.setVal(e, targetElement, map);
         })
     }
 
-    _host: HTMLElement
-    getHost(el: HTMLElement, level: number, maxLevel : number){
-        let parent = el;
-        while(parent = parent.parentElement){
+    _host!: HTMLElement
+    getHost(el: HTMLElement, level: number, maxLevel : number) : HTMLElement | undefined{
+        let parent = el as HTMLElement;
+        while(parent = parent.parentElement as HTMLElement){
             if(parent.nodeType === 11){
                 const newLevel = level + 1;
-                if(newLevel >= maxLevel) return parent['host'];
-                return this.getHost(parent['host'], newLevel, maxLevel);
+                if(newLevel >= maxLevel) return (<any>parent)['host'];
+                return this.getHost((<any>parent)['host'], newLevel, maxLevel);
             }else if(parent.tagName === 'HTML'){
                 return parent;
             }
         }
+        
     }
     connectedCallback(){
         super.connectedCallback();

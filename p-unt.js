@@ -6,6 +6,15 @@ export class PUnt extends P {
     static get is() { return 'p-unt'; }
     pass(e) {
         this._cssPropMap.forEach(map => {
+            const detail = {};
+            this.setVal(e, detail, map);
+            const customEventInit = {
+                name: map.cssSelector,
+                bubbles: this._bubbles,
+                composed: this._composed,
+                detail: detail,
+            };
+            this.dispatchEvent(customEventInit);
         });
     }
     get bubbles() {
@@ -24,12 +33,7 @@ export class PUnt extends P {
         return this._dispatch;
     }
     set dispatch(val) {
-        if (val) {
-            this.setAttribute(dispatch, '');
-        }
-        else {
-            this.removeAttribute(dispatch);
-        }
+        this.attr(dispatch, val, '');
     }
 }
 //# sourceMappingURL=p-unt.js.map

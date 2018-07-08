@@ -11,21 +11,21 @@ const noblock = 'noblock';
 const iff = 'if';
 const to = 'to';
 export abstract class P extends XtallatX(HTMLElement){
-    _on: string;
+    _on!: string;
     get on(){
         return this._on;
     }
     set on(val){
         this.attr(on, val)
     }
-    _to: string;
+    _to!: string;
     get to(){
         return this._to;
     }
     set to(val){
         this.attr(to, val);
     }
-    _noblock: boolean;
+    _noblock!: boolean;
     get noblock(){
         return this._noblock;
     }
@@ -39,7 +39,7 @@ export abstract class P extends XtallatX(HTMLElement){
     // set noinit(val){
     //     this.attr(noinit, val, '');
     // }
-    _if: string;
+    _if!: string;
     get if(){return this._if;}
     set if(val){
         this.attr(iff, val);
@@ -116,9 +116,9 @@ export abstract class P extends XtallatX(HTMLElement){
         if(prevSibling && this._boundHandleEvent) this.detach(prevSibling);
         this.disconnectSiblingObserver();
     }
-    _boundHandleEvent;
-    abstract pass(e: Event);
-    _lastEvent: Event;
+    _boundHandleEvent!: any;
+    abstract pass(e: Event) : void;
+    _lastEvent!: Event;
     _handleEvent(e: Event){
         if(this.hasAttribute('debug')) debugger;
         if(!e) return;
@@ -130,8 +130,8 @@ export abstract class P extends XtallatX(HTMLElement){
         }
         this.pass(e);
     }
-    _evalFn;
-    _destIsNA: boolean;
+    _evalFn!: any;
+    _destIsNA!: boolean;
     attachEventListeners(){
         const attrFilters = [];
         const prevSibling = this.getPreviousSib();
@@ -164,14 +164,14 @@ export abstract class P extends XtallatX(HTMLElement){
         if(!this._connected || !this._on || !this._to) return;
         this.attachEventListeners();
     }
-    _cssPropMap: ICssPropMap[];
-    _lastTo: string;
+    _cssPropMap!: ICssPropMap[];
+    _lastTo!: string;
     parseMapping(mapTokens: string[], cssSelector: string){
         const splitPropPointer = mapTokens[1].split(':');
         this._cssPropMap.push({
             cssSelector: cssSelector,
             propTarget:splitPropPointer[0],
-            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
         });
     }
     parseTo() {
@@ -193,14 +193,14 @@ export abstract class P extends XtallatX(HTMLElement){
         })
 
     }
-    setVal(e: Event, target: HTMLElement, map: ICssPropMap){
+    setVal(e: Event, target: any, map: ICssPropMap){
         const gpfp = this.getPropFromPath.bind(this);
         const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
         this.commit(target, map, propFromEvent);
        
     }
     commit(target: HTMLElement, map: ICssPropMap, val: any){
-        target[map.propTarget] = val;
+        (<any>target)[map.propTarget] = val;
     }
     getPropFromPath(val: any, path: string){
         if(!path || path==='.') return val;
@@ -218,5 +218,5 @@ export abstract class P extends XtallatX(HTMLElement){
         if(this._siblingObserver)  this._siblingObserver.disconnect();
     }
 
-    _siblingObserver: MutationObserver;
+    _siblingObserver!: MutationObserver;
 }

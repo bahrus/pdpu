@@ -154,7 +154,7 @@ export class P extends XtallatX(HTMLElement) {
         this._cssPropMap.push({
             cssSelector: cssSelector,
             propTarget: splitPropPointer[0],
-            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
         });
     }
     parseTo() {
