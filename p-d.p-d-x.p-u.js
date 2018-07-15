@@ -220,7 +220,7 @@ class P extends XtallatX(HTMLElement) {
         this._cssPropMap.push({
             cssSelector: cssSelector,
             propTarget: splitPropPointer[0],
-            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
         });
     }
     parseTo() {
@@ -373,7 +373,7 @@ class PDX extends PD {
             this._cssPropMap.push({
                 cssSelector: cssSelector,
                 propTarget: splitPropPointer[0],
-                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : null
+                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
             });
         });
     }
@@ -414,17 +414,17 @@ class PDX extends PD {
         Object.assign(target, returnObj);
     }
     attachEventListeners() {
-        if (!this._on.startsWith('@')) {
+        if (!this._on.startsWith('[')) {
             super.attachEventListeners();
             return;
         }
         const prevSibling = this.getPreviousSib();
         if (!prevSibling)
             return;
-        const split = this._on.split('@');
+        const split = this._on.split(',');
         const config = {
             attributes: true,
-            attributeFilter: split
+            attributeFilter: split.map(s => s.substr(1, s.length - 2))
         };
         this._attributeObserver = new MutationObserver(mutationRecords => {
             const values = {};
@@ -478,16 +478,17 @@ class PU extends P {
                     if (host.shadowRoot) {
                         targetElement = host.shadowRoot.getElementById(id);
                         if (!targetElement)
-                            targetElement = host.getElementById(id);
+                            targetElement = host.querySelector('#' + id);
                     }
                     else {
-                        targetElement = host.getElementById(id);
+                        targetElement = host.querySelector('#' + id);
                     }
                 }
+                else {
+                    throw 'Target Element Not found';
+                }
             }
-            if (targetElement) {
-                this.setVal(e, targetElement, map);
-            }
+            this.setVal(e, targetElement, map);
         });
     }
     getHost(el, level, maxLevel) {
