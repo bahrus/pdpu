@@ -124,7 +124,7 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
 It is common to want to set function and object properties on a custom element.  This can be done as shown below:
 
 ```html
-<script type="module ish">
+<script nomodule>
 ({
     fn: (obj, idx) => `<div>Row with index ${idx}</div>`
 })
@@ -133,6 +133,23 @@ It is common to want to set function and object properties on a custom element. 
 <my-virtual-list></my-virtual-list>
 ```
 
+Note the "nomodule" attribute.  This code won't execute in modern browsers without p-d element making it execute via eval.
+
+It will execute in older browsers, but likely with no harm done / side effects (other performance loss).
+
+Also note that if you are targeting older browsers, you will need to use syntax more like this:
+
+```html
+<script nomodule>
+({
+    function(obj, idx){
+        return '<div>Row with index ' + idx + '</div>';
+    } 
+})
+</script>
+```
+
+unless you add a build step that does the conversion for you.
 
 ## Inline Script Pipeline Processing
 
@@ -141,7 +158,7 @@ In the previous section, we described how you can define an object within script
 If instead of defining an object, one defines a function:
 
 ```html
-<script type="module ish">
+<script nomodule>
     pd => {
         return pd._input;
     }
@@ -158,10 +175,10 @@ Suppose we want to attach a simple JavaScript event handler to a DOM Element.   
 ```html
 <button>Click Me</button>
 <p-d on="click" to="{input:target}"></p-d>
-<script type="module ish">
+<script nomodule>
     pd =>{
         console.log('the button that was clicked was:');
-        console.log(pd._input);
+        console.log(pd.input);
     }
 </script>
 <p-d on="eval" to="{NA}"></p-d>
