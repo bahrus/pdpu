@@ -22,15 +22,16 @@ export class PDestal extends PDX {
         this._useLocation;
     }
     doFakeEvent() {
-        const split = this._on.split('@');
+        const split = this._on.split(',');
         const searchParams = new URLSearchParams(location.search);
         let changedVal = false;
         split.forEach(param => {
-            const searchParm = searchParams.get(param);
-            if (!changedVal && (searchParm !== this._previousValues[param])) {
+            const trimmedParam = param.substr(1, param.length - 2);
+            const searchParm = searchParams.get(trimmedParam);
+            if (!changedVal && (searchParm !== this._previousValues[trimmedParam])) {
                 changedVal = true;
             }
-            this._previousValues[param] = searchParm;
+            this._previousValues[trimmedParam] = searchParm;
         });
         if (changedVal) {
             const fakeEvent = {

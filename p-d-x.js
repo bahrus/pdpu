@@ -50,17 +50,17 @@ export class PDX extends PD {
         Object.assign(target, returnObj);
     }
     attachEventListeners() {
-        if (!this._on.startsWith('@')) {
+        if (!this._on.startsWith('[')) {
             super.attachEventListeners();
             return;
         }
         const prevSibling = this.getPreviousSib();
         if (!prevSibling)
             return;
-        const split = this._on.split('@');
+        const split = this._on.split(',');
         const config = {
             attributes: true,
-            attributeFilter: split
+            attributeFilter: split.map(s => s.substr(1, s.length - 2))
         };
         this._attributeObserver = new MutationObserver(mutationRecords => {
             const values = {};
