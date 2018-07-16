@@ -93,7 +93,7 @@ export abstract class P extends XtallatX(HTMLElement){
         setTimeout(() => this.doFake(), 50);
     }
     doFake(){
-        if(!this._if){
+        if(!this._if && !this.hasAttribute('skip-init')){
             let lastEvent = this._lastEvent;
             if(!lastEvent){
                 lastEvent = <any>{
@@ -140,7 +140,7 @@ export abstract class P extends XtallatX(HTMLElement){
             let evalObj = eval(prevSibling.innerText);
             if(typeof(evalObj) === 'function'){
                 this._evalFn = evalObj;
-                if(!this._destIsNA){
+                if(!this._destIsNA && !this.hasAttribute('skip-init')){
                     evalObj(this);
                 }
                

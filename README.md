@@ -207,9 +207,35 @@ To accommodate these difficulties, by defaut, a "fake" event is "emitted" just b
 
 p-d is ~2.3KB minified and gzipped.
 
+## Counter test
+
+Apparently Counter tests are a thing to compare with "frameworks."  Here's what p-d's looks like:
+
+```html
+    <button>Increment</button>
+    <p-d on="click" if="button" to="p-d{input:target}"></p-d>
+    <script nomodule>
+        pd => {
+            const val = pd.value;
+            if(val){
+                pd.value++;
+            }else{
+                pd.value = 1;
+            }
+            return {
+                detail: {
+                    value: pd.value
+                }
+            }
+        } 
+    </script>
+    <p-d on="eval" skip-init to="{innerText}"></p-d>
+    <div></div>
+```
+
 ##  Another impossible dream
 
-p-destal (prounced "pedestal") is another web component in shining armor.  Its quest is to allow some types of web components to serve dual roles -- they could work as stand alone web pages, but also as web components, embedded within other pages / apps.  Much like iFrames.  The type of scenario where this would be useful is *not* highly reusable generic web components, like those found on webcomponents.org, but rather business domain, markup-centric, dynamic (server-generated?) HTML content.  The definition of such a component would be in the form of an html file:  *.html, or *.cshtml, or *.jsp or *.pug, etc.
+p-destal (pronunced "pedestal") is another web component in shining armor.  Its quest is to allow some types of web components to serve dual roles -- they could work as stand alone web pages, but also as web components, embedded within other pages / apps.  Much like iFrames.  The type of scenario where this would be useful is *not* highly reusable generic web components, like those found on webcomponents.org, but rather business domain, markup-centric, dynamic (server-generated?) HTML content.  The definition of such a component would be in the form of an html file:  *.html, or *.cshtml, or *.jsp or *.pug, etc.
 
 A key piece of the puzzle p-destal unlocks is how to pass information to these pages / web components that wear two hats?
 

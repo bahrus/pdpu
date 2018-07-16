@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="module" src="../p-d.js"></script>
+    <script type="module" src="../p-d-x.js"></script>
+    <script type="module" src="../p-u.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <button>Increment</button>
+    <p-d on="click" if="button" to="p-d{input:target}"></p-d>
+    <script nomodule>
+        pd => {
+            const val = pd.value;
+            if(val){
+                pd.value++;
+            }else{
+                pd.value = 1;
+            }
+            pd.setAttribute('initialized', '');
+            return {
+                detail: {
+                    value: pd.value
+                }
+            }
+        } 
+    </script>
+    <p-d on="eval" skip-init to="{innerText}"></p-d>
+    <div></div>
+</body>
+</html>
