@@ -216,20 +216,12 @@ Apparently Counter tests are a thing to compare with "frameworks."  Here's what 
     <p-d on="click" if="button" to="p-d{input:target}"></p-d>
     <script nomodule>
         pd => {
-            const val = pd.value;
-            if(val){
-                pd.value++;
-            }else{
-                pd.value = 1;
-            }
-            return {
-                detail: {
-                    value: pd.value
-                }
-            }
+            pd.value = (pd.value || 0);
+            pd.value++;
+            return pd;
         } 
     </script>
-    <p-d on="eval" skip-init to="{innerText}"></p-d>
+    <p-d on="eval" skip-init to="{innerText:value}"></p-d>
     <div></div>
 ```
 
