@@ -11,12 +11,12 @@
 </head>
 <body>
     <button>Increment</button>
-    <p-d on="click" if="button" to="p-d{input:target}"></p-d>
+    <p-d on="click" if="button" to="{input:NA}"></p-d>
     <script nomodule>
-        pd => {
-            pd.value = (pd.value || 0);
-            pd.value++;
-            return pd;
+        counterState => {
+            counterState.value = (counterState.value || 0);
+            counterState.value++;
+            return counterState;
         } 
     </script>
     <p-d on="eval" skip-init to="{innerText:value}"></p-d>

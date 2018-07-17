@@ -135,7 +135,7 @@ It is common to want to set function and object properties on a custom element. 
 
 Note the "nomodule" attribute.  This code won't execute in modern browsers without p-d element making it execute via eval.
 
-It will execute in older browsers, but likely with no harm done / side effects (other performance loss).
+It will execute in older browsers, but likely with no harm done / side effects (other than a small performance loss).
 
 Also note that if you are targeting older browsers, you will need to use syntax more like this:
 
@@ -160,7 +160,7 @@ If instead of defining an object, one defines a function:
 ```html
 <script nomodule>
     pd => {
-        return pd._input;
+        return pd.input;
     }
 </script>
 <p-d on="eval" to="{input}">
@@ -209,16 +209,16 @@ p-d is ~2.3KB minified and gzipped.
 
 ## Counter test
 
-Apparently Counter tests are a thing to compare with "frameworks."  Here's what p-d's looks like:
+Apparently, counter tests are a thing people use to compare "frameworks."  Here's what p-d's looks like:
 
 ```html
     <button>Increment</button>
-    <p-d on="click" if="button" to="p-d{input:target}"></p-d>
+    <p-d on="click" if="button" to="{input:NA}"></p-d>
     <script nomodule>
-        pd => {
-            pd.value = (pd.value || 0);
-            pd.value++;
-            return pd;
+        counterState => {
+            counterState.value = (counterState.value || 0);
+            counterState.value++;
+            return counterState;
         } 
     </script>
     <p-d on="eval" skip-init to="{innerText:value}"></p-d>
