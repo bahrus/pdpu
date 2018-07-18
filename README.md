@@ -280,7 +280,7 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 4)  You can observe attribute changes, in lieu of listening for an event (tested).
 5)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested).
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~2.9KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~3.0KB minified and gzipped.
 
 When p-destal is added, the total is 3.2 kb minified and gzipped.
 
