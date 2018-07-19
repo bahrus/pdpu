@@ -188,7 +188,7 @@ class P extends XtallatX(HTMLElement) {
         if (!prevSibling)
             return;
         if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
-            let evalObj = eval(prevSibling.innerText);
+            let evalObj = eval(prevSibling.innerHTML);
             if (typeof (evalObj) === 'function') {
                 this._evalFn = evalObj;
                 if (!this._destIsNA && !this.hasAttribute('skip-init')) {
