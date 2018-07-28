@@ -448,6 +448,44 @@ class PDX extends PD {
         this.disconnect();
         super.disconnectedCallback();
     }
+    static define(name, fn) {
+        class newClass extends XtallatX(HTMLElement) {
+            constructor() {
+                super(...arguments);
+                this._connected = false;
+            }
+            connectedCallback() {
+                this._upgradeProperties(['input', 'disabled']);
+                this._connected = true;
+            }
+            get input() {
+                return this._input;
+            }
+            set input(val) {
+                this._input = val;
+                this.value = fn(val);
+                this.onPropsChange();
+            }
+            attributeChangedCallback(name, oldVal, newVal) {
+                super.attributeChangedCallback(name, oldVal, newVal);
+                switch (name) {
+                    case 'input':
+                        this.input = JSON.parse(newVal);
+                        break;
+                    default:
+                        this.onPropsChange();
+                }
+            }
+            onPropsChange() {
+                if (!this._disabled)
+                    return;
+                this.de('value', {
+                    value: this.value
+                });
+            }
+        }
+        customElements.define(name, newClass);
+    }
 }
 if (!customElements.get(PDX.is))
     customElements.define(PDX.is, PDX);

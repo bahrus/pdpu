@@ -85,7 +85,7 @@ export class PDX extends PD {
         this.disconnect();
         super.disconnectedCallback();
     }
-    define(name, fn) {
+    static define(name, fn) {
         class newClass extends XtallatX(HTMLElement) {
             constructor() {
                 super(...arguments);

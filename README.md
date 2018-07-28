@@ -176,15 +176,15 @@ If the expression inside the script tag evaluates to a function, it is evaluated
 
 The intention of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
 
-It would be amazing if one could debug the code found in these incline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements (and even better, be able to examine the property values, attributes, etc.) 
+It would be amazing if one could debug the code found in these inline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements (and even better, be able to examine the property values, attributes, etc.) 
 
-The problem is this would pollute the global namespace with functions, and one developer's function overwritng another could trigger a nuclear winter.  
+The problem is this would pollute the global namespace with functions, and one developer's function overwriting another could trigger major team dysfunction. 
 
 In the lack of this support, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?  And as the JavaScript grows, the ability to get a good grasp of the UI would diminish. 
 
 For simple, trivial code, or preliminary prototyping, this might not be an issue.  But as the code grows in complexity and maturity, we basically need to start adding "hyperlinks" in the markup, if you follow my drift.  
 
-###  Defining a piping custom element [TODO]
+###  Defining a piping custom element
 
 p-d-x will provide a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
 
@@ -215,6 +215,8 @@ Then you can  replace the pipeline processing script tag above with:
 <my-pipeline-fn></my-pipeline-fn>
 <p-d on="value-changed" to="{input}">
 ```
+
+Of course, teams will need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help with that in the future.
 
 ## Adding a simple JavaScript event handler
 
@@ -327,10 +329,11 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 3)  You can  specify multiple properties that need setting on the same element, more compactly (tested).
 4)  You can observe attribute changes, in lieu of listening for an event (tested).
 5)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested).
+6)  Autogenerate custom element that can do pipeline processing.
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~3.0KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~3.3KB minified and gzipped.
 
-When p-destal is added, the total is 3.2 kb minified and gzipped.
+When p-destal is added, the total is ~3.4 kb minified and gzipped.
 
 ##  Differences to other "frameworks"
 

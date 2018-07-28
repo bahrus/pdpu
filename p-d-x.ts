@@ -91,7 +91,7 @@ export class PDX extends PD {
         super.disconnectedCallback();
     }
 
-    define(name: string, fn: (input: any) => any){
+    static define(name: string, fn: (input: any) => any){
         class newClass extends XtallatX(HTMLElement) {
             _connected = false;
             connectedCallback() {
