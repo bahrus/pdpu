@@ -17,7 +17,7 @@ Here I am defining a "framework" as a "common, centrally managed language used t
 
 It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial) or [sweet.js](https://www.sweetjs.org/), only a hell of a lot easier.
 
-NB:  Lit-html (also by the Polymer team) also appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://github.com/Polymer/lit-html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  Hyper-html has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
+NB:  Lit-html (also by the Polymer team) appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://github.com/Polymer/lit-html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  hyperHTML has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
@@ -171,6 +171,41 @@ If instead of defining an object, one defines a function:
 then that function will be invoked every time anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
 
 If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
+
+### A cautionary note on use of inline script pipeline processing
+
+The intention of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
+
+It would be amazing if one could debug the code found in these incline script pipelines, right in the context of the other UI elements.  The productivity benefit would be phenominal.  The only way I know how this could be done would be to define a function, by name, inside the script tag.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements (and even better, be able to examine the property values, attributes, etc.) 
+
+The problem is this would pollute the global namespace with functions, and one developer's function overwritng another could trigger a nuclear winter.
+
+In the lack of this support, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?
+
+For simple, trivial code, or preliminary prototyping, this might not be an issue.  But as the code grows in complexity and maturity, we basically need to start adding "hyperlinks" in the markup, if you follow my drift.
+
+###  Defining a piping custom element [TODO]
+
+p-d-x provide a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
+
+You can use traditional JavaScript import:
+
+```JavaScript
+import {PDX} from 'p-d.p-u/p-d-x.js';
+PDX.define('my-pipeline-fn', pd => {
+    // do stuff
+    return pd.input;
+})
+```
+
+Then you can  replace the pipeline processing script tag above with:
+
+```html
+<my-pipeline-fn></my-pipeline-fn>
+<p-d on="value-changed" to="{input}">
+```
+
+Basically, we need a way of quickly turning our inline script pipeline processor into a web component.
 
 Suppose we want to attach a simple JavaScript event handler to a DOM Element.   Using p-d, it is possible to do this (if a bit strange looking):
 
