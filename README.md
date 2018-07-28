@@ -176,17 +176,17 @@ If the expression inside the script tag evaluates to a function, it is evaluated
 
 The intention of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
 
-It would be amazing if one could debug the code found in these incline script pipelines, right in the context of the other UI elements.  The productivity benefit would be phenominal.  The only way I know how this could be done would be to define a function, by name, inside the script tag.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements (and even better, be able to examine the property values, attributes, etc.) 
+It would be amazing if one could debug the code found in these incline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements (and even better, be able to examine the property values, attributes, etc.) 
 
-The problem is this would pollute the global namespace with functions, and one developer's function overwritng another could trigger a nuclear winter.
+The problem is this would pollute the global namespace with functions, and one developer's function overwritng another could trigger a nuclear winter.  
 
-In the lack of this support, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?
+In the lack of this support, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?  And as the JavaScript grows, the ability to get a good grasp of the UI would diminish. 
 
-For simple, trivial code, or preliminary prototyping, this might not be an issue.  But as the code grows in complexity and maturity, we basically need to start adding "hyperlinks" in the markup, if you follow my drift.
+For simple, trivial code, or preliminary prototyping, this might not be an issue.  But as the code grows in complexity and maturity, we basically need to start adding "hyperlinks" in the markup, if you follow my drift.  
 
 ###  Defining a piping custom element [TODO]
 
-p-d-x provide a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
+p-d-x will provide a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
 
 You can use traditional JavaScript import:
 
@@ -195,7 +195,18 @@ import {PDX} from 'p-d.p-u/p-d-x.js';
 PDX.define('my-pipeline-fn', pd => {
     // do stuff
     return pd.input;
-})
+});
+```
+
+or if you prefer:
+
+```JavaScript
+customElements.when('p-d-x').then(() =>{
+    customElements.get('p-d-x').define('my-pipeline-fn', pd => {
+        // do stuff
+        return pd.input;
+    })
+}
 ```
 
 Then you can  replace the pipeline processing script tag above with:
@@ -205,7 +216,7 @@ Then you can  replace the pipeline processing script tag above with:
 <p-d on="value-changed" to="{input}">
 ```
 
-Basically, we need a way of quickly turning our inline script pipeline processor into a web component.
+## Adding a simple JavaScript event handler
 
 Suppose we want to attach a simple JavaScript event handler to a DOM Element.   Using p-d, it is possible to do this (if a bit strange looking):
 

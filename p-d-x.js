@@ -1,4 +1,5 @@
 import { PD } from './p-d.js';
+import { XtallatX } from 'xtal-latx/xtal-latx.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
     static get is() { return 'p-d-x'; }
@@ -83,6 +84,44 @@ export class PDX extends PD {
     disconnectedCallback() {
         this.disconnect();
         super.disconnectedCallback();
+    }
+    define(name, fn) {
+        class newClass extends XtallatX(HTMLElement) {
+            constructor() {
+                super(...arguments);
+                this._connected = false;
+            }
+            connectedCallback() {
+                this._upgradeProperties(['input', 'disabled']);
+                this._connected = true;
+            }
+            get input() {
+                return this._input;
+            }
+            set input(val) {
+                this._input = val;
+                this.value = fn(val);
+                this.onPropsChange();
+            }
+            attributeChangedCallback(name, oldVal, newVal) {
+                super.attributeChangedCallback(name, oldVal, newVal);
+                switch (name) {
+                    case 'input':
+                        this.input = JSON.parse(newVal);
+                        break;
+                    default:
+                        this.onPropsChange();
+                }
+            }
+            onPropsChange() {
+                if (!this._disabled)
+                    return;
+                this.de('value', {
+                    value: this.value
+                });
+            }
+        }
+        customElements.define(name, newClass);
     }
 }
 if (!customElements.get(PDX.is))
