@@ -2,48 +2,48 @@ Arguments:
   C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js publish
 
 PATH: 
-  C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseGit\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\dotnet\;C:\Users\bahrus\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Microsoft VS Code\bin;C:\Users\bahrus\AppData\Roaming\npm;C:\Users\bahrus\AppData\Local\Yarn\bin
+  C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\TortoiseGit\bin;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\WINDOWS\System32\OpenSSH\;C:\Users\ander\AppData\Local\Microsoft\WindowsApps;C:\Users\ander\AppData\Roaming\npm;C:\Users\ander\AppData\Local\Yarn\bin;
 
 Yarn version: 
-  1.7.0
+  1.9.2
 
 Node version: 
-  8.9.2
+  8.11.3
 
 Platform: 
   win32 x64
 
 Trace: 
   Error: canceled
-      at Interface.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:131036:13)
+      at Interface.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:125950:13)
       at emitNone (events.js:106:13)
       at Interface.emit (events.js:208:7)
-      at Interface._ttyWrite (readline.js:775:16)
-      at ReadStream.onkeypress (readline.js:160:10)
+      at Interface._ttyWrite (readline.js:774:16)
+      at ReadStream.onkeypress (readline.js:158:10)
       at emitTwo (events.js:126:13)
       at ReadStream.emit (events.js:214:7)
       at emitKeys (internal/readline.js:420:14)
       at emitKeys.next (<anonymous>)
-      at ReadStream.onData (readline.js:1011:36)
+      at ReadStream.onData (readline.js:1010:36)
 
 npm manifest: 
   {
     "name": "p-d.p-u",
-    "version": "0.0.10",
+    "version": "0.0.53",
     "description": "TBD",
     "repository": "https://github.com/bahrus/pdpu",
     "author": "bahrus <anderson.bruce.b@gmail.com>",
     "license": "MIT",
     "main": "p-d.js",
     "dependencies": {
-      "@polymer/polymer": "^3.0.0",
-      "xtal-latx": "0.0.11"
+      "xtal-latx": "0.0.17"
     },
     "devDependencies": {
       "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
       "@webcomponents/webcomponentsjs": "^2.0.0",
       "wct-browser-legacy": "^1.0.0",
-      "jiife": "^0.0.0"
+      "jiife": "^0.0.3",
+      "@polymer/polymer": "^3.0.0"
     }
   }
 
@@ -244,9 +244,9 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
   
-  growl@1.9.2:
-    version "1.9.2"
-    resolved "https://registry.yarnpkg.com/growl/-/growl-1.9.2.tgz#0ea7743715db8d8de2c5ede1775e1b45ac85c02f"
+  growl@1.10.2:
+    version "1.10.2"
+    resolved "https://registry.yarnpkg.com/growl/-/growl-1.10.2.tgz#0ea7743715db8d8de2c5ede1775e1b45ac85c02f"
   
   has-ansi@^2.0.0:
     version "2.0.0"
@@ -273,9 +273,9 @@ Lockfile:
     version "2.0.3"
     resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.3.tgz#633c2c83e3da42a502f52466022480f4208261de"
   
-  jiife@^0.0.0:
-    version "0.0.0"
-    resolved "https://registry.yarnpkg.com/jiife/-/jiife-0.0.0.tgz#43fde478b4255be1c35df282c2daa5eaabb8c159"
+  jiife@^0.0.3:
+    version "0.0.3"
+    resolved "https://registry.yarnpkg.com/jiife/-/jiife-0.0.3.tgz#be7f208bcbd8dbb177d7dd362d53aa8db311dbc7"
   
   json3@3.3.2:
     version "3.3.2"
@@ -366,7 +366,7 @@ Lockfile:
       diff "3.2.0"
       escape-string-regexp "1.0.5"
       glob "7.1.1"
-      growl "1.9.2"
+      growl "1.10.2"
       he "1.1.1"
       json3 "3.3.2"
       lodash.create "3.1.1"
@@ -480,6 +480,6 @@ Lockfile:
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   
-  xtal-latx@0.0.11:
-    version "0.0.11"
-    resolved "https://registry.yarnpkg.com/xtal-latx/-/xtal-latx-0.0.11.tgz#be0c7f5b9a3f2e529684f2cb014cb6d9f85b2c59"
+  xtal-latx@0.0.17:
+    version "0.0.17"
+    resolved "https://registry.yarnpkg.com/xtal-latx/-/xtal-latx-0.0.17.tgz#520d9f49ac1b6b8d58b1b0521e1b186a938ae25c"

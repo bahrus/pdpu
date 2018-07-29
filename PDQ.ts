@@ -29,9 +29,26 @@ export class PDQ{
             }
             onPropsChange(){
                 if(!this._disabled) return;
+                const val = this.value;
                 this.de('value', {
-                    value: this.value
+                    value: val
                 });
+                let valueSummary: any = null;
+                switch(typeof(val)){
+                    case 'string':
+                    case 'boolean':
+                    case 'number':
+                        valueSummary = 'array:' + val.toString();
+                        break;
+                    case 'object':
+                        if(!val) return;
+                        if(Array.isArray(val)) {
+                            valueSummary = val.length;
+                        }else{
+                            valueSummary = Object.keys(val).toString()
+                        }
+                }
+                if(valueSummary !== null) this.setAttribute(valueSummary, valueSummary);
             }
         }
         if(adjustClass){
