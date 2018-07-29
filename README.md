@@ -186,7 +186,7 @@ For simple, trivial code, or preliminary prototyping, this might not be an issue
 
 ###  Defining a piping custom element
 
-p-d-x provides a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
+A convenience function is provided, that allows you to generate a "pipe" custom element with as few keystrokes as possible.
 
 You can use traditional JavaScript import:
 
@@ -198,6 +198,7 @@ PDQ.define('my-pipeline-fn', pd => {
 });
 ```
 
+This will create a custom element with name my-pipeline-fn.  It applies the second argument, a function to the input property of the custom element, every tie the input changes.  It then stores the result in property value, and emits and event with name value-changed.
 
 Then you can replace the pipeline processing script tag above with:
 
@@ -206,7 +207,7 @@ Then you can replace the pipeline processing script tag above with:
 <p-d on="value-changed" to="{input}">
 ```
 
-Of course, teams will need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help with that in the future.
+Of course, teams would need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
 If the issue of mixing JavaScript script tags inside markup is not a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, like a novel, you can still inline the code.  It would look like this:
 
