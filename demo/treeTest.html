@@ -104,12 +104,13 @@
                   </template>
                   <template is="dom-if" if="[[!item.children]]">📝</template>
             </span>
-            <p-u on="click" if="span" to="/myTree{toggledNode:target.node}"></p-u>
+            
             <xtal-split node="[[item]]"  search="[[search]]" text-content="[[item.name]]"></xtal-split>
             <p-u on="click" if="xtal-split" to="/myTree{toggledNode:target.node}"></p-u>
           </div>
         </template>
       </iron-list>
+      <p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
       <script type="module ish">
         inp => {
           if(typeof(fvi) !== 'undefined' && fvi > -1){

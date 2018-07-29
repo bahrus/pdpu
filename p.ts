@@ -7,7 +7,6 @@ export interface ICssPropMap {
 }
 const on = 'on';
 const noblock = 'noblock';
-//const noinit = 'noinit';
 const iff = 'if';
 const to = 'to';
 export abstract class P extends XtallatX(HTMLElement){
@@ -32,13 +31,7 @@ export abstract class P extends XtallatX(HTMLElement){
     set noblock(val){
         this.attr(noblock, val, '')
     }
-    // _noinit: boolean;
-    // get noinit(){
-    //     return this._noinit;
-    // }
-    // set noinit(val){
-    //     this.attr(noinit, val, '');
-    // }
+    
     _if!: string;
     get if(){return this._if;}
     set if(val){
@@ -208,8 +201,23 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     getPropFromPathTokens(val: any, pathTokens: string[]){
         let context = val;
+        let firstToken = true;
+        const cp = 'composedPath';
         pathTokens.forEach(token => {
-            if(context)  context = context[token];
+            if(context)  {
+                if(firstToken && context[cp]){
+                    firstToken = false;
+                    const cpath = token.split(cp + '_');
+                    if(cpath.length === 1){
+                        context = context[cpath[0]];
+                    }else{
+                        context = context.composedPath(parseInt(cpath[1]));
+                    }
+                }else{
+                    context = context[token];
+                }
+                
+            }
         });
         return context;
     }
