@@ -211,7 +211,8 @@ export abstract class P extends XtallatX(HTMLElement){
                     if(cpath.length === 1){
                         context = context[cpath[0]];
                     }else{
-                        context = context.composedPath(parseInt(cpath[1]));
+                        context = context[cp]()[parseInt(cpath[1])];
+                        debugger;
                     }
                 }else{
                     context = context[token];

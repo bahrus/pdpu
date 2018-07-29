@@ -67,7 +67,6 @@ function XtallatX(superClass) {
 //# sourceMappingURL=xtal-latx.js.map
 const on = 'on';
 const noblock = 'noblock';
-//const noinit = 'noinit';
 const iff = 'if';
 const to = 'to';
 class P extends XtallatX(HTMLElement) {
@@ -258,9 +257,25 @@ class P extends XtallatX(HTMLElement) {
     }
     getPropFromPathTokens(val, pathTokens) {
         let context = val;
+        let firstToken = true;
+        const cp = 'composedPath';
         pathTokens.forEach(token => {
-            if (context)
-                context = context[token];
+            if (context) {
+                if (firstToken && context[cp]) {
+                    firstToken = false;
+                    const cpath = token.split(cp + '_');
+                    if (cpath.length === 1) {
+                        context = context[cpath[0]];
+                    }
+                    else {
+                        context = context[cp]()[parseInt(cpath[1])];
+                        debugger;
+                    }
+                }
+                else {
+                    context = context[token];
+                }
+            }
         });
         return context;
     }

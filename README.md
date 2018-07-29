@@ -276,7 +276,7 @@ So what happens if an element fires an event, before p-d has loaded and started 
 To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add a condition as described above.
 
 
-p-d is ~2.3KB minified and gzipped.
+p-d is ~2.4KB minified and gzipped.
 
 ## Counter test
 
@@ -339,7 +339,7 @@ For that we have:
 <p-unt on="click" dispatch to="myEventName{toggledNode:target.node}" composed bubbles></p-unt>
 ```
 
-The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.5KB minified and gzipped.
+The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.6KB minified and gzipped.
 
 ## Deluxe version [partially untested]
 
@@ -352,9 +352,9 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 5)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested).
 6)  Autogenerate custom element that can do pipeline processing.
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~3.3KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~3.2KB minified and gzipped.
 
-When p-destal is added, the total is ~3.4 kb minified and gzipped.
+When p-destal is added, the total is ~3.5 kb minified and gzipped.
 
 ##  Differences to other "frameworks"
 
@@ -393,3 +393,12 @@ I mentioned at the beginning that there could be performance issues if using the
 We can already do that somewhat with p-d -- wrap multiple elements inside a div tag, and then add p-d after the div tag.  The problem is that will only pass data to DOM elements under the p-d tag.  We can't pass data down to elements below the element that actually triggered the event.
 
 For that we have p-s, which stands for "pass sideways".  It differs from p-d only in that the search for matches begins from the triggering element.  Also, it can actually pass things to itself.
+
+For similar reasons, there is a special string used to refer to an element of [composedPath()](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath):
+
+```html
+<p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
+```
+
+This pulls the node from event.composedPath()[0].node.
+

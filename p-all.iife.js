@@ -378,6 +378,133 @@ if (!customElements.get(PD.is)) {
     customElements.define(PD.is, PD);
 }
 //# sourceMappingURL=p-d.js.map
+//const attrib_filter = 'attrib-filter';
+class PDX extends PD {
+    static get is() { return 'p-d-x'; }
+    parseMapping(mapTokens, cssSelector) {
+        const splitPropPointer1 = mapTokens[1].split(';');
+        splitPropPointer1.forEach(token => {
+            const splitPropPointer = token.split(':');
+            this._cssPropMap.push({
+                cssSelector: cssSelector,
+                propTarget: splitPropPointer[0],
+                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
+            });
+        });
+    }
+    commit(target, map, val) {
+        if (map.propSource === '.' && map.propTarget === '.') {
+            Object.assign(target, val);
+            return;
+        }
+        const targetPath = map.propTarget;
+        if (targetPath.startsWith('.')) {
+            const cssClass = targetPath.substr(1);
+            const method = val ? 'add' : 'remove';
+            target.classList[method](cssClass);
+        }
+        else if (targetPath.indexOf('.') > -1) {
+            const pathTokens = targetPath.split('.');
+            // const lastToken = pathTokens.pop();
+            this.createNestedProp(target, pathTokens, val);
+        }
+        else {
+            target[targetPath] = val;
+        }
+    }
+    createNestedProp(target, pathTokens, val) {
+        const firstToken = pathTokens.shift();
+        const tft = target[firstToken];
+        const returnObj = { [firstToken]: tft ? tft : {} };
+        let targetContext = returnObj[firstToken];
+        const lastToken = pathTokens.pop();
+        pathTokens.forEach(token => {
+            let newContext = targetContext[token];
+            if (!newContext) {
+                newContext = targetContext[token] = {};
+            }
+            targetContext = newContext;
+        });
+        targetContext[lastToken] = val;
+        Object.assign(target, returnObj);
+    }
+    attachEventListeners() {
+        if (this._on[0] !== '[') {
+            super.attachEventListeners();
+            return;
+        }
+        const prevSibling = this.getPreviousSib();
+        if (!prevSibling)
+            return;
+        const split = this._on.split(',').map(s => s.substr(1, s.length - 2));
+        const config = {
+            attributes: true,
+            attributeFilter: split
+        };
+        this._attributeObserver = new MutationObserver(mutationRecords => {
+            const values = {};
+            split.forEach(attrib => {
+                values[attrib] = prevSibling.getAttribute(attrib);
+            });
+            const fakeEvent = {
+                mutationRecords: mutationRecords,
+                values: values,
+                target: prevSibling
+            };
+            this._handleEvent(fakeEvent);
+        });
+        this._attributeObserver.observe(prevSibling, config);
+    }
+    disconnect() {
+        if (this._attributeObserver)
+            this._attributeObserver.disconnect();
+    }
+    disconnectedCallback() {
+        this.disconnect();
+        super.disconnectedCallback();
+    }
+    static define(name, fn) {
+        class newClass extends XtallatX(HTMLElement) {
+            constructor() {
+                super(...arguments);
+                this._connected = false;
+            }
+            connectedCallback() {
+                this._upgradeProperties(['input', 'disabled']);
+                this._connected = true;
+            }
+            get input() {
+                return this._input;
+            }
+            set input(val) {
+                this._input = val;
+                this.value = fn(val);
+                this.onPropsChange();
+            }
+            attributeChangedCallback(name, oldVal, newVal) {
+                super.attributeChangedCallback(name, oldVal, newVal);
+                switch (name) {
+                    case 'input':
+                        this.input = JSON.parse(newVal);
+                        break;
+                    default:
+                        this.onPropsChange();
+                }
+            }
+            onPropsChange() {
+                if (!this._disabled)
+                    return;
+                this.de('value', {
+                    value: this.value
+                });
+            }
+        }
+        customElements.define(name, newClass);
+    }
+}
+if (!customElements.get(PDX.is))
+    customElements.define(PDX.is, PDX);
+//# sourceMappingURL=p-d-x.js.map
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -441,5 +568,65 @@ if (!customElements.get(PU.is)) {
     customElements.define(PU.is, PU);
 }
 //# sourceMappingURL=p-u.js.map
+class PDestal extends PDX {
+    constructor() {
+        super(...arguments);
+        this._previousValues = {};
+    }
+    static get is() { return 'p-destal'; }
+    getPreviousSib() {
+        let parent = this;
+        while (parent = parent.parentNode) {
+            if (parent.nodeType === 11) {
+                return parent['host'];
+            }
+            else if (parent.tagName.indexOf('-') > -1) {
+                return parent;
+            }
+            else if (parent.tagName === 'HTML') {
+                this.watchLocation();
+                return null;
+            }
+        }
+        this._useLocation;
+    }
+    doFakeEvent() {
+        const split = this._on.split(',');
+        const searchParams = new URLSearchParams(location.search);
+        let changedVal = false;
+        split.forEach(param => {
+            const trimmedParam = param.substr(1, param.length - 2);
+            const searchParm = searchParams.get(trimmedParam);
+            if (!changedVal && (searchParm !== this._previousValues[trimmedParam])) {
+                changedVal = true;
+            }
+            this._previousValues[trimmedParam] = searchParm;
+        });
+        if (changedVal) {
+            const fakeEvent = {
+                target: this._previousValues,
+            };
+            this._handleEvent(fakeEvent);
+        }
+    }
+    watchLocation() {
+        window.addEventListener('popstate', e => {
+            this.doFakeEvent();
+        });
+        this.doFakeEvent();
+    }
+}
+if (!customElements.get(PDestal.is))
+    customElements.define(PDestal.is, PDestal);
+//# sourceMappingURL=p-destal.js.map
+class PS extends PDX {
+    static get is() { return 'p-s'; }
+    pass(e) {
+        this.passDown(e.target, e, 0);
+    }
+}
+if (!customElements.get(PS.is))
+    customElements.define(PS.is, PS);
+//# sourceMappingURL=p-s.js.map
     })();  
         

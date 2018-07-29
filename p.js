@@ -202,7 +202,8 @@ export class P extends XtallatX(HTMLElement) {
                         context = context[cpath[0]];
                     }
                     else {
-                        context = context.composedPath(parseInt(cpath[1]));
+                        context = context[cp]()[parseInt(cpath[1])];
+                        debugger;
                     }
                 }
                 else {
