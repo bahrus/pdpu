@@ -186,7 +186,7 @@ For simple, trivial code, or preliminary prototyping, this might not be an issue
 
 ###  Defining a piping custom element
 
-p-d-x will provide a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
+p-d-x provides a convenience function that allows you to generate a "pipe" custom element with as few keystrokes as possible.
 
 You can use traditional JavaScript import:
 
@@ -218,7 +218,7 @@ Then you can  replace the pipeline processing script tag above with:
 
 Of course, teams will need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help with that in the future.
 
-If the issue of mixing JavaScript script tags inside markup is not a serious concern for you, but you do want to benefit from making the data flow unidirectionally, like a novel, you can still inline the code.  It would look like this:
+If the issue of mixing JavaScript script tags inside markup is not a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, like a novel, you can still inline the code.  It would look like this:
 
 ```html
 <p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
