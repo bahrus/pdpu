@@ -67,7 +67,7 @@
     <p-d on="input" to="#myTree{searchString}"></p-d>
     <xtal-fetch fetch href="directory.json" as="json"></xtal-fetch>
     <p-d on="result-changed" to="#myTree{nodes}" m="1"></p-d>
-    <script type="module ish">
+    <script nomodule>
       ({
         childrenFn: node => node.children,
         isOpenFn: node => node.expanded,
@@ -92,7 +92,7 @@
     <!-- <p-d-x on="eval" to="{childrenFn:childrenFn;isOpenFn:isOpenFn;levelSetterFn:levelSetterFn;toggleNodeFn:toggleNodeFn;testNodeFn:testNodeFn;compareFn:compareFn}"></p-d-x> -->
     <p-d-x on="eval" to="{.:.}"></p-d-x>
     <xtal-tree id="myTree"></xtal-tree>
-    <p-d on="viewable-nodes-changed" to="iron-list{items};#viewNodesChangeHandler{input}"></p-d>
+    <p-d on="viewable-nodes-changed" to="iron-list{items};view-nodes-change-handler{input}"></p-d>
     <p-d on="toggled-node-changed" to="#toggledNodeChangeHandler{input}"></p-d>
     <iron-list style="height:400px" id="nodeList" mutable-data p-d-if="#searchProp">
         <template>
@@ -111,15 +111,22 @@
         </template>
       </iron-list>
       <p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
-      <script type="module ish">
+      <script nomodule>
         inp => {
           if(typeof(fvi) !== 'undefined' && fvi > -1){
             nodeList.scrollToIndex(fvi);
           }
         }
       </script>
-      <p-d id="viewNodesChangeHandler" on="eval" to="{whoknows}"></p-d>
-      <script type="module ish">
+      <script type="module">
+        import {PDQ} from '../PDQ.js';
+        PDQ.define('view-nodes-change-handler', inp =>{
+          fvi = nodeList.firstVisibleIndex;
+        })
+      </script>
+      <view-nodes-change-handler></view-nodes-change-handler>
+      <!-- <p-d id="viewNodesChangeHandler" on="eval" to="{whoknows}"></p-d> -->
+      <script noodule>
         inp =>{
           fvi = nodeList.firstVisibleIndex;
         }
@@ -127,7 +134,6 @@
       <p-d id="toggledNodeChangeHandler" on="eval" to="{whoknows}"></p-d>
   </div>
   <script>
-   
 
   </script>
 </body>

@@ -17,7 +17,7 @@ Here I am defining a "framework" as a "common, centrally managed language used t
 
 It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial) or [sweet.js](https://www.sweetjs.org/), only a hell of a lot easier.
 
-NB:  Lit-html (also by the Polymer team) appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://github.com/Polymer/lit-html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  hyperHTML has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
+NB:  Lit-html (also by the Polymer team) appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  hyperHTML has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
@@ -191,25 +191,15 @@ p-d-x provides a convenience function that allows you to generate a "pipe" custo
 You can use traditional JavaScript import:
 
 ```JavaScript
-import {PDX} from 'p-d.p-u/p-d-x.js';
-PDX.define('my-pipeline-fn', pd => {
+import {PDQ} from 'p-d.p-u/PDQ.js';
+PDQ.define('my-pipeline-fn', pd => {
     // do stuff
     return pd.input;
 });
 ```
 
-or if you prefer:
 
-```JavaScript
-customElements.when('p-d-x').then(() =>{
-    customElements.get('p-d-x').define('my-pipeline-fn', pd => {
-        // do stuff
-        return pd.input;
-    })
-}
-```
-
-Then you can  replace the pipeline processing script tag above with:
+Then you can replace the pipeline processing script tag above with:
 
 ```html
 <my-pipeline-fn></my-pipeline-fn>
@@ -223,8 +213,8 @@ If the issue of mixing JavaScript script tags inside markup is not a serious con
 ```html
 <p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
 <script type="module">
-    import {PDX} from 'https://unpkg.com/p-d.p-u@0.0.50/p-d-x.js?module';
-    PDX.define('selected-node-change-handler', () =>{
+    import {PDQ} from 'https://unpkg.com/p-d.p-u@0.0.50/PDQ.js?module';
+    PDX.define('selected-node-change-handler', (input) =>{
         if((typeof(nodeList) === 'undefined') || !nodeList.items) return;
         const idx = nodeList.firstVisibleIndex;
         nodeList.items = nodeList.items.slice();

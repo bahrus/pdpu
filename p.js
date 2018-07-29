@@ -203,7 +203,6 @@ export class P extends XtallatX(HTMLElement) {
                     }
                     else {
                         context = context[cp]()[parseInt(cpath[1])];
-                        debugger;
                     }
                 }
                 else {

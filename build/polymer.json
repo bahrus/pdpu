@@ -12,6 +12,8 @@
     "p-d.p-d-x.p-u.p-destal.js",
     "p-s.js",
     "p-all.iife.js",
+    "PDQ.js",
+    "PDQ.iife.js",
     "index.html"
   ],
   "extraDependencies": [
