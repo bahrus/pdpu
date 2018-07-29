@@ -218,6 +218,27 @@ Then you can  replace the pipeline processing script tag above with:
 
 Of course, teams will need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help with that in the future.
 
+If the issue of mixing JavaScript script tags inside markup is not a serious concern for you, but you do want to benefit from making the data flow unidirectionally, like a novel, you can still inline the code.  It would look like this:
+
+```html
+<p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
+<script type="module">
+    import {PDX} from 'https://unpkg.com/p-d.p-u@0.0.50/p-d-x.js?module';
+    PDX.define('selected-node-change-handler', () =>{
+        if((typeof(nodeList) === 'undefined') || !nodeList.items) return;
+        const idx = nodeList.firstVisibleIndex;
+        nodeList.items = nodeList.items.slice();
+        nodeList.scrollToIndex(idx);
+    })
+</script>
+<selected-node-change-handler></selected-node-change-handler>
+```
+
+Now if you add a breakpoint, it will take you to the code, where you can see the surrounding markup.  But you will only see the *markup*, not the actual live elements, unfortunately.  Just saying.
+
+Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some beneifits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
+
+
 ## Adding a simple JavaScript event handler
 
 Suppose we want to attach a simple JavaScript event handler to a DOM Element.   Using p-d, it is possible to do this (if a bit strange looking):
