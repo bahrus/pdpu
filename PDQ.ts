@@ -58,3 +58,4 @@ export class PDQ{
 
     }
 }
+(<any>customElements)['PDQ'] = PDQ;

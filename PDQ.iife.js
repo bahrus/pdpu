@@ -129,6 +129,7 @@ class PDQ {
         customElements.define(name, newClass);
     }
 }
+customElements['PDQ'] = PDQ;
 //# sourceMappingURL=PDQ.js.map
     })();  
         
