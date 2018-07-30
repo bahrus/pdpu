@@ -95,7 +95,7 @@ class PDQ {
                 }
             }
             onPropsChange() {
-                if (!this._disabled)
+                if (this._disabled)
                     return;
                 const val = this.value;
                 this.de('value', {
@@ -119,7 +119,7 @@ class PDQ {
                         }
                 }
                 if (valueSummary !== null)
-                    this.setAttribute(valueSummary, valueSummary);
+                    this.setAttribute('value-ish', valueSummary);
             }
         }
         if (adjustClass) {
