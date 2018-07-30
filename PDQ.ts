@@ -28,7 +28,7 @@ export class PDQ{
                 }
             }
             onPropsChange(){
-                if(!this._disabled) return;
+                if(this._disabled) return;
                 const val = this.value;
                 this.de('value', {
                     value: val
@@ -48,7 +48,7 @@ export class PDQ{
                             valueSummary = Object.keys(val).toString()
                         }
                 }
-                if(valueSummary !== null) this.setAttribute(valueSummary, valueSummary);
+                if(valueSummary !== null) this.setAttribute('value-ish', valueSummary);
             }
         }
         if(adjustClass){
