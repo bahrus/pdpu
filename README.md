@@ -229,18 +229,21 @@ Now if you add a breakpoint, it will take you to the code, where you can see the
 
 Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some beneifits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
 
-However, you might find the following helpful:
+However, you might find the following helpful.  What follows is Chrome-centric discussion, but other browsers should work as well:
 
 In the console, type:
 
-import('https://cdn.jsdelivr.net/npm/xtal-shell@0.0.4/$hell.js');
+import('https://unpkg.com/xtal-shell@0.0.6/$hell.js');
 
-Then, as you inspect custom elements (in Chrome dev tools, right-click on elements in the Elements tab), you can type:
+Then make you you select the Elements tab in the dev tools, in such a way that you can see both the elements and the console at the same time.
+
+Then, as you inspect custom elements, you can type this in the console:
 
 $hell.getProperties($0)
 
-This will list the values of Polymer properties, as well as observedAttributes.  It also displays the constructor, which you can right-click on, and go to definition.
+You should see an object, which you will want to expand.  This will list the values of Polymer properties, as well as observedAttributes, as well as Object.getOwnProperties.  It also displays the constructor, which you can right-click on, and go to definition to see the code for the web component.
 
+Now as you select other elements in the elements tab, in the console, hit the up arrow and enter.
 
 ## Adding a simple JavaScript event handler
 
