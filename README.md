@@ -227,6 +227,8 @@ If the issue of mixing JavaScript script tags inside markup is not a serious con
 
 Now if you add a breakpoint, it will take you to the code, where you can see the surrounding markup.  But you will only see the *markup*, not the actual live elements, unfortunately.  Just saying.
 
+## Debugging Tips
+
 Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some beneifits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
 
 However, you might find the following helpful.  What follows is Chrome-centric discussion, but other browsers should work as well:
@@ -235,7 +237,7 @@ In the console, type:
 
 import('https://unpkg.com/xtal-shell@0.0.6/$hell.js');
 
-Then make you you select the Elements tab in the dev tools, in such a way that you can see both the elements and the console at the same time.
+Then make you sure you select the Elements tab in the dev tools, in such a way that you can see both the elements and the console at the same time.
 
 Then, as you inspect custom elements, you can type this in the console:
 
