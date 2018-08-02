@@ -11,7 +11,7 @@ These two components dream the impossible dream -- be able to progressively, dec
 
 Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  
 
-These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree) 
+These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree).  See the section "p-s" for more discussion about this. 
 
 Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who still uses the word lasslorn? 
 
@@ -73,7 +73,7 @@ It appears that the css flex/grid doesn't count elements with display:none as co
 </style>
 ```
 
-There is likely less overhead from components with display:none, as they likely aren't added to the [rendering tree](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#Render_tree_construction).
+Another benefit of making this explicit:  There is likely less overhead from components with display:none, as they may not get added to the [rendering tree](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#Render_tree_construction).
 
 
 ## Compact notation
@@ -116,7 +116,7 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
 
 ```html   
     <text-box></text-box>                                                               
-    <p-d id="myPassDownTag" on="input" to="prepend-string{input}"></p-d>
+    <p-d id="myPassDownTag" on="input" to="url-builder{input}"></p-d>
     <h3>Search Employees</h3>
     <div p-d-if="#myPassDownTag">
         <url-builder></url-builder>
@@ -183,36 +183,36 @@ It would be amazing if one could debug the code found in these inline script pip
 
 The problem is this would pollute the global namespace with functions, and one developer's function overwriting another could trigger major team dysfunction. 
 
-In the lack of this support, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?  And as the JavaScript grows, the ability to get a good grasp of the UI would diminish. 
+In the lack of this support, if you use pipeline processing as shown above, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?  And as the JavaScript grows, the ability to get a good grasp of the UI diminishes. 
 
 For simple, trivial code, or preliminary prototyping, this might not be an issue.  But as the code grows in complexity and maturity, we basically need to start adding "hyperlinks" in the markup, if you follow my drift.  
 
 ###  Defining a piping custom element
 
-A convenience function is provided, that allows you to generate a "pipe" custom element with as few keystrokes as possible.
+A convenience function is provided, that allows you to generate a "pipe" or "action" custom element with as few keystrokes as possible.
 
 You can use traditional JavaScript import:
 
 ```JavaScript
 import {PDQ} from 'p-d.p-u/PDQ.js';
-PDQ.define('my-pipeline-fn', pd => {
+PDQ.define('my-pipeline-action', input => {
     // do stuff
-    return pd.input;
+    return myProcessedResult;
 });
 ```
 
-This will create a custom element with name my-pipeline-fn.  It applies the second argument, a function to the input property of the custom element, every tie the input changes.  It then stores the result in property value, and emits and event with name value-changed.
+This will create a custom element with name my-pipeline-action.  It applies the second argument, a function to the input property of the custom element, every tie the input changes.  It then stores the result in property "value", and emits and event with name "value-changed".
 
 Then you can replace the pipeline processing script tag above with:
 
 ```html
-<my-pipeline-fn></my-pipeline-fn>
+<my-pipeline-action></my-pipeline-action>
 <p-d on="value-changed" to="{input}">
 ```
 
 Of course, teams would need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
-If the issue of mixing JavaScript script tags inside markup is not a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, like a novel, you can still inline the code.  It would look like this:
+If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away for the code, like a novel, you can still inline the code.  It would look like this:
 
 ```html
 <p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
@@ -238,7 +238,7 @@ However, you might find the following helpful.  What follows is Chrome-centric d
 
 In the console, type:
 
-import('https://unpkg.com/xtal-shell@0.0.6/$hell.js');
+import('https://unpkg.com/xtal-shell@0.0.7/$hell.js');
 
 Then make you sure you select the Elements tab in the dev tools, in such a way that you can see both the elements and the console at the same time.
 
@@ -248,7 +248,7 @@ $hell.getProperties($0)
 
 You should see an object, which you will want to expand.  This will list the values of Polymer properties, as well as observedAttributes, as well as Object.getOwnProperties.  It also displays the constructor, which you can right-click on, and go to definition to see the code for the web component.
 
-Now as you select other elements in the elements tab, in the console, hit the up arrow and enter.
+Now as you select other elements in the elements tab, in the console, hit the up arrow and enter (so you don't have to keep typing "$hell.getProperties($0)" each time).  You will have to keep expanding the result.
 
 ## Adding a simple JavaScript event handler
 

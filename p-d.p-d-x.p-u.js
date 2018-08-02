@@ -425,8 +425,13 @@ class PDX extends PD {
             targetContext = newContext;
         });
         targetContext[lastToken] = val;
-        if (!tft)
+        //this controversial line is to force the target to see new properties, even though we are updating nested properties.
+        //In some scenarios, this will fail (like if updating element.dataset), but hopefull it's okay to ignore such failures 
+        try {
             Object.assign(target, returnObj);
+        }
+        catch (e) { }
+        ;
     }
     attachEventListeners() {
         if (this._on[0] !== '[') {
