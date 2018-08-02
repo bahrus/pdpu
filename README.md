@@ -73,6 +73,9 @@ It appears that the css flex/grid doesn't count elements with display:none as co
 </style>
 ```
 
+There is likely less overhead from components with display:none, as they likely aren't added to the [rendering tree](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#Render_tree_construction).
+
+
 ## Compact notation
 One can't help noticing quite a bit of redundancy in the markup above.  We can reduce this redundancy if we apply some default settings.
 

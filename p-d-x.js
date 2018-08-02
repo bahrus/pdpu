@@ -47,7 +47,8 @@ export class PDX extends PD {
             targetContext = newContext;
         });
         targetContext[lastToken] = val;
-        Object.assign(target, returnObj);
+        if (!tft)
+            Object.assign(target, returnObj);
     }
     attachEventListeners() {
         if (this._on[0] !== '[') {
