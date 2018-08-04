@@ -120,6 +120,9 @@
       </script>
       <script type="module">
         import {PDQ} from '../PDQ.js';
+        const t = PDQ.$;
+        const s = t('a <span>b</span>');
+        console.log(s);
         PDQ.define('view-nodes-change-handler', inp =>{
           fvi = nodeList.firstVisibleIndex;
         })

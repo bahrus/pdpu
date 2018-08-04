@@ -128,6 +128,9 @@ class PDQ {
         }
         customElements.define(name, newClass);
     }
+    static $(str) {
+        return str.replace(/(<([^>]+)>)/ig, '');
+    }
 }
 customElements['PDQ'] = PDQ;
 //# sourceMappingURL=PDQ.js.map

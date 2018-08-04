@@ -57,5 +57,8 @@ export class PDQ{
         customElements.define(name, newClass);
 
     }
+    public static $(str: string){
+        return str.replace(/(<([^>]+)>)/ig, '');
+    }
 }
 (<any>customElements)['PDQ'] = PDQ;
