@@ -40,7 +40,7 @@ export class PDQ {
                     case 'string':
                     case 'boolean':
                     case 'number':
-                        valueSummary = 'array:' + val.toString();
+                        valueSummary = val.toString().substr(0, 10);
                         break;
                     case 'object':
                         if (!val)
