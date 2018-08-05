@@ -15,35 +15,40 @@
 
     <test-fixture id="BasicTestFixture">
       <template>
-        <p-d></p-d>
+        <button data-val="hello"></button>
+        <p-d on="click" if="button" to="{innerText:target.dataset.val}"></p-d>
+        <div></div>
       </template>
     </test-fixture>
 
-    <test-fixture id="ChangedPropertyTestFixture">
+    <!-- <test-fixture id="ChangedPropertyTestFixture">
       <template>
         <p-d prop1="new-prop1"></p-d>
       </template>
-    </test-fixture>
+    </test-fixture> -->
 
     <script type="module">
       suite('p-d', () => {
 
         test('instantiating the element with default properties works', () => {
           const element = fixture('BasicTestFixture');
-          assert.equal(element.prop1, 'p-d');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello p-d!');
+          const btn = element[0];
+          const div = element[2];
+          btn.click();
+          assert.equal(div.innerText, 'hello');
+          // const elementShadowRoot = element.shadowRoot;
+          // const elementHeader = elementShadowRoot.querySelector('h2');
+          // assert.equal(elementHeader.innerHTML, 'Hello p-d!');
         });
 
-        test('setting a property on the element works', () => {
-          // Create a test fixture
-          const element = fixture('ChangedPropertyTestFixture');
-          assert.equal(element.prop1, 'new-prop1');
-          const elementShadowRoot = element.shadowRoot;
-          const elementHeader = elementShadowRoot.querySelector('h2');
-          assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
-        });
+        // test('setting a property on the element works', () => {
+        //   // Create a test fixture
+        //   const element = fixture('ChangedPropertyTestFixture');
+        //   assert.equal(element.prop1, 'new-prop1');
+        //   const elementShadowRoot = element.shadowRoot;
+        //   const elementHeader = elementShadowRoot.querySelector('h2');
+        //   assert.equal(elementHeader.innerHTML, 'Hello new-prop1!');
+        // });
 
       });
     </script>
