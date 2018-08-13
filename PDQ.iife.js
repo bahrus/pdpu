@@ -25,6 +25,10 @@ function XtallatX(superClass) {
                 this.removeAttribute(name);
             }
         }
+        to$(number) {
+            const mod = number % 2;
+            return (number - mod) / 2 + '-' + mod;
+        }
         incAttr(name) {
             const ec = this._evCount;
             if (name in ec) {
@@ -33,7 +37,7 @@ function XtallatX(superClass) {
             else {
                 ec[name] = 0;
             }
-            this.attr(name, ec[name].toString());
+            this.attr('data-' + name, this.to$(ec[name]));
         }
         attributeChangedCallback(name, oldVal, newVal) {
             switch (name) {
@@ -64,7 +68,6 @@ function XtallatX(superClass) {
         }
     };
 }
-//# sourceMappingURL=xtal-latx.js.map
 class PDQ {
     static define(name, fn, adjustClass) {
         class newClass extends XtallatX(HTMLElement) {
@@ -106,7 +109,7 @@ class PDQ {
                     case 'string':
                     case 'boolean':
                     case 'number':
-                        valueSummary = 'array:' + val.toString();
+                        valueSummary = val.toString().substr(0, 10);
                         break;
                     case 'object':
                         if (!val)
@@ -133,6 +136,5 @@ class PDQ {
     }
 }
 customElements['PDQ'] = PDQ;
-//# sourceMappingURL=PDQ.js.map
     })();  
         

@@ -25,6 +25,10 @@ function XtallatX(superClass) {
                 this.removeAttribute(name);
             }
         }
+        to$(number) {
+            const mod = number % 2;
+            return (number - mod) / 2 + '-' + mod;
+        }
         incAttr(name) {
             const ec = this._evCount;
             if (name in ec) {
@@ -33,7 +37,7 @@ function XtallatX(superClass) {
             else {
                 ec[name] = 0;
             }
-            this.attr(name, ec[name].toString());
+            this.attr('data-' + name, this.to$(ec[name]));
         }
         attributeChangedCallback(name, oldVal, newVal) {
             switch (name) {
@@ -64,7 +68,6 @@ function XtallatX(superClass) {
         }
     };
 }
-//# sourceMappingURL=xtal-latx.js.map
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';
@@ -283,7 +286,6 @@ class P extends XtallatX(HTMLElement) {
             this._siblingObserver.disconnect();
     }
 }
-//# sourceMappingURL=p.js.map
 const m = 'm';
 const p_d_if = 'p-d-if';
 const PDIf = 'PDIf';
@@ -376,7 +378,6 @@ class PD extends P {
 if (!customElements.get(PD.is)) {
     customElements.define(PD.is, PD);
 }
-//# sourceMappingURL=p-d.js.map
 //const attrib_filter = 'attrib-filter';
 class PDX extends PD {
     static get is() { return 'p-d-x'; }
@@ -471,7 +472,6 @@ class PDX extends PD {
 }
 if (!customElements.get(PDX.is))
     customElements.define(PDX.is, PDX);
-//# sourceMappingURL=p-d-x.js.map
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -534,7 +534,6 @@ class PU extends P {
 if (!customElements.get(PU.is)) {
     customElements.define(PU.is, PU);
 }
-//# sourceMappingURL=p-u.js.map
 class PDestal extends PDX {
     constructor() {
         super(...arguments);
@@ -585,7 +584,6 @@ class PDestal extends PDX {
 }
 if (!customElements.get(PDestal.is))
     customElements.define(PDestal.is, PDestal);
-//# sourceMappingURL=p-destal.js.map
 class PS extends PDX {
     static get is() { return 'p-s'; }
     pass(e) {
@@ -594,6 +592,5 @@ class PS extends PDX {
 }
 if (!customElements.get(PS.is))
     customElements.define(PS.is, PS);
-//# sourceMappingURL=p-s.js.map
     })();  
         
