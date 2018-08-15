@@ -3,8 +3,9 @@ export class PDQ {
     static define(name, fn, adjustClass) {
         class newClass extends XtallatX(HTMLElement) {
             constructor() {
-                super(...arguments);
+                super();
                 this._connected = false;
+                this.style.display = 'none';
             }
             connectedCallback() {
                 this._upgradeProperties(['input', 'disabled']);
@@ -66,5 +67,5 @@ export class PDQ {
         return str.replace(/(<([^>]+)>)/ig, '');
     }
 }
-customElements['PDQ'] = PDQ;
+customElements['PDQ'] = PDQ; // for ES6 Module challenged browsers.
 //# sourceMappingURL=PDQ.js.map

@@ -22,7 +22,7 @@
   "builds":[
     {
       "name": "ES5",
-      "js": {"minify": true, "compile": true},
+      "js": {"minify": false, "compile": true},
       "html": {"minify": true},
       "css" : {"minify": true}
     },

@@ -87,7 +87,7 @@ What we end up with is shown below:
 ```html
 <!-- abreviated syntax -->
 <style>
-[nv], p-d{
+[nv]{
     display:none;
 }
 </style>
@@ -179,7 +179,7 @@ If the expression inside the script tag evaluates to a function, it is evaluated
 
 The intention of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
 
-It would be amazing if one could debug the code found in these inline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements (and even better, be able to examine the property values, attributes, etc.) 
+It would be amazing if one could debug the code found in these inline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements. 
 
 The problem is this would pollute the global namespace with functions, and one developer's function overwriting another could trigger major team dysfunction. 
 
@@ -191,7 +191,7 @@ For simple, trivial code, or preliminary prototyping, this might not be an issue
 
 A convenience function is provided, that allows you to generate a "pipe" or "action" custom element with as few keystrokes as possible.
 
-You can use traditional JavaScript import:
+Here's the syntax:
 
 ```JavaScript
 import {PDQ} from 'p-d.p-u/PDQ.js';
@@ -201,7 +201,7 @@ PDQ.define('my-pipeline-action', input => {
 });
 ```
 
-This will create a custom element with name my-pipeline-action.  It applies the second argument, a function to the input property of the custom element, every tie the input changes.  It then stores the result in property "value", and emits and event with name "value-changed".
+This will create a custom element with name "my-pipeline-action".  It applies the second argument, a function, to the "input" property of the custom element, every time the input changes.  It then stores the result in property "value", and emits an event with name "value-changed".
 
 Then you can replace the pipeline processing script tag above with:
 
@@ -212,13 +212,13 @@ Then you can replace the pipeline processing script tag above with:
 
 Of course, teams would need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
-If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away for the code, like a novel, you can still inline the code.  It would look like this:
+If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the the code, you can still inline the code.  It would look like this:
 
 ```html
 <p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
 <script type="module">
-    import {PDQ} from 'https://unpkg.com/p-d.p-u@0.0.50/PDQ.js?module';
-    PDX.define('selected-node-change-handler', (input) =>{
+    import {PDQ} from 'https://unpkg.com/p-d.p-u@0.0.64/PDQ.js?module';
+    PDQ.define('selected-node-change-handler', (input) =>{
         if((typeof(nodeList) === 'undefined') || !nodeList.items) return;
         const idx = nodeList.firstVisibleIndex;
         nodeList.items = nodeList.items.slice();

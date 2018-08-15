@@ -23,7 +23,7 @@
     {
       "name": "ES5",
       "js": {
-        "minify": true,
+        "minify": false,
         "compile": true
       },
       "html": {

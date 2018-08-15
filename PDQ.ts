@@ -3,6 +3,10 @@ import {XtallatX} from 'xtal-latx/xtal-latx.js';
 export class PDQ{
     static define(name: string, fn: (input: any) => any, adjustClass?: (newClass: any) => boolean){
         class newClass extends XtallatX(HTMLElement) {
+            constructor(){
+                super();
+                this.style.display = 'none';
+            }
             _connected = false;
             connectedCallback() {
                 this._upgradeProperties(['input', 'disabled']);
@@ -61,4 +65,4 @@ export class PDQ{
         return str.replace(/(<([^>]+)>)/ig, '');
     }
 }
-(<any>customElements)['PDQ'] = PDQ;
+(<any>customElements)['PDQ'] = PDQ; // for ES6 Module challenged browsers.
