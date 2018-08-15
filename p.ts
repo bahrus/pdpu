@@ -10,6 +10,10 @@ const noblock = 'noblock';
 const iff = 'if';
 const to = 'to';
 export abstract class P extends XtallatX(HTMLElement){
+    constructor(){
+        super();
+        this.style.display = 'none';
+    }
     _on!: string;
     get on(){
         return this._on;

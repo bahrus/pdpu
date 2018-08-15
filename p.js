@@ -4,6 +4,10 @@ const noblock = 'noblock';
 const iff = 'if';
 const to = 'to';
 export class P extends XtallatX(HTMLElement) {
+    constructor() {
+        super();
+        this.style.display = 'none';
+    }
     get on() {
         return this._on;
     }
