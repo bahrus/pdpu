@@ -266,6 +266,8 @@ Suppose we want to attach a simple JavaScript event handler to a DOM Element.   
 <p-d on="eval" to="{NA}"></p-d>
 ```
 
+This is kind of a mind twister to understand.  The alternative element [xtal-deco](https://www.webcomponents.org/element/xtal-decorator), which is quite similar, provides a much more intuitive way of dynamically attaching event handlers to other DOM elements.
+
 ## Conditional Processing
 
 p-d can be configured to test the event target to make sure it matches a css test.  This is done with the "if" attribute / property:
