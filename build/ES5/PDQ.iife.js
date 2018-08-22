@@ -1,5 +1,16 @@
 //@ts-check
 (function () {
+  function _define(custEl) {
+    var tagName = custEl.is;
+
+    if (customElements.get(tagName)) {
+      console.warn('Already registered ' + tagName);
+      return;
+    }
+
+    customElements.define(tagName, custEl);
+  }
+
   var disabled = 'disabled';
 
   function XtallatX(superClass) {
@@ -20,11 +31,8 @@
         babelHelpers.createClass(_class, [{
           key: "attr",
           value: function attr(name, val, trueVal) {
-            if (val) {
-              this.setAttribute(name, trueVal || val);
-            } else {
-              this.removeAttribute(name);
-            }
+            var setOrRemove = val ? 'set' : 'remove';
+            this[setOrRemove + 'Attribute'](name, trueVal || val);
           }
         }, {
           key: "to$",
@@ -185,6 +193,11 @@
               this.value = fn(val);
               this.onPropsChange();
             }
+          }], [{
+            key: "is",
+            get: function get() {
+              return name;
+            }
           }]);
           return newClass;
         }(XtallatX(HTMLElement));
@@ -193,7 +206,7 @@
           if (!adjustClass(newClass)) return;
         }
 
-        customElements.define(name, newClass);
+        _define(newClass);
       }
     }, {
       key: "$",

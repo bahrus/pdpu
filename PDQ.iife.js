@@ -1,7 +1,15 @@
 
     //@ts-check
     (function () {
-    const disabled = 'disabled';
+    function define(custEl) {
+    let tagName = custEl.is;
+    if (customElements.get(tagName)) {
+        console.warn('Already registered ' + tagName);
+        return;
+    }
+    customElements.define(tagName, custEl);
+}
+const disabled = 'disabled';
 function XtallatX(superClass) {
     return class extends superClass {
         constructor() {
@@ -18,12 +26,8 @@ function XtallatX(superClass) {
             this.attr(disabled, val, '');
         }
         attr(name, val, trueVal) {
-            if (val) {
-                this.setAttribute(name, trueVal || val);
-            }
-            else {
-                this.removeAttribute(name);
-            }
+            const setOrRemove = val ? 'set' : 'remove';
+            this[setOrRemove + 'Attribute'](name, trueVal || val);
         }
         to$(number) {
             const mod = number % 2;
@@ -76,6 +80,7 @@ class PDQ {
                 this._connected = false;
                 this.style.display = 'none';
             }
+            static get is() { return name; }
             connectedCallback() {
                 this._upgradeProperties(['input', 'disabled']);
                 this._connected = true;
@@ -130,7 +135,7 @@ class PDQ {
             if (!adjustClass(newClass))
                 return;
         }
-        customElements.define(name, newClass);
+        define(newClass);
     }
     static $(str) {
         return str.replace(/(<([^>]+)>)/ig, '');

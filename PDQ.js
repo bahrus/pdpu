@@ -1,4 +1,5 @@
 import { XtallatX } from 'xtal-latx/xtal-latx.js';
+import { define } from 'xtal-latx/define.js';
 export class PDQ {
     static define(name, fn, adjustClass) {
         class newClass extends XtallatX(HTMLElement) {
@@ -7,6 +8,7 @@ export class PDQ {
                 this._connected = false;
                 this.style.display = 'none';
             }
+            static get is() { return name; }
             connectedCallback() {
                 this._upgradeProperties(['input', 'disabled']);
                 this._connected = true;
@@ -61,7 +63,7 @@ export class PDQ {
             if (!adjustClass(newClass))
                 return;
         }
-        customElements.define(name, newClass);
+        define(newClass);
     }
     static $(str) {
         return str.replace(/(<([^>]+)>)/ig, '');

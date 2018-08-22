@@ -1,4 +1,5 @@
 import { P } from './p.js';
+import { define } from "./node_modules/xtal-latx/define.js";
 var m = 'm';
 var p_d_if = 'p-d-if';
 var PDIf = 'PDIf';
@@ -135,7 +136,4 @@ function (_P) {
   }]);
   return PD;
 }(P);
-
-if (!customElements.get(PD.is)) {
-  customElements.define(PD.is, PD);
-} //# sourceMappingURL=p-d.js.map
+define(PD); //# sourceMappingURL=p-d.js.map

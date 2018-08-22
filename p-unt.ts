@@ -1,4 +1,5 @@
 import { P, ICssPropMap } from './p.js';
+import {define} from 'xtal-latx/define.js';
 
 const bubbles = 'bubbles';
 const composed = 'composed';
@@ -40,3 +41,4 @@ export class PUnt extends P {
         this.attr(dispatch, val, '');
     }
 }
+define(PUnt;)

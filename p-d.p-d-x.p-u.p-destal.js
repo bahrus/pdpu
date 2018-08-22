@@ -1,7 +1,15 @@
 
     //@ts-check
     (function () {
-    const disabled = 'disabled';
+    function define(custEl) {
+    let tagName = custEl.is;
+    if (customElements.get(tagName)) {
+        console.warn('Already registered ' + tagName);
+        return;
+    }
+    customElements.define(tagName, custEl);
+}
+const disabled = 'disabled';
 function XtallatX(superClass) {
     return class extends superClass {
         constructor() {
@@ -18,12 +26,8 @@ function XtallatX(superClass) {
             this.attr(disabled, val, '');
         }
         attr(name, val, trueVal) {
-            if (val) {
-                this.setAttribute(name, trueVal || val);
-            }
-            else {
-                this.removeAttribute(name);
-            }
+            const setOrRemove = val ? 'set' : 'remove';
+            this[setOrRemove + 'Attribute'](name, trueVal || val);
         }
         to$(number) {
             const mod = number % 2;
@@ -379,9 +383,7 @@ class PD extends P {
         this._siblingObserver.observe(elementToObserve, { childList: true });
     }
 }
-if (!customElements.get(PD.is)) {
-    customElements.define(PD.is, PD);
-}
+define(PD);
 //const attrib_filter = 'attrib-filter';
 class PDX extends PD {
     static get is() { return 'p-d-x'; }
@@ -535,9 +537,7 @@ class PU extends P {
         this.onPropsChange();
     }
 }
-if (!customElements.get(PU.is)) {
-    customElements.define(PU.is, PU);
-}
+define(PU);
 class PDestal extends PDX {
     constructor() {
         super(...arguments);
@@ -586,7 +586,6 @@ class PDestal extends PDX {
         this.doFakeEvent();
     }
 }
-if (!customElements.get(PDestal.is))
-    customElements.define(PDestal.is, PDestal);
+define(PDestal);
     })();  
         

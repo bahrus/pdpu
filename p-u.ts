@@ -1,5 +1,5 @@
 import {P, ICssPropMap} from './p.js';
-
+import {define} from 'xtal-latx/define.js';
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -59,6 +59,4 @@ export class PU extends P{
 
     
 }
-if(!customElements.get(PU.is)){
-    customElements.define(PU.is, PU);
-}
+define(PU);

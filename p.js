@@ -197,11 +197,12 @@ export class P extends XtallatX(HTMLElement) {
         let context = val;
         let firstToken = true;
         const cp = 'composedPath';
+        const cp_ = cp + '_';
         pathTokens.forEach(token => {
             if (context) {
                 if (firstToken && context[cp]) {
                     firstToken = false;
-                    const cpath = token.split(cp + '_');
+                    const cpath = token.split(cp_);
                     if (cpath.length === 1) {
                         context = context[cpath[0]];
                     }

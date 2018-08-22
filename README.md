@@ -352,7 +352,7 @@ For that we have:
 <p-unt on="click" dispatch to="myEventName{toggledNode:target.node}" composed bubbles></p-unt>
 ```
 
-The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.6KB minified and gzipped.
+The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.7KB minified and gzipped.
 
 ## Deluxe version [partially untested]
 

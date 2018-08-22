@@ -1,5 +1,5 @@
 import {P, ICssPropMap} from './p.js';
-
+import {define} from 'xtal-latx/define.js';
 
 const m = 'm';
 const p_d_if = 'p-d-if';
@@ -102,6 +102,4 @@ export class PD extends P{
 
 
 }
-if(!customElements.get(PD.is)){
-    customElements.define(PD.is, PD);
-}
+define(PD);

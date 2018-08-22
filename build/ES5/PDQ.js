@@ -1,4 +1,5 @@
 import { XtallatX } from "./node_modules/xtal-latx/xtal-latx.js";
+import { define as _define } from "./node_modules/xtal-latx/define.js";
 export var PDQ =
 /*#__PURE__*/
 function () {
@@ -85,6 +86,11 @@ function () {
             this.value = fn(val);
             this.onPropsChange();
           }
+        }], [{
+          key: "is",
+          get: function get() {
+            return name;
+          }
         }]);
         return newClass;
       }(XtallatX(HTMLElement));
@@ -93,7 +99,7 @@ function () {
         if (!adjustClass(newClass)) return;
       }
 
-      customElements.define(name, newClass);
+      _define(newClass);
     }
   }, {
     key: "$",

@@ -1,5 +1,16 @@
 //@ts-check
 (function () {
+  function define(custEl) {
+    var tagName = custEl.is;
+
+    if (customElements.get(tagName)) {
+      console.warn('Already registered ' + tagName);
+      return;
+    }
+
+    customElements.define(tagName, custEl);
+  }
+
   var disabled = 'disabled';
 
   function XtallatX(superClass) {
@@ -20,11 +31,8 @@
         babelHelpers.createClass(_class, [{
           key: "attr",
           value: function attr(name, val, trueVal) {
-            if (val) {
-              this.setAttribute(name, trueVal || val);
-            } else {
-              this.removeAttribute(name);
-            }
+            var setOrRemove = val ? 'set' : 'remove';
+            this[setOrRemove + 'Attribute'](name, trueVal || val);
           }
         }, {
           key: "to$",
@@ -528,10 +536,7 @@
     return PD;
   }(P);
 
-  if (!customElements.get(PD.is)) {
-    customElements.define(PD.is, PD);
-  } //const attrib_filter = 'attrib-filter';
-
+  define(PD); //const attrib_filter = 'attrib-filter';
 
   var PDX =
   /*#__PURE__*/
@@ -748,9 +753,7 @@
     return PU;
   }(P);
 
-  if (!customElements.get(PU.is)) {
-    customElements.define(PU.is, PU);
-  }
+  define(PU);
 
   var PDestal =
   /*#__PURE__*/
@@ -831,5 +834,5 @@
     return PDestal;
   }(PDX);
 
-  if (!customElements.get(PDestal.is)) customElements.define(PDestal.is, PDestal);
+  define(PDestal);
 })();

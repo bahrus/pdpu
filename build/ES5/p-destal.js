@@ -1,4 +1,5 @@
 import { PDX } from './p-d-x.js';
+import { define } from "./node_modules/xtal-latx/define.js";
 export var PDestal =
 /*#__PURE__*/
 function (_PDX) {
@@ -77,4 +78,4 @@ function (_PDX) {
   }]);
   return PDestal;
 }(PDX);
-if (!customElements.get(PDestal.is)) customElements.define(PDestal.is, PDestal); //# sourceMappingURL=p-destal.js.map
+define(PDestal); //# sourceMappingURL=p-destal.js.map

@@ -1,4 +1,5 @@
 import {PDX} from './p-d-x.js';
+import {define} from 'xtal-latx/define.js';
 
 export class PS extends PDX{
     static get is(){return 'p-s';}
@@ -7,5 +8,4 @@ export class PS extends PDX{
         this.passDown(e.target as HTMLElement, e, 0);
     }
 }
-
-if (!customElements.get(PS.is)) customElements.define(PS.is, PS);
+define(PS);

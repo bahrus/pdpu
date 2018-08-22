@@ -1,8 +1,10 @@
 import {XtallatX} from 'xtal-latx/xtal-latx.js';
+import {define} from 'xtal-latx/define.js';
 
 export class PDQ{
     static define(name: string, fn: (input: any) => any, adjustClass?: (newClass: any) => boolean){
         class newClass extends XtallatX(HTMLElement) {
+            static get is(){return name;}
             constructor(){
                 super();
                 this.style.display = 'none';
@@ -58,7 +60,7 @@ export class PDQ{
         if(adjustClass){
             if(!adjustClass(newClass)) return;
         }
-        customElements.define(name, newClass);
+        define(newClass);
 
     }
     public static $(str: string){

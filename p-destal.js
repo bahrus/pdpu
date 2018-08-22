@@ -1,4 +1,5 @@
 import { PDX } from './p-d-x.js';
+import { define } from 'xtal-latx/define.js';
 export class PDestal extends PDX {
     constructor() {
         super(...arguments);
@@ -47,6 +48,5 @@ export class PDestal extends PDX {
         this.doFakeEvent();
     }
 }
-if (!customElements.get(PDestal.is))
-    customElements.define(PDestal.is, PDestal);
+define(PDestal);
 //# sourceMappingURL=p-destal.js.map

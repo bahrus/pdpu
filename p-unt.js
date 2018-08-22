@@ -1,4 +1,5 @@
 import { P } from './p.js';
+import { define } from 'xtal-latx/define.js';
 const bubbles = 'bubbles';
 const composed = 'composed';
 const dispatch = 'dispatch';
@@ -36,4 +37,5 @@ export class PUnt extends P {
         this.attr(dispatch, val, '');
     }
 }
+define(PUnt);
 //# sourceMappingURL=p-unt.js.map

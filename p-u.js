@@ -1,4 +1,5 @@
 import { P } from './p.js';
+import { define } from 'xtal-latx/define.js';
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -58,7 +59,5 @@ export class PU extends P {
         this.onPropsChange();
     }
 }
-if (!customElements.get(PU.is)) {
-    customElements.define(PU.is, PU);
-}
+define(PU);
 //# sourceMappingURL=p-u.js.map

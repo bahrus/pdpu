@@ -1,4 +1,5 @@
 import { P } from './p.js';
+import { define } from 'xtal-latx/define.js';
 const m = 'm';
 const p_d_if = 'p-d-if';
 const PDIf = 'PDIf';
@@ -88,7 +89,5 @@ export class PD extends P {
         this._siblingObserver.observe(elementToObserve, { childList: true });
     }
 }
-if (!customElements.get(PD.is)) {
-    customElements.define(PD.is, PD);
-}
+define(PD);
 //# sourceMappingURL=p-d.js.map
