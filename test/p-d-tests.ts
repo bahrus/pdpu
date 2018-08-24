@@ -15,9 +15,6 @@ const path = require('path');
     const devFile = path.resolve(__dirname, '../demo/dev.html');
     await page.goto(devFile);
     const textContent = await page.$eval('#secondEditor', (c: any) => c.input);
-    //if(textContent){
-        
-    //}
     await page.screenshot({path: 'example.png'});
     console.log(textContent);
     await browser.close();

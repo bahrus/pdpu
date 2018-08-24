@@ -20,8 +20,6 @@ const path = require('path');
     const devFile = path.resolve(__dirname, '../demo/dev.html');
     yield page.goto(devFile);
     const textContent = yield page.$eval('#secondEditor', (c) => c.input);
-    //if(textContent){
-    //}
     yield page.screenshot({ path: 'example.png' });
     console.log(textContent);
     yield browser.close();

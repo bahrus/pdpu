@@ -371,7 +371,9 @@ When p-destal is added, the total is ~3.5 kb minified and gzipped.
 
 ##  Differences to other "frameworks"
 
-While these components provide a kind of "framework built with web components", similar to Polymer, there's a fundamental difference.  Unlike Polymer (and other competing frameworks), these components don't depend on the existence of a controlling component which manages state.  Instead, it is a little more JQuery like.  This may be more appealing for some people / use cases, less appealing to others.   But these components should be compatible with such frameworks, and may be useful for filling in some cracks with less boilerplate code.
+While these components provide a kind of "framework built with web components", similar to Polymer, there's a fundamental difference.  Unlike Polymer (and other competing frameworks), these components don't depend on the existence of a controlling component which manages state.  Instead, it is a little more JQuery like.  It is a "peer-to-peer binding framework."  This may be more appealing for some people / use cases, less appealing to others.   But these components should be compatible with such frameworks, and may be useful for filling in some cracks with less boilerplate code.
+
+
 
 ## Install the Polymer-CLI
 
@@ -386,10 +388,9 @@ $ polymer serve
 ## Running Tests
 
 ```
-$ polymer test
+$ node test/p-d-tests
 ```
 
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
 
 ## p-s
 
