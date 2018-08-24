@@ -19,15 +19,16 @@ const path = require('path');
     page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
     const devFile = path.resolve(__dirname, '../demo/dev.html');
     yield page.goto(devFile);
+    const textContent = yield page.$eval('#secondEditor', (c) => c.input);
+    //if(textContent){
+    //}
     yield page.screenshot({ path: 'example.png' });
-    test('timing test', (t) => {
-        t.plan(2);
-        t.equal(typeof Date.now, 'function');
-        var start = Date.now();
-        setTimeout(function () {
-            t.equal(Date.now() - start, 100);
-        }, 100);
-    });
+    console.log(textContent);
     yield browser.close();
+    test('testing dev.html', (t) => {
+        t.equal(typeof Date.now, 'function');
+        t.equal(textContent.data[0].name, 'Harry Potter');
+        t.end();
+    });
 }))();
 //# sourceMappingURL=p-d-tests.js.map

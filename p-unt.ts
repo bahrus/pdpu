@@ -41,4 +41,4 @@ export class PUnt extends P {
         this.attr(dispatch, val, '');
     }
 }
-define(PUnt;)
+define(PUnt);

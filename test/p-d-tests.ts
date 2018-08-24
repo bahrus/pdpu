@@ -14,17 +14,20 @@ const path = require('path');
     page.on('console', (msg: ConsoleMessage) => console.log('PAGE LOG:', msg.text()));
     const devFile = path.resolve(__dirname, '../demo/dev.html');
     await page.goto(devFile);
+    const textContent = await page.$eval('#secondEditor', (c: any) => c.input);
+    //if(textContent){
+        
+    //}
     await page.screenshot({path: 'example.png'});
-    test('timing test', (t: any) => {
-        t.plan(2);
+    console.log(textContent);
+    await browser.close();
+    test('testing dev.html', (t: any) => {
+        
     
         t.equal(typeof Date.now, 'function');
-        var start = Date.now();
-    
-        setTimeout(function () {
-            t.equal(Date.now() - start, 100);
-        }, 100);
+        t.equal(textContent.data[0].name, 'Harry Potter');
+        t.end();
     });
-    await browser.close();
+    
   })();
 
