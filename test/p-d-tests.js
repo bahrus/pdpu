@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -17,6 +16,7 @@ const path = require('path');
         args: ['--allow-file-access-from-files']
     });
     const page = yield browser.newPage();
+    page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
     const devFile = path.resolve(__dirname, '../demo/dev.html');
     yield page.goto(devFile);
     yield page.screenshot({ path: 'example.png' });
