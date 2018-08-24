@@ -10,9 +10,10 @@
     "xtal-latx": "0.0.19"
   },
   "devDependencies": {
+    "@types/node": "^10.9.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "jiife": "0.0.4",
     "tape": "^4.9.1",
-    "@types/node": "10.9.1"
+    "puppeteer": "1.7.0"
   }
 }
