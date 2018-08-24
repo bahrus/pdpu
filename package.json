@@ -10,10 +10,7 @@
     "xtal-latx": "0.0.19"
   },
   "devDependencies": {
-    "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
     "@webcomponents/webcomponentsjs": "^2.0.0",
-    "wct-browser-legacy": "^1.0.0",
-    "jiife": "^0.0.4",
-    "@polymer/polymer": "^3.0.0"
+    "jiife": "^0.0.4"
   }
 }
