@@ -21,7 +21,6 @@ const path = require('path');
     yield page.goto(devFile);
     const textContent = yield page.$eval('#secondEditor', (c) => c.input);
     yield page.screenshot({ path: 'example.png' });
-    console.log(textContent);
     yield browser.close();
     test('testing dev.html', (t) => {
         t.equal(typeof Date.now, 'function');

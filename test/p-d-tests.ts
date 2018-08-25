@@ -16,7 +16,6 @@ const path = require('path');
     await page.goto(devFile);
     const textContent = await page.$eval('#secondEditor', (c: any) => c.input);
     await page.screenshot({path: 'example.png'});
-    console.log(textContent);
     await browser.close();
     test('testing dev.html', (t: any) => {
         
