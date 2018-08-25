@@ -388,7 +388,7 @@ $ polymer serve
 ## Running Tests
 
 ```
-$ node test/p-d-tests
+$ npm tests
 ```
 
 
