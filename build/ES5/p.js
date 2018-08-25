@@ -209,11 +209,12 @@ function (_XtallatX) {
       var context = val;
       var firstToken = true;
       var cp = 'composedPath';
+      var cp_ = cp + '_';
       pathTokens.forEach(function (token) {
         if (context) {
           if (firstToken && context[cp]) {
             firstToken = false;
-            var cpath = token.split(cp + '_');
+            var cpath = token.split(cp_);
 
             if (cpath.length === 1) {
               context = context[cpath[0]];
