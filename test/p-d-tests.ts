@@ -18,9 +18,6 @@ const path = require('path');
     await page.screenshot({path: 'example.png'});
     await browser.close();
     test('testing dev.html', (t: any) => {
-        
-    
-        t.equal(typeof Date.now, 'function');
         t.equal(textContent.data[0].name, 'Harry Potter');
         t.end();
     });

@@ -23,7 +23,6 @@ const path = require('path');
     yield page.screenshot({ path: 'example.png' });
     yield browser.close();
     test('testing dev.html', (t) => {
-        t.equal(typeof Date.now, 'function');
         t.equal(textContent.data[0].name, 'Harry Potter');
         t.end();
     });
