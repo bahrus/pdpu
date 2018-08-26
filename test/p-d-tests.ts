@@ -1,26 +1,23 @@
-import { ConsoleMessage } from "puppeteer";
-
+import { IXtalTestRunner, IXtalTestRunnerOptions } from 'xtal-test/index.js';
+const xt = require('xtal-test/index') as IXtalTestRunner;
 const test = require('tape');
-const puppeteer = require('puppeteer');
-const path = require('path');
-
-(async () => {
-    console.log(__dirname);
-    const browser = await puppeteer.launch({
-        headless: true,
-        args:['--allow-file-access-from-files']
-    });
-    const page = await browser.newPage();
-    page.on('console', (msg: ConsoleMessage) => console.log('PAGE LOG:', msg.text()));
-    const devFile = path.resolve(__dirname, '../demo/dev.html');
-    await page.goto(devFile);
+import { Page } from "puppeteer"; //typescript
+import { Test } from "tape";
+async function customTests(page: Page) {
     const textContent = await page.$eval('#secondEditor', (c: any) => c.input);
-    await page.screenshot({path: 'example.png'});
-    await browser.close();
-    test('testing dev.html', (t: any) => {
+    const TapeTestRunner = {
+        test: test
+    } as Test;
+    TapeTestRunner.test('testing dev.html', (t: any) => {
         t.equal(textContent.data[0].name, 'Harry Potter');
         t.end();
     });
-    
-  })();
+
+}
+
+(async () => {
+    await xt.runTests({
+        path: 'demo/dev.html'
+    }, customTests);
+})();
 

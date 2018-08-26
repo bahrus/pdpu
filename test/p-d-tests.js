@@ -6,25 +6,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+const xt = require('xtal-test/index');
 const test = require('tape');
-const puppeteer = require('puppeteer');
-const path = require('path');
+function customTests(page) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const textContent = yield page.$eval('#secondEditor', (c) => c.input);
+        const TapeTestRunner = {
+            test: test
+        };
+        TapeTestRunner.test('testing dev.html', (t) => {
+            t.equal(textContent.data[0].name, 'Harry Potter');
+            t.end();
+        });
+    });
+}
 (() => __awaiter(this, void 0, void 0, function* () {
-    console.log(__dirname);
-    const browser = yield puppeteer.launch({
-        headless: true,
-        args: ['--allow-file-access-from-files']
-    });
-    const page = yield browser.newPage();
-    page.on('console', (msg) => console.log('PAGE LOG:', msg.text()));
-    const devFile = path.resolve(__dirname, '../demo/dev.html');
-    yield page.goto(devFile);
-    const textContent = yield page.$eval('#secondEditor', (c) => c.input);
-    yield page.screenshot({ path: 'example.png' });
-    yield browser.close();
-    test('testing dev.html', (t) => {
-        t.equal(textContent.data[0].name, 'Harry Potter');
-        t.end();
-    });
+    yield xt.runTests({
+        path: 'demo/dev.html'
+    }, customTests);
 }))();
 //# sourceMappingURL=p-d-tests.js.map

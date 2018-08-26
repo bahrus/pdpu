@@ -212,7 +212,9 @@ Then you can replace the pipeline processing script tag above with:
 
 Of course, teams would need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
-If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the the code, you can still inline the code.  It would look like this:
+## Location, Location, Location
+
+If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the the code, you can still inline the code, without making the code float in space.  It would look like this:
 
 ```html
 <p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
