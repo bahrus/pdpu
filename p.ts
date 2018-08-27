@@ -12,7 +12,7 @@ const to = 'to';
 export abstract class P extends XtallatX(HTMLElement){
     constructor(){
         super();
-        this.style.display = 'none';
+        
     }
     _on!: string;
     get on(){
@@ -86,6 +86,7 @@ export abstract class P extends XtallatX(HTMLElement){
         return <any>prevSibling as HTMLElement;
     }
     connectedCallback(){
+        this.style.display = 'none';
         this._upgradeProperties([on, to, noblock, 'input', iff]);
         setTimeout(() => this.doFake(), 50);
     }
@@ -111,7 +112,7 @@ export abstract class P extends XtallatX(HTMLElement){
     disconnectedCallback(){
         const prevSibling = this.getPreviousSib();
         if(prevSibling && this._boundHandleEvent) this.detach(prevSibling);
-        this.disconnectSiblingObserver();
+        this.disconnect();
     }
     _boundHandleEvent!: any;
     abstract pass(e: Event) : void;
@@ -201,9 +202,9 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     getPropFromPath(val: any, path: string){
         if(!path || path==='.') return val;
-        return this.getPropFromPathTokens(val, path.split('.'));
+        return this.getProp(val, path.split('.'));
     }
-    getPropFromPathTokens(val: any, pathTokens: string[]){
+    getProp(val: any, pathTokens: string[]){
         let context = val;
         let firstToken = true;
         const cp = 'composedPath';
@@ -227,9 +228,9 @@ export abstract class P extends XtallatX(HTMLElement){
         return context;
     }
 
-    disconnectSiblingObserver(){
-        if(this._siblingObserver)  this._siblingObserver.disconnect();
+    disconnect(){
+        if(this._sibObs)  this._sibObs.disconnect();
     }
 
-    _siblingObserver!: MutationObserver;
+    _sibObs!: MutationObserver;
 }

@@ -118,12 +118,8 @@
     babelHelpers.inherits(P, _XtallatX);
 
     function P() {
-      var _this3;
-
       babelHelpers.classCallCheck(this, P);
-      _this3 = babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
-      _this3.style.display = 'none';
-      return _this3;
+      return babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
     }
 
     babelHelpers.createClass(P, [{
@@ -165,12 +161,14 @@
     }, {
       key: "connectedCallback",
       value: function connectedCallback() {
-        var _this4 = this;
+        var _this3 = this;
+
+        this.style.display = 'none';
 
         this._upgradeProperties([on, to, noblock, 'input', iff]);
 
         setTimeout(function () {
-          return _this4.doFake();
+          return _this3.doFake();
         }, 50);
       }
     }, {
@@ -204,7 +202,7 @@
       value: function disconnectedCallback() {
         var prevSibling = this.getPreviousSib();
         if (prevSibling && this._boundHandleEvent) this.detach(prevSibling);
-        this.disconnectSiblingObserver();
+        this.disconnect();
       }
     }, {
       key: "_handleEvent",
@@ -271,7 +269,7 @@
     }, {
       key: "parseTo",
       value: function parseTo() {
-        var _this5 = this;
+        var _this4 = this;
 
         if (this._cssPropMap && this._to === this._lastTo) return;
         this._lastTo = this._to;
@@ -287,11 +285,11 @@
 
           if (!cssSelector && onlyOne) {
             cssSelector = '*';
-            _this5._m = 1;
-            _this5._hasMax = true;
+            _this4._m = 1;
+            _this4._hasMax = true;
           }
 
-          _this5.parseMapping(mapTokens, cssSelector);
+          _this4.parseMapping(mapTokens, cssSelector);
         });
       }
     }, {
@@ -310,11 +308,11 @@
       key: "getPropFromPath",
       value: function getPropFromPath(val, path) {
         if (!path || path === '.') return val;
-        return this.getPropFromPathTokens(val, path.split('.'));
+        return this.getProp(val, path.split('.'));
       }
     }, {
-      key: "getPropFromPathTokens",
-      value: function getPropFromPathTokens(val, pathTokens) {
+      key: "getProp",
+      value: function getProp(val, pathTokens) {
         var context = val;
         var firstToken = true;
         var cp = 'composedPath';
@@ -338,9 +336,9 @@
         return context;
       }
     }, {
-      key: "disconnectSiblingObserver",
-      value: function disconnectSiblingObserver() {
-        if (this._siblingObserver) this._siblingObserver.disconnect();
+      key: "disconnect",
+      value: function disconnect() {
+        if (this._sibObs) this._sibObs.disconnect();
       }
     }, {
       key: "on",
@@ -432,33 +430,33 @@
     }, {
       key: "passDown",
       value: function passDown(start, e, count) {
-        var _this6 = this;
+        var _this5 = this;
 
-        var nextSibling = start;
+        var nextSib = start;
 
-        while (nextSibling) {
-          if (nextSibling.tagName !== 'SCRIPT') {
+        while (nextSib) {
+          if (nextSib.tagName !== 'SCRIPT') {
             this._cssPropMap.forEach(function (map) {
-              if (map.cssSelector === '*' || nextSibling.matches && nextSibling.matches(map.cssSelector)) {
+              if (map.cssSelector === '*' || nextSib.matches && nextSib.matches(map.cssSelector)) {
                 count++;
 
-                _this6.setVal(e, nextSibling, map);
+                _this5.setVal(e, nextSib, map);
               }
 
-              var fec = nextSibling.firstElementChild;
+              var fec = nextSib.firstElementChild;
 
-              if (_this6.id && fec && nextSibling.hasAttribute(p_d_if)) {
+              if (_this5.id && fec && nextSib.hasAttribute(p_d_if)) {
                 //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                if (_this6.matches(nextSibling.getAttribute(p_d_if))) {
-                  _this6.passDown(fec, e, count);
+                if (_this5.matches(nextSib.getAttribute(p_d_if))) {
+                  _this5.passDown(fec, e, count);
 
-                  var addedSMOTracker = nextSibling[_addedSMO];
-                  if (!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
+                  var addedSMOTracker = nextSib[_addedSMO];
+                  if (!addedSMOTracker) addedSMOTracker = nextSib[_addedSMO] = {};
 
-                  if (!addedSMOTracker[_this6.id]) {
-                    _this6.addMutationObserver(nextSibling, true);
+                  if (!addedSMOTracker[_this5.id]) {
+                    _this5.addMutObs(nextSib, true);
 
-                    nextSibling[_addedSMO][_this6.id] = true;
+                    nextSib[_addedSMO][_this5.id] = true;
                   }
                 }
               }
@@ -467,7 +465,7 @@
             if (this._hasMax && count >= this._m) break;
           }
 
-          nextSibling = nextSibling.nextElementSibling;
+          nextSib = nextSib.nextElementSibling;
         }
       }
     }, {
@@ -498,20 +496,20 @@
         this.onPropsChange();
       }
     }, {
-      key: "addMutationObserver",
-      value: function addMutationObserver(baseElement, isParent) {
-        var _this7 = this;
+      key: "addMutObs",
+      value: function addMutObs(baseElement, isParent) {
+        var _this6 = this;
 
         var elementToObserve = isParent ? baseElement : baseElement.parentElement;
         if (!elementToObserve) return; //TODO
 
-        this._siblingObserver = new MutationObserver(function (mutationsList) {
-          if (!_this7._lastEvent) return; //this.passDownProp(this._lastResult);
+        this._sibObs = new MutationObserver(function (mutationsList) {
+          if (!_this6._lastEvent) return; //this.passDownProp(this._lastResult);
 
-          _this7._handleEvent(_this7._lastEvent);
+          _this6._handleEvent(_this6._lastEvent);
         });
 
-        this._siblingObserver.observe(elementToObserve, {
+        this._sibObs.observe(elementToObserve, {
           childList: true
         });
       }
@@ -560,7 +558,7 @@
     babelHelpers.createClass(PU, [{
       key: "pass",
       value: function pass(e) {
-        var _this8 = this;
+        var _this7 = this;
 
         this._cssPropMap.forEach(function (map) {
           var cssSel = map.cssSelector;
@@ -573,7 +571,7 @@
           } else {
             var len = cssSel.startsWith('./') ? 0 : split.length;
 
-            var host = _this8.getHost(_this8, 0, split.length);
+            var host = _this7.getHost(_this7, 0, split.length);
 
             if (host) {
               if (host.shadowRoot) {
@@ -587,7 +585,7 @@
             }
           }
 
-          _this8.setVal(e, targetElement, map);
+          _this7.setVal(e, targetElement, map);
         });
       }
     }, {

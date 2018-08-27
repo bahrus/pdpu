@@ -118,12 +118,8 @@
     babelHelpers.inherits(P, _XtallatX);
 
     function P() {
-      var _this3;
-
       babelHelpers.classCallCheck(this, P);
-      _this3 = babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
-      _this3.style.display = 'none';
-      return _this3;
+      return babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
     }
 
     babelHelpers.createClass(P, [{
@@ -165,12 +161,14 @@
     }, {
       key: "connectedCallback",
       value: function connectedCallback() {
-        var _this4 = this;
+        var _this3 = this;
+
+        this.style.display = 'none';
 
         this._upgradeProperties([on, to, noblock, 'input', iff]);
 
         setTimeout(function () {
-          return _this4.doFake();
+          return _this3.doFake();
         }, 50);
       }
     }, {
@@ -204,7 +202,7 @@
       value: function disconnectedCallback() {
         var prevSibling = this.getPreviousSib();
         if (prevSibling && this._boundHandleEvent) this.detach(prevSibling);
-        this.disconnectSiblingObserver();
+        this.disconnect();
       }
     }, {
       key: "_handleEvent",
@@ -271,7 +269,7 @@
     }, {
       key: "parseTo",
       value: function parseTo() {
-        var _this5 = this;
+        var _this4 = this;
 
         if (this._cssPropMap && this._to === this._lastTo) return;
         this._lastTo = this._to;
@@ -287,11 +285,11 @@
 
           if (!cssSelector && onlyOne) {
             cssSelector = '*';
-            _this5._m = 1;
-            _this5._hasMax = true;
+            _this4._m = 1;
+            _this4._hasMax = true;
           }
 
-          _this5.parseMapping(mapTokens, cssSelector);
+          _this4.parseMapping(mapTokens, cssSelector);
         });
       }
     }, {
@@ -310,11 +308,11 @@
       key: "getPropFromPath",
       value: function getPropFromPath(val, path) {
         if (!path || path === '.') return val;
-        return this.getPropFromPathTokens(val, path.split('.'));
+        return this.getProp(val, path.split('.'));
       }
     }, {
-      key: "getPropFromPathTokens",
-      value: function getPropFromPathTokens(val, pathTokens) {
+      key: "getProp",
+      value: function getProp(val, pathTokens) {
         var context = val;
         var firstToken = true;
         var cp = 'composedPath';
@@ -338,9 +336,9 @@
         return context;
       }
     }, {
-      key: "disconnectSiblingObserver",
-      value: function disconnectSiblingObserver() {
-        if (this._siblingObserver) this._siblingObserver.disconnect();
+      key: "disconnect",
+      value: function disconnect() {
+        if (this._sibObs) this._sibObs.disconnect();
       }
     }, {
       key: "on",
@@ -432,33 +430,33 @@
     }, {
       key: "passDown",
       value: function passDown(start, e, count) {
-        var _this6 = this;
+        var _this5 = this;
 
-        var nextSibling = start;
+        var nextSib = start;
 
-        while (nextSibling) {
-          if (nextSibling.tagName !== 'SCRIPT') {
+        while (nextSib) {
+          if (nextSib.tagName !== 'SCRIPT') {
             this._cssPropMap.forEach(function (map) {
-              if (map.cssSelector === '*' || nextSibling.matches && nextSibling.matches(map.cssSelector)) {
+              if (map.cssSelector === '*' || nextSib.matches && nextSib.matches(map.cssSelector)) {
                 count++;
 
-                _this6.setVal(e, nextSibling, map);
+                _this5.setVal(e, nextSib, map);
               }
 
-              var fec = nextSibling.firstElementChild;
+              var fec = nextSib.firstElementChild;
 
-              if (_this6.id && fec && nextSibling.hasAttribute(p_d_if)) {
+              if (_this5.id && fec && nextSib.hasAttribute(p_d_if)) {
                 //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                if (_this6.matches(nextSibling.getAttribute(p_d_if))) {
-                  _this6.passDown(fec, e, count);
+                if (_this5.matches(nextSib.getAttribute(p_d_if))) {
+                  _this5.passDown(fec, e, count);
 
-                  var addedSMOTracker = nextSibling[_addedSMO];
-                  if (!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
+                  var addedSMOTracker = nextSib[_addedSMO];
+                  if (!addedSMOTracker) addedSMOTracker = nextSib[_addedSMO] = {};
 
-                  if (!addedSMOTracker[_this6.id]) {
-                    _this6.addMutationObserver(nextSibling, true);
+                  if (!addedSMOTracker[_this5.id]) {
+                    _this5.addMutObs(nextSib, true);
 
-                    nextSibling[_addedSMO][_this6.id] = true;
+                    nextSib[_addedSMO][_this5.id] = true;
                   }
                 }
               }
@@ -467,7 +465,7 @@
             if (this._hasMax && count >= this._m) break;
           }
 
-          nextSibling = nextSibling.nextElementSibling;
+          nextSib = nextSib.nextElementSibling;
         }
       }
     }, {
@@ -498,20 +496,20 @@
         this.onPropsChange();
       }
     }, {
-      key: "addMutationObserver",
-      value: function addMutationObserver(baseElement, isParent) {
-        var _this7 = this;
+      key: "addMutObs",
+      value: function addMutObs(baseElement, isParent) {
+        var _this6 = this;
 
         var elementToObserve = isParent ? baseElement : baseElement.parentElement;
         if (!elementToObserve) return; //TODO
 
-        this._siblingObserver = new MutationObserver(function (mutationsList) {
-          if (!_this7._lastEvent) return; //this.passDownProp(this._lastResult);
+        this._sibObs = new MutationObserver(function (mutationsList) {
+          if (!_this6._lastEvent) return; //this.passDownProp(this._lastResult);
 
-          _this7._handleEvent(_this7._lastEvent);
+          _this6._handleEvent(_this6._lastEvent);
         });
 
-        this._siblingObserver.observe(elementToObserve, {
+        this._sibObs.observe(elementToObserve, {
           childList: true
         });
       }
@@ -552,13 +550,13 @@
     babelHelpers.createClass(PDX, [{
       key: "parseMapping",
       value: function parseMapping(mapTokens, cssSelector) {
-        var _this8 = this;
+        var _this7 = this;
 
         var splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(function (token) {
           var splitPropPointer = token.split(':');
 
-          _this8._cssPropMap.push({
+          _this7._cssPropMap.push({
             cssSelector: cssSelector,
             propTarget: splitPropPointer[0],
             propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
@@ -616,7 +614,7 @@
     }, {
       key: "attachEventListeners",
       value: function attachEventListeners() {
-        var _this9 = this;
+        var _this8 = this;
 
         if (this._on[0] !== '[') {
           babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "attachEventListeners", this).call(this);
@@ -645,7 +643,7 @@
             target: prevSibling
           };
 
-          _this9._handleEvent(fakeEvent);
+          _this8._handleEvent(fakeEvent);
         });
 
         this._attributeObserver.observe(prevSibling, config);
@@ -693,7 +691,7 @@
     babelHelpers.createClass(PU, [{
       key: "pass",
       value: function pass(e) {
-        var _this10 = this;
+        var _this9 = this;
 
         this._cssPropMap.forEach(function (map) {
           var cssSel = map.cssSelector;
@@ -706,7 +704,7 @@
           } else {
             var len = cssSel.startsWith('./') ? 0 : split.length;
 
-            var host = _this10.getHost(_this10, 0, split.length);
+            var host = _this9.getHost(_this9, 0, split.length);
 
             if (host) {
               if (host.shadowRoot) {
@@ -720,7 +718,7 @@
             }
           }
 
-          _this10.setVal(e, targetElement, map);
+          _this9.setVal(e, targetElement, map);
         });
       }
     }, {
@@ -762,12 +760,12 @@
     babelHelpers.inherits(PDestal, _PDX);
 
     function PDestal() {
-      var _this11;
+      var _this10;
 
       babelHelpers.classCallCheck(this, PDestal);
-      _this11 = babelHelpers.possibleConstructorReturn(this, (PDestal.__proto__ || Object.getPrototypeOf(PDestal)).apply(this, arguments));
-      _this11._previousValues = {};
-      return _this11;
+      _this10 = babelHelpers.possibleConstructorReturn(this, (PDestal.__proto__ || Object.getPrototypeOf(PDestal)).apply(this, arguments));
+      _this10._previousValues = {};
+      return _this10;
     }
 
     babelHelpers.createClass(PDestal, [{
@@ -791,7 +789,7 @@
     }, {
       key: "doFakeEvent",
       value: function doFakeEvent() {
-        var _this12 = this;
+        var _this11 = this;
 
         var split = this._on.split(',');
 
@@ -801,11 +799,11 @@
           var trimmedParam = param.substr(1, param.length - 2);
           var searchParm = searchParams.get(trimmedParam);
 
-          if (!changedVal && searchParm !== _this12._previousValues[trimmedParam]) {
+          if (!changedVal && searchParm !== _this11._previousValues[trimmedParam]) {
             changedVal = true;
           }
 
-          _this12._previousValues[trimmedParam] = searchParm;
+          _this11._previousValues[trimmedParam] = searchParm;
         });
 
         if (changedVal) {
@@ -819,10 +817,10 @@
     }, {
       key: "watchLocation",
       value: function watchLocation() {
-        var _this13 = this;
+        var _this12 = this;
 
         window.addEventListener('popstate', function (e) {
-          _this13.doFakeEvent();
+          _this12.doFakeEvent();
         });
         this.doFakeEvent();
       }

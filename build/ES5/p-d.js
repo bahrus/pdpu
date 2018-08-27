@@ -34,31 +34,31 @@ function (_P) {
     value: function passDown(start, e, count) {
       var _this = this;
 
-      var nextSibling = start;
+      var nextSib = start;
 
-      while (nextSibling) {
-        if (nextSibling.tagName !== 'SCRIPT') {
+      while (nextSib) {
+        if (nextSib.tagName !== 'SCRIPT') {
           this._cssPropMap.forEach(function (map) {
-            if (map.cssSelector === '*' || nextSibling.matches && nextSibling.matches(map.cssSelector)) {
+            if (map.cssSelector === '*' || nextSib.matches && nextSib.matches(map.cssSelector)) {
               count++;
 
-              _this.setVal(e, nextSibling, map);
+              _this.setVal(e, nextSib, map);
             }
 
-            var fec = nextSibling.firstElementChild;
+            var fec = nextSib.firstElementChild;
 
-            if (_this.id && fec && nextSibling.hasAttribute(p_d_if)) {
+            if (_this.id && fec && nextSib.hasAttribute(p_d_if)) {
               //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-              if (_this.matches(nextSibling.getAttribute(p_d_if))) {
+              if (_this.matches(nextSib.getAttribute(p_d_if))) {
                 _this.passDown(fec, e, count);
 
-                var addedSMOTracker = nextSibling[_addedSMO];
-                if (!addedSMOTracker) addedSMOTracker = nextSibling[_addedSMO] = {};
+                var addedSMOTracker = nextSib[_addedSMO];
+                if (!addedSMOTracker) addedSMOTracker = nextSib[_addedSMO] = {};
 
                 if (!addedSMOTracker[_this.id]) {
-                  _this.addMutationObserver(nextSibling, true);
+                  _this.addMutObs(nextSib, true);
 
-                  nextSibling[_addedSMO][_this.id] = true;
+                  nextSib[_addedSMO][_this.id] = true;
                 }
               }
             }
@@ -67,7 +67,7 @@ function (_P) {
           if (this._hasMax && count >= this._m) break;
         }
 
-        nextSibling = nextSibling.nextElementSibling;
+        nextSib = nextSib.nextElementSibling;
       }
     }
   }, {
@@ -98,20 +98,20 @@ function (_P) {
       this.onPropsChange();
     }
   }, {
-    key: "addMutationObserver",
-    value: function addMutationObserver(baseElement, isParent) {
+    key: "addMutObs",
+    value: function addMutObs(baseElement, isParent) {
       var _this2 = this;
 
       var elementToObserve = isParent ? baseElement : baseElement.parentElement;
       if (!elementToObserve) return; //TODO
 
-      this._siblingObserver = new MutationObserver(function (mutationsList) {
+      this._sibObs = new MutationObserver(function (mutationsList) {
         if (!_this2._lastEvent) return; //this.passDownProp(this._lastResult);
 
         _this2._handleEvent(_this2._lastEvent);
       });
 
-      this._siblingObserver.observe(elementToObserve, {
+      this._sibObs.observe(elementToObserve, {
         childList: true
       });
     }

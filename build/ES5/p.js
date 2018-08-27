@@ -9,12 +9,8 @@ function (_XtallatX) {
   babelHelpers.inherits(P, _XtallatX);
 
   function P() {
-    var _this;
-
     babelHelpers.classCallCheck(this, P);
-    _this = babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
-    _this.style.display = 'none';
-    return _this;
+    return babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
   }
 
   babelHelpers.createClass(P, [{
@@ -56,12 +52,14 @@ function (_XtallatX) {
   }, {
     key: "connectedCallback",
     value: function connectedCallback() {
-      var _this2 = this;
+      var _this = this;
+
+      this.style.display = 'none';
 
       this._upgradeProperties([on, to, noblock, 'input', iff]);
 
       setTimeout(function () {
-        return _this2.doFake();
+        return _this.doFake();
       }, 50);
     }
   }, {
@@ -95,7 +93,7 @@ function (_XtallatX) {
     value: function disconnectedCallback() {
       var prevSibling = this.getPreviousSib();
       if (prevSibling && this._boundHandleEvent) this.detach(prevSibling);
-      this.disconnectSiblingObserver();
+      this.disconnect();
     }
   }, {
     key: "_handleEvent",
@@ -162,7 +160,7 @@ function (_XtallatX) {
   }, {
     key: "parseTo",
     value: function parseTo() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (this._cssPropMap && this._to === this._lastTo) return;
       this._lastTo = this._to;
@@ -178,11 +176,11 @@ function (_XtallatX) {
 
         if (!cssSelector && onlyOne) {
           cssSelector = '*';
-          _this3._m = 1;
-          _this3._hasMax = true;
+          _this2._m = 1;
+          _this2._hasMax = true;
         }
 
-        _this3.parseMapping(mapTokens, cssSelector);
+        _this2.parseMapping(mapTokens, cssSelector);
       });
     }
   }, {
@@ -201,11 +199,11 @@ function (_XtallatX) {
     key: "getPropFromPath",
     value: function getPropFromPath(val, path) {
       if (!path || path === '.') return val;
-      return this.getPropFromPathTokens(val, path.split('.'));
+      return this.getProp(val, path.split('.'));
     }
   }, {
-    key: "getPropFromPathTokens",
-    value: function getPropFromPathTokens(val, pathTokens) {
+    key: "getProp",
+    value: function getProp(val, pathTokens) {
       var context = val;
       var firstToken = true;
       var cp = 'composedPath';
@@ -229,9 +227,9 @@ function (_XtallatX) {
       return context;
     }
   }, {
-    key: "disconnectSiblingObserver",
-    value: function disconnectSiblingObserver() {
-      if (this._siblingObserver) this._siblingObserver.disconnect();
+    key: "disconnect",
+    value: function disconnect() {
+      if (this._sibObs) this._sibObs.disconnect();
     }
   }, {
     key: "on",

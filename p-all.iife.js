@@ -79,7 +79,6 @@ const to = 'to';
 class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
-        this.style.display = 'none';
     }
     get on() {
         return this._on;
@@ -148,6 +147,7 @@ class P extends XtallatX(HTMLElement) {
         return prevSibling;
     }
     connectedCallback() {
+        this.style.display = 'none';
         this._upgradeProperties([on, to, noblock, 'input', iff]);
         setTimeout(() => this.doFake(), 50);
     }
@@ -175,7 +175,7 @@ class P extends XtallatX(HTMLElement) {
         const prevSibling = this.getPreviousSib();
         if (prevSibling && this._boundHandleEvent)
             this.detach(prevSibling);
-        this.disconnectSiblingObserver();
+        this.disconnect();
     }
     _handleEvent(e) {
         if (this.hasAttribute('debug'))
@@ -264,9 +264,9 @@ class P extends XtallatX(HTMLElement) {
     getPropFromPath(val, path) {
         if (!path || path === '.')
             return val;
-        return this.getPropFromPathTokens(val, path.split('.'));
+        return this.getProp(val, path.split('.'));
     }
-    getPropFromPathTokens(val, pathTokens) {
+    getProp(val, pathTokens) {
         let context = val;
         let firstToken = true;
         const cp = 'composedPath';
@@ -290,9 +290,9 @@ class P extends XtallatX(HTMLElement) {
         });
         return context;
     }
-    disconnectSiblingObserver() {
-        if (this._siblingObserver)
-            this._siblingObserver.disconnect();
+    disconnect() {
+        if (this._sibObs)
+            this._sibObs.disconnect();
     }
 }
 const m = 'm';
@@ -322,25 +322,25 @@ class PD extends P {
         this.passDown(this.nextElementSibling, e, 0);
     }
     passDown(start, e, count) {
-        let nextSibling = start;
-        while (nextSibling) {
-            if (nextSibling.tagName !== 'SCRIPT') {
+        let nextSib = start;
+        while (nextSib) {
+            if (nextSib.tagName !== 'SCRIPT') {
                 this._cssPropMap.forEach(map => {
-                    if (map.cssSelector === '*' || (nextSibling.matches && nextSibling.matches(map.cssSelector))) {
+                    if (map.cssSelector === '*' || (nextSib.matches && nextSib.matches(map.cssSelector))) {
                         count++;
-                        this.setVal(e, nextSibling, map);
+                        this.setVal(e, nextSib, map);
                     }
-                    const fec = nextSibling.firstElementChild;
-                    if (this.id && fec && nextSibling.hasAttribute(p_d_if)) {
+                    const fec = nextSib.firstElementChild;
+                    if (this.id && fec && nextSib.hasAttribute(p_d_if)) {
                         //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                        if (this.matches(nextSibling.getAttribute(p_d_if))) {
+                        if (this.matches(nextSib.getAttribute(p_d_if))) {
                             this.passDown(fec, e, count);
-                            let addedSMOTracker = nextSibling[_addedSMO];
+                            let addedSMOTracker = nextSib[_addedSMO];
                             if (!addedSMOTracker)
-                                addedSMOTracker = nextSibling[_addedSMO] = {};
+                                addedSMOTracker = nextSib[_addedSMO] = {};
                             if (!addedSMOTracker[this.id]) {
-                                this.addMutationObserver(nextSibling, true);
-                                nextSibling[_addedSMO][this.id] = true;
+                                this.addMutObs(nextSib, true);
+                                nextSib[_addedSMO][this.id] = true;
                             }
                         }
                     }
@@ -348,7 +348,7 @@ class PD extends P {
                 if (this._hasMax && count >= this._m)
                     break;
             }
-            nextSibling = nextSibling.nextElementSibling;
+            nextSib = nextSib.nextElementSibling;
         }
     }
     attributeChangedCallback(name, oldVal, newVal) {
@@ -371,17 +371,17 @@ class PD extends P {
         this._connected = true;
         this.onPropsChange();
     }
-    addMutationObserver(baseElement, isParent) {
+    addMutObs(baseElement, isParent) {
         let elementToObserve = isParent ? baseElement : baseElement.parentElement;
         if (!elementToObserve)
             return; //TODO
-        this._siblingObserver = new MutationObserver((mutationsList) => {
+        this._sibObs = new MutationObserver((mutationsList) => {
             if (!this._lastEvent)
                 return;
             //this.passDownProp(this._lastResult);
             this._handleEvent(this._lastEvent);
         });
-        this._siblingObserver.observe(elementToObserve, { childList: true });
+        this._sibObs.observe(elementToObserve, { childList: true });
     }
 }
 define(PD);

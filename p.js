@@ -6,7 +6,6 @@ const to = 'to';
 export class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
-        this.style.display = 'none';
     }
     get on() {
         return this._on;
@@ -75,6 +74,7 @@ export class P extends XtallatX(HTMLElement) {
         return prevSibling;
     }
     connectedCallback() {
+        this.style.display = 'none';
         this._upgradeProperties([on, to, noblock, 'input', iff]);
         setTimeout(() => this.doFake(), 50);
     }
@@ -102,7 +102,7 @@ export class P extends XtallatX(HTMLElement) {
         const prevSibling = this.getPreviousSib();
         if (prevSibling && this._boundHandleEvent)
             this.detach(prevSibling);
-        this.disconnectSiblingObserver();
+        this.disconnect();
     }
     _handleEvent(e) {
         if (this.hasAttribute('debug'))
@@ -191,9 +191,9 @@ export class P extends XtallatX(HTMLElement) {
     getPropFromPath(val, path) {
         if (!path || path === '.')
             return val;
-        return this.getPropFromPathTokens(val, path.split('.'));
+        return this.getProp(val, path.split('.'));
     }
-    getPropFromPathTokens(val, pathTokens) {
+    getProp(val, pathTokens) {
         let context = val;
         let firstToken = true;
         const cp = 'composedPath';
@@ -217,9 +217,9 @@ export class P extends XtallatX(HTMLElement) {
         });
         return context;
     }
-    disconnectSiblingObserver() {
-        if (this._siblingObserver)
-            this._siblingObserver.disconnect();
+    disconnect() {
+        if (this._sibObs)
+            this._sibObs.disconnect();
     }
 }
 //# sourceMappingURL=p.js.map

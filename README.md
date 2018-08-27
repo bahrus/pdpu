@@ -279,7 +279,7 @@ p-d can be configured to test the event target to make sure it matches a css tes
     <a href="link1">Link 1</a>
     <a href="link2">Link 2</a>
 </div>
-<p-d on="click" if="a"></pd>
+<p-d on="click" if="a"></p-d>
 ```
 
 ## Disabling the default behavior of initialization (Warning:  Wonky discussion)
