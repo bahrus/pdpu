@@ -2,6 +2,7 @@
 
 <a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
+<img src="http://img.badgesize.io/https://unpkg.com/p-d.p-u@0.0.67/ES6/build/p-d.p-u.js?compression=gzip">
 
 # \<p-d\>, \<p-u\>
 
