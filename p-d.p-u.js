@@ -26,12 +26,12 @@ function XtallatX(superClass) {
             this.attr(disabled, val, '');
         }
         attr(name, val, trueVal) {
-            const setOrRemove = val ? 'set' : 'remove';
-            this[setOrRemove + 'Attribute'](name, trueVal || val);
+            const v = val ? 'set' : 'remove'; //verb
+            this[v + 'Attribute'](name, trueVal || val);
         }
-        to$(number) {
-            const mod = number % 2;
-            return (number - mod) / 2 + '-' + mod;
+        to$(n) {
+            const mod = n % 2;
+            return (n - mod) / 2 + '-' + mod;
         }
         incAttr(name) {
             const ec = this._evCount;
@@ -79,6 +79,8 @@ const to = 'to';
 class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
+        this._addedSMO = false;
+        this._connected = false;
     }
     get on() {
         return this._on;
@@ -136,6 +138,7 @@ class P extends XtallatX(HTMLElement) {
                 break;
             case noblock:
                 this[f] = newVal !== null;
+                break;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -313,7 +316,7 @@ class PD extends P {
         return this._m;
     }
     set m(val) {
-        this.setAttribute(val.toString());
+        this.attr(m, val.toString());
     }
     static get observedAttributes() {
         return super.observedAttributes.concat([m]);
@@ -339,7 +342,8 @@ class PD extends P {
                             if (!addedSMOTracker)
                                 addedSMOTracker = nextSib[_addedSMO] = {};
                             if (!addedSMOTracker[this.id]) {
-                                this.addMutObs(nextSib, true);
+                                if (nextSib !== null)
+                                    this.addMutObs(nextSib, true);
                                 nextSib[_addedSMO][this.id] = true;
                             }
                         }

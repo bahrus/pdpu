@@ -29,8 +29,6 @@ function (_PDX) {
           return null;
         }
       }
-
-      this._useLocation;
     }
   }, {
     key: "doFakeEvent",

@@ -63,7 +63,7 @@ export abstract class P extends XtallatX(HTMLElement){
         switch(name){
             case iff:
             case on:
-                this[f] = newVal;
+                (<any>this)[f] = newVal;
                 break;
             case to:
                 this._destIsNA = newVal === '{NA}';
@@ -73,23 +73,25 @@ export abstract class P extends XtallatX(HTMLElement){
                 if(this._lastEvent) this._handleEvent(this._lastEvent);
                 break;
             case noblock:
-                this[f] = newVal !== null;
+                (<any>this)[f] = newVal !== null;
+                break;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
 
-    getPreviousSib() : HTMLElement{
-        let prevSibling = this;
+    getPreviousSib() : Element | null{
+        let prevSibling = this as Element | null;
         while(prevSibling && prevSibling.tagName.startsWith('P-')){
-            prevSibling = prevSibling.previousElementSibling;
+            prevSibling = prevSibling.previousElementSibling!;
         }
-        return <any>prevSibling as HTMLElement;
+        return prevSibling;
     }
     connectedCallback(){
         this.style.display = 'none';
         this._upgradeProperties([on, to, noblock, 'input', iff]);
         setTimeout(() => this.doFake(), 50);
     }
+    _addedSMO = false;
     doFake(){
         if(!this._if && !this.hasAttribute('skip-init')){
             let lastEvent = this._lastEvent;
@@ -101,12 +103,12 @@ export abstract class P extends XtallatX(HTMLElement){
             }
             if(this._handleEvent) this._handleEvent(lastEvent);
         }        
-        if(!this._addedSMO && this.addMutationObserver){
-            this.addMutationObserver(<any>this as HTMLElement, false);
+        if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
+            (<any>this).addMutationObserver(<any>this as HTMLElement, false);
             this._addedSMO = true;
         }
     }
-    detach(prevSibling: HTMLElement){
+    detach(prevSibling: Element){
         prevSibling.removeEventListener(this._on, this._boundHandleEvent);
     }
     disconnectedCallback(){
@@ -158,6 +160,7 @@ export abstract class P extends XtallatX(HTMLElement){
         }
 
     }
+    _connected = false;
     onPropsChange(){
         if(!this._connected || !this._on || !this._to) return;
         this.attachEventListeners();
@@ -184,8 +187,8 @@ export abstract class P extends XtallatX(HTMLElement){
             let cssSelector = mapTokens[0];
             if(!cssSelector && onlyOne){
                 cssSelector = '*';
-                this._m = 1;
-                this._hasMax = true;
+                (<any>this)._m = 1;
+                (<any>this)._hasMax = true;
             }
            this.parseMapping(mapTokens, cssSelector);
         })

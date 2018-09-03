@@ -18,7 +18,7 @@ export class PD extends P {
         return this._m;
     }
     set m(val) {
-        this.setAttribute(val.toString());
+        this.attr(m, val.toString());
     }
     static get observedAttributes() {
         return super.observedAttributes.concat([m]);
@@ -44,7 +44,8 @@ export class PD extends P {
                             if (!addedSMOTracker)
                                 addedSMOTracker = nextSib[_addedSMO] = {};
                             if (!addedSMOTracker[this.id]) {
-                                this.addMutObs(nextSib, true);
+                                if (nextSib !== null)
+                                    this.addMutObs(nextSib, true);
                                 nextSib[_addedSMO][this.id] = true;
                             }
                         }

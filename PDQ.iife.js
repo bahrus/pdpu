@@ -26,12 +26,12 @@ function XtallatX(superClass) {
             this.attr(disabled, val, '');
         }
         attr(name, val, trueVal) {
-            const setOrRemove = val ? 'set' : 'remove';
-            this[setOrRemove + 'Attribute'](name, trueVal || val);
+            const v = val ? 'set' : 'remove'; //verb
+            this[v + 'Attribute'](name, trueVal || val);
         }
-        to$(number) {
-            const mod = number % 2;
-            return (number - mod) / 2 + '-' + mod;
+        to$(n) {
+            const mod = n % 2;
+            return (n - mod) / 2 + '-' + mod;
         }
         incAttr(name) {
             const ec = this._evCount;

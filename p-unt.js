@@ -9,12 +9,11 @@ export class PUnt extends P {
         this._cssPropMap.forEach(map => {
             const detail = {};
             this.setVal(e, detail, map);
-            const customEventInit = {
-                name: map.cssSelector,
+            const customEventInit = new CustomEvent(map.cssSelector, {
                 bubbles: this._bubbles,
                 composed: this._composed,
                 detail: detail,
-            };
+            });
             this.dispatchEvent(customEventInit);
         });
     }

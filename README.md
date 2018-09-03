@@ -178,7 +178,7 @@ If the expression inside the script tag evaluates to a function, it is evaluated
 
 ### A cautionary note on use of inline script pipeline processing
 
-The intention of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
+The intent of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
 
 It would be amazing if one could debug the code found in these inline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements. 
 

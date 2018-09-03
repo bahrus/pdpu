@@ -10,6 +10,7 @@ export class PDQ{
                 this.style.display = 'none';
             }
             _connected = false;
+            value!: any;
             connectedCallback() {
                 this._upgradeProperties(['input', 'disabled']);
                 this._connected = true;

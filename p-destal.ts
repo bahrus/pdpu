@@ -7,18 +7,17 @@ export class PDestal extends PDX {
     _host!: HTMLElement;
     _useLocation!: boolean;
     getPreviousSib() {
-        let parent = this;
-        while (parent = parent.parentNode) {
-            if (parent.nodeType === 11) {
-                return parent['host'];
-            } else if (parent.tagName.indexOf('-') > -1) {
+        let parent = this as Node | null;
+        while (parent = parent!.parentNode) {
+            if ((<HTMLElement>parent).nodeType === 11) {
+                return (<any>parent)['host'];
+            } else if ((<HTMLElement>parent).tagName.indexOf('-') > -1) {
                 return parent;
-            } else if (parent.tagName === 'HTML') {
+            } else if ((<HTMLElement>parent).tagName === 'HTML') {
                 this.watchLocation();
                 return null;
             }
         }
-        this._useLocation
     }
     _previousValues: { [key: string]: string | null } = {};
     doFakeEvent() {

@@ -9,8 +9,13 @@ function (_XtallatX) {
   babelHelpers.inherits(P, _XtallatX);
 
   function P() {
+    var _this;
+
     babelHelpers.classCallCheck(this, P);
-    return babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
+    _this = babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
+    _this._addedSMO = false;
+    _this._connected = false;
+    return _this;
   }
 
   babelHelpers.createClass(P, [{
@@ -34,6 +39,7 @@ function (_XtallatX) {
 
         case noblock:
           this[f] = newVal !== null;
+          break;
       }
 
       babelHelpers.get(P.prototype.__proto__ || Object.getPrototypeOf(P.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
@@ -52,14 +58,14 @@ function (_XtallatX) {
   }, {
     key: "connectedCallback",
     value: function connectedCallback() {
-      var _this = this;
+      var _this2 = this;
 
       this.style.display = 'none';
 
       this._upgradeProperties([on, to, noblock, 'input', iff]);
 
       setTimeout(function () {
-        return _this.doFake();
+        return _this2.doFake();
       }, 50);
     }
   }, {
@@ -160,7 +166,7 @@ function (_XtallatX) {
   }, {
     key: "parseTo",
     value: function parseTo() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this._cssPropMap && this._to === this._lastTo) return;
       this._lastTo = this._to;
@@ -176,11 +182,11 @@ function (_XtallatX) {
 
         if (!cssSelector && onlyOne) {
           cssSelector = '*';
-          _this2._m = 1;
-          _this2._hasMax = true;
+          _this3._m = 1;
+          _this3._hasMax = true;
         }
 
-        _this2.parseMapping(mapTokens, cssSelector);
+        _this3.parseMapping(mapTokens, cssSelector);
       });
     }
   }, {

@@ -6,6 +6,8 @@ const to = 'to';
 export class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
+        this._addedSMO = false;
+        this._connected = false;
     }
     get on() {
         return this._on;
@@ -63,6 +65,7 @@ export class P extends XtallatX(HTMLElement) {
                 break;
             case noblock:
                 this[f] = newVal !== null;
+                break;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }

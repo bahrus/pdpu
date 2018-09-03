@@ -31,14 +31,15 @@
         babelHelpers.createClass(_class, [{
           key: "attr",
           value: function attr(name, val, trueVal) {
-            var setOrRemove = val ? 'set' : 'remove';
-            this[setOrRemove + 'Attribute'](name, trueVal || val);
+            var v = val ? 'set' : 'remove'; //verb
+
+            this[v + 'Attribute'](name, trueVal || val);
           }
         }, {
           key: "to$",
-          value: function to$(number) {
-            var mod = number % 2;
-            return (number - mod) / 2 + '-' + mod;
+          value: function to$(n) {
+            var mod = n % 2;
+            return (n - mod) / 2 + '-' + mod;
           }
         }, {
           key: "incAttr",

@@ -22,7 +22,7 @@ export class PD extends P{
         return this._m;
     }
     set m(val){
-        this.setAttribute(val.toString());
+        this.attr(m, val.toString());
     }
     static get observedAttributes(){
         return super.observedAttributes.concat([m]);
@@ -34,24 +34,24 @@ export class PD extends P{
         this.passDown(this.nextElementSibling, e, 0);
     }
 
-    passDown(start: HTMLElement, e: Event, count: number){
+    passDown(start:  Element | null, e: Event, count: number){
         let nextSib = start;
         while (nextSib) {
             if(nextSib.tagName!=='SCRIPT'){
                 this._cssPropMap.forEach(map => {
-                    if (map.cssSelector === '*' || (nextSib.matches && nextSib.matches(map.cssSelector))) {
+                    if (map.cssSelector === '*' || (nextSib!.matches && nextSib!.matches(map.cssSelector))) {
                         count++;
                         this.setVal(e, nextSib, map)
                     }
-                    const fec = nextSib.firstElementChild as HTMLElement;
-                    if(this.id && fec && nextSib.hasAttribute(p_d_if)){
+                    const fec = nextSib!.firstElementChild as HTMLElement;
+                    if(this.id && fec && nextSib!.hasAttribute(p_d_if)){
                         //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                        if(this.matches(nextSib.getAttribute(p_d_if))){
+                        if(this.matches(nextSib!.getAttribute(p_d_if) as string )){
                             this.passDown(fec, e, count);
                             let addedSMOTracker = (<any>nextSib)[_addedSMO];
                             if(!addedSMOTracker) addedSMOTracker = (<any>nextSib)[_addedSMO] = {};
                             if(!addedSMOTracker[this.id]){
-                                this.addMutObs(nextSib, true);
+                                if(nextSib !== null) this.addMutObs(nextSib, true);
                                 (<any>nextSib)[_addedSMO][this.id] = true;
                             }
                         }
@@ -78,7 +78,6 @@ export class PD extends P{
         super.attributeChangedCallback(name, oldVal, newVal);
         this.onPropsChange();
     }
-    _connected!: boolean;
     connectedCallback(){
         super.connectedCallback();
         this._upgradeProperties([m])
@@ -89,7 +88,7 @@ export class PD extends P{
 
 
     _addedSMO!: boolean; //addedSiblingMutationObserver
-    addMutObs(baseElement: HTMLElement, isParent: boolean){
+    addMutObs(baseElement: Element, isParent: boolean){
         let elementToObserve = isParent ? baseElement : baseElement.parentElement;
         if(!elementToObserve) return; //TODO
         this._sibObs =  new MutationObserver((mutationsList: MutationRecord[]) =>{

@@ -56,8 +56,7 @@ function (_P) {
                 if (!addedSMOTracker) addedSMOTracker = nextSib[_addedSMO] = {};
 
                 if (!addedSMOTracker[_this.id]) {
-                  _this.addMutObs(nextSib, true);
-
+                  if (nextSib !== null) _this.addMutObs(nextSib, true);
                   nextSib[_addedSMO][_this.id] = true;
                 }
               }
@@ -121,7 +120,7 @@ function (_P) {
       return this._m;
     },
     set: function set(val) {
-      this.setAttribute(val.toString());
+      this.attr(m, val.toString());
     }
   }], [{
     key: "is",

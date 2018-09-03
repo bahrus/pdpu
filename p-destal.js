@@ -20,7 +20,6 @@ export class PDestal extends PDX {
                 return null;
             }
         }
-        this._useLocation;
     }
     doFakeEvent() {
         const split = this._on.split(',');
