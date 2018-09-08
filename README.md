@@ -150,7 +150,7 @@ As with all custom element definitions, some care should be taken to ensure that
 
 ## Location, Location, Location
 
-If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the code for one of these piping custom elements, you can "inline" the code quite close to where it is needed.  For now, this will only work if you avoid hard code the location of PDQ, for example via a CDN:
+If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the code for one of these piping custom elements, you can "inline" the code quite close to where it is needed.  For now, this will only work if you essentially "hard code" the location of PDQ to a CDN with support for bare import specifiers:
 
 ```html
 <p-d on="selected-root-nodes-changed" to="{input:target}"></p-d>
@@ -166,7 +166,11 @@ If the issue of mixing JavaScript script tags inside markup is *not* a serious c
 <selected-node-change-handler></selected-node-change-handler>
 ```
 
-With package map support, the import statement could look more like the example above 
+With [package name map](https://github.com/domenic/package-name-maps) support, the import statement could look more like the previous example:
+
+```JavaScript
+import {PDQ} from 'p-d.p-u/PDQ.js';
+```
 
 Now if you add a breakpoint, it will take you to the code, where you can see the surrounding markup.  But you will only see the *markup*, not the actual live elements, unfortunately.  Just saying.
 
@@ -174,9 +178,9 @@ Now if you add a breakpoint, it will take you to the code, where you can see the
 
 Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some beneifits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
 
-I'm quite excited to see Firefox nightly making some [giant leaps forward](https://blog.nightly.mozilla.org/2018/09/06/developer-tools-support-for-web-components-in-firefox-63/) in supporting universal web component debugging.
+But I am quite excited to see Firefox nightly making some [giant leaps forward](https://blog.nightly.mozilla.org/2018/09/06/developer-tools-support-for-web-components-in-firefox-63/) in supporting universal web component debugging.
 
-However, you might find the following helpful.  What follows is Chrome-centric discussion, and requires support for dynamic import:
+In addition, you might find the following helpful.  What follows is Chrome-centric discussion, and requires support for dynamic import:
 
 In the console, type:
 
