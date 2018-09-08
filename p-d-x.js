@@ -1,4 +1,5 @@
 import { PD } from './p-d.js';
+import { define } from 'xtal-latx/define.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
     static get is() { return 'p-d-x'; }
@@ -91,6 +92,5 @@ export class PDX extends PD {
         super.disconnectedCallback();
     }
 }
-if (!customElements.get(PDX.is))
-    customElements.define(PDX.is, PDX);
+define(PDX);
 //# sourceMappingURL=p-d-x.js.map

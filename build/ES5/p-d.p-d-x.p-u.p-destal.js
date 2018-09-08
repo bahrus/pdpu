@@ -12,6 +12,10 @@
   }
 
   var disabled = 'disabled';
+  /**
+   * Base class for many xtal- components
+   * @param superClass
+   */
 
   function XtallatX(superClass) {
     return (
@@ -30,17 +34,34 @@
 
         babelHelpers.createClass(_class, [{
           key: "attr",
+
+          /**
+           * Set attribute value.
+           * @param name
+           * @param val
+           * @param trueVal String to set attribute if true.
+           */
           value: function attr(name, val, trueVal) {
             var v = val ? 'set' : 'remove'; //verb
 
             this[v + 'Attribute'](name, trueVal || val);
           }
+          /**
+           * Turn number into string with even and odd values easy to query via css.
+           * @param n
+           */
+
         }, {
           key: "to$",
           value: function to$(n) {
             var mod = n % 2;
             return (n - mod) / 2 + '-' + mod;
           }
+          /**
+           * Increment event count
+           * @param name
+           */
+
         }, {
           key: "incAttr",
           value: function incAttr(name) {
@@ -63,10 +84,17 @@
                 break;
             }
           }
+          /**
+           * Dispatch Custom Event
+           * @param name Name of event to dispatch (with -changed if asIs is false)
+           * @param detail Information to be passed with the event
+           * @param asIs If true, don't append event name with '-changed'
+           */
+
         }, {
           key: "de",
-          value: function de(name, detail) {
-            var eventName = name + '-changed';
+          value: function de(name, detail, asIs) {
+            var eventName = name + (asIs ? '' : '-changed');
             var newEvent = new CustomEvent(eventName, {
               detail: detail,
               bubbles: true,
@@ -76,6 +104,11 @@
             this.incAttr(eventName);
             return newEvent;
           }
+          /**
+           * Needed for asynchronous loading
+           * @param props Array of property names to "upgrade", without losing value set while element was Unknown
+           */
+
         }, {
           key: "_upgradeProperties",
           value: function _upgradeProperties(props) {
@@ -91,6 +124,12 @@
           }
         }, {
           key: "disabled",
+
+          /**
+           * Any component that emits events should not do so ef it is disabled.
+           * Note that this is not enforced, but the disabled property is made available.
+           * Users of this mix-in sure ensure it doesn't call "de" if this property is set to true.
+           */
           get: function get() {
             return this._disabled;
           },
@@ -233,28 +272,14 @@
         var prevSibling = this.getPreviousSib();
         if (!prevSibling) return;
 
-        if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
-          var evalObj = eval(prevSibling.innerHTML);
-
-          if (typeof evalObj === 'function') {
-            this._evalFn = evalObj;
-
-            if (!this._destIsNA && !this.hasAttribute('skip-init')) {
-              evalObj(this);
-            }
-          } else {
-            this._handleEvent(evalObj);
-          }
+        if (this._boundHandleEvent) {
+          return;
         } else {
-          if (this._boundHandleEvent) {
-            return;
-          } else {
-            this._boundHandleEvent = this._handleEvent.bind(this);
-          }
-
-          prevSibling.addEventListener(this._on, this._boundHandleEvent);
-          prevSibling.removeAttribute('disabled');
+          this._boundHandleEvent = this._handleEvent.bind(this);
         }
+
+        prevSibling.addEventListener(this._on, this._boundHandleEvent);
+        prevSibling.removeAttribute('disabled');
       }
     }, {
       key: "onPropsChange",
@@ -386,15 +411,6 @@
       },
       set: function set(val) {
         this._input = val;
-
-        if (this._evalFn && (!this._destIsNA || val && !val.isFake)) {
-          var returnObj = this._evalFn(this);
-
-          if (returnObj) {
-            this._handleEvent(returnObj);
-          }
-        } //this._handleEvent(this._lastEvent);
-
       }
     }], [{
       key: "observedAttributes",
@@ -467,10 +483,9 @@
                 }
               }
             });
-
-            if (this._hasMax && count >= this._m) break;
           }
 
+          if (this._hasMax && count >= this._m) break;
           nextSib = nextSib.nextElementSibling;
         }
       }
@@ -674,7 +689,7 @@
     return PDX;
   }(PD);
 
-  if (!customElements.get(PDX.is)) customElements.define(PDX.is, PDX);
+  define(PDX);
   /**
    * `p-u`
    *  Pass data from one element to a targeted DOM element elsewhere

@@ -62,10 +62,9 @@ function (_P) {
               }
             }
           });
-
-          if (this._hasMax && count >= this._m) break;
         }
 
+        if (this._hasMax && count >= this._m) break;
         nextSib = nextSib.nextElementSibling;
       }
     }

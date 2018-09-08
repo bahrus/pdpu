@@ -1,4 +1,5 @@
-import { PD } from './p-d.js'; //const attrib_filter = 'attrib-filter';
+import { PD } from './p-d.js';
+import { define } from "./node_modules/xtal-latx/define.js"; //const attrib_filter = 'attrib-filter';
 
 export var PDX =
 /*#__PURE__*/
@@ -130,4 +131,4 @@ function (_PD) {
   }]);
   return PDX;
 }(PD);
-if (!customElements.get(PDX.is)) customElements.define(PDX.is, PDX); //# sourceMappingURL=p-d-x.js.map
+define(PDX); //# sourceMappingURL=p-d-x.js.map

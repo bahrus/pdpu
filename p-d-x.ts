@@ -1,5 +1,6 @@
 import { PD } from './p-d.js';
 import { ICssPropMap } from './p.js';
+import { define } from 'xtal-latx/define.js';
 
 //const attrib_filter = 'attrib-filter';
 
@@ -95,4 +96,4 @@ export class PDX extends PD {
 
 
 }
-if (!customElements.get(PDX.is)) customElements.define(PDX.is, PDX);
+define(PDX);

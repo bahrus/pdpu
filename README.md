@@ -125,74 +125,11 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
     </div>
 ```
 
-## Inline Script Props
-
-It is common to want to set function and object properties on a custom element.  This can be done as shown below:
-
-```html
-<script nomodule>
-({
-    fn: (obj, idx) => `<div>Row with index ${idx}</div>`
-})
-</script>
-<p-d on="eval" to="{rowGenerator:fn}">
-<my-virtual-list></my-virtual-list>
-```
-
-Note the "nomodule" attribute.  This code won't execute in modern browsers without p-d element making it execute via eval.
-
-It will execute in older browsers, but likely with no harm done / side effects (other than a small performance loss).
-
-Also note that if you are targeting older browsers, you will need to use syntax more like this:
-
-```html
-<script nomodule>
-({
-    function(obj, idx){
-        return '<div>Row with index ' + idx + '</div>';
-    } 
-})
-</script>
-```
-
-unless you add a build step that does the conversion for you.
-
-## Inline Script Pipeline Processing
-
-In the previous section, we described how you can define an object within script tags, and that object can be passed down to lower siblings.
-
-If instead of defining an object, one defines a function:
-
-```html
-<script nomodule>
-    pd => {
-        return pd.input;
-    }
-</script>
-<p-d on="eval" to="{input}">
-```
-
-then that function will be invoked every time anything passes property "input" to the p-d element below the script tag.  If the function returns an object, pieces of that object can be passed down just as before.
-
-If the expression inside the script tag evaluates to a function, it is evaluated against the p-d instance before assigning the properties to the target element.
-
-### A cautionary note on use of inline script pipeline processing
-
-The intent of these web components is that one can understand the UI like reading a novel - from beginning to end.  This should be possible while reading / writing the code, but also while debugging in the dev tools of your favorite browser.
-
-It would be amazing if one could debug the code found in these inline script pipelines, right in the context of the other UI elements.  The productivity benefit would be significant.  The only way I know how this could be done would be to define a function, by name, inside the script tag, and for these elements to call the function by name.  Then browsers generally would jump to the code inside the script tag, so you could at least see the surrounding elements. 
-
-The problem is this would pollute the global namespace with functions, and one developer's function overwriting another could trigger major team dysfunction. 
-
-In the lack of this support, if you use pipeline processing as shown above, one finds oneself staring at some code fragment floating in space when one adds a debug statement.  And there's no way to add a break point without editing the script.  And what if you want to unit test the code?  And as the JavaScript grows, the ability to get a good grasp of the UI diminishes. 
-
-For simple, trivial code, or preliminary prototyping, this might not be an issue.  But as the code grows in complexity and maturity, we basically need to start adding "hyperlinks" in the markup, if you follow my drift.  
-
 ###  Defining a piping custom element
 
 A convenience function is provided, that allows you to generate a "pipe" or "action" custom element with as few keystrokes as possible.
 
-Here's the syntax:
+Here's what the syntax looks like in a JavaScript file:
 
 ```JavaScript
 import {PDQ} from 'p-d.p-u/PDQ.js';
@@ -202,23 +139,21 @@ PDQ.define('my-pipeline-action', input => {
 });
 ```
 
-This will create a custom element with name "my-pipeline-action".  It applies the second argument, a function, to the "input" property of the custom element, every time the input changes.  It then stores the result in property "value", and emits an event with name "value-changed".
-
-Then you can replace the pipeline processing script tag above with:
+This will create a custom element with name "my-pipeline-action".  It applies the second argument, a function, to the "input" property of the custom element, every time the input changes.  It then stores the result in property "value", and emits an event with name "value-changed":
 
 ```html
 <my-pipeline-action></my-pipeline-action>
 <p-d on="value-changed" to="{input}">
 ```
 
-Of course, teams would need to give a naming convention to these pipeline custom elements so as to avoid conflicts, just as we would have to do with the global function issue mentioned above.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
+As with all custom element definitions, some care should be taken to ensure that the custom element names are unique.  This could be challenging if generating lots of small custom elements, like shown above, to be used in a large application, especially if that large application combines somewhat loosely coupled content from different teams, who also generate many custom elements.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
 ## Location, Location, Location
 
-If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the the code, you can still inline the code, without making the code float in space.  It would look like this:
+If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the code for one of these piping custom elements, you can "inline" the code quite close to where it is needed.  For now, this will only work if you avoid hard code the location of PDQ, for example via a CDN:
 
 ```html
-<p-d on="selected-root-nodes-changed" to="{input:target}" m="1"></p-d>
+<p-d on="selected-root-nodes-changed" to="{input:target}"></p-d>
 <script type="module">
     import {PDQ} from 'https://unpkg.com/p-d.p-u@0.0.64/PDQ.js?module';
     PDQ.define('selected-node-change-handler', (input) =>{
@@ -231,13 +166,17 @@ If the issue of mixing JavaScript script tags inside markup is *not* a serious c
 <selected-node-change-handler></selected-node-change-handler>
 ```
 
+With package map support, the import statement could look more like the example above 
+
 Now if you add a breakpoint, it will take you to the code, where you can see the surrounding markup.  But you will only see the *markup*, not the actual live elements, unfortunately.  Just saying.
 
 ## Debugging Tips
 
 Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some beneifits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
 
-However, you might find the following helpful.  What follows is Chrome-centric discussion, but other browsers should work as well:
+I'm quite excited to see Firefox nightly making some [giant leaps forward](https://blog.nightly.mozilla.org/2018/09/06/developer-tools-support-for-web-components-in-firefox-63/) in supporting universal web component debugging.
+
+However, you might find the following helpful.  What follows is Chrome-centric discussion, and requires support for dynamic import:
 
 In the console, type:
 
@@ -253,23 +192,6 @@ You should see an object, which you will want to expand.  This will list the val
 
 Now as you select other elements in the elements tab, in the console, hit the up arrow and enter (so you don't have to keep typing "$hell.getProperties($0)" each time).  You will have to keep expanding the result.
 
-## Adding a simple JavaScript event handler
-
-Suppose we want to attach a simple JavaScript event handler to a DOM Element.   Using p-d, it is possible to do this (if a bit strange looking):
-
-```html
-<button>Click Me</button>
-<p-d on="click" to="{input:target}"></p-d>
-<script nomodule>
-    pd =>{
-        console.log('the button that was clicked was:');
-        console.log(pd.input);
-    }
-</script>
-<p-d on="eval" to="{NA}"></p-d>
-```
-
-This is kind of a mind twister to understand.  The alternative element [xtal-deco](https://www.webcomponents.org/element/xtal-decorator), which is quite similar, provides a much more intuitive way of dynamically attaching event handlers to other DOM elements.
 
 ## Conditional Processing
 
@@ -289,26 +211,36 @@ One of the goals of these components is they can load asynchronously, and the ou
 
 So what happens if an element fires an event, before p-d has loaded and started listening?  What if you want to monitor a property that starts out with some initial value?
 
-To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add a condition as described above.
+To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add attribute **skip-init**.
 
 
 p-d is ~2.4KB minified and gzipped.
 
 ## Counter test
 
-Apparently, counter tests are a thing people use to compare "frameworks."  Here's what p-d's looks like:
+p-d, by itself, is not exactly turing-complete.  Even a simple "counter" is beyond its abilities.  A previous attempt to pile in enough hooks to do this proved clumsy.
+
+A nice companion custom element that works well together with p-d is [xtal-decorator](https://www.webcomponents.org/element/xtal-decorator).
+
+With these two combined the counter would look like:
 
 ```html
+    <xtal-deco>
+        <script nomodule>
+        ({
+            on: {
+                click:{
+                    this.counter++;
+                }
+            },
+            props:{
+                counter: 0
+            }
+        })
+        </script>
+    </xtal-deco>
     <button>Increment</button>
-    <p-d on="click" if="button" to="{input:NA}"></p-d>
-    <script nomodule>
-        counterState => {
-            counterState.value = (counterState.value || 0);
-            counterState.value++;
-            return counterState;
-        } 
-    </script>
-    <p-d on="eval" skip-init to="{innerText:value}"></p-d>
+    <p-d on="counter-changed" to="{innerText}"></p-d>
     <div></div>
 ```
 
@@ -355,7 +287,7 @@ For that we have:
 <p-unt on="click" dispatch to="myEventName{toggledNode:target.node}" composed bubbles></p-unt>
 ```
 
-The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.7KB minified and gzipped.
+The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.6KB minified and gzipped.
 
 ## Deluxe version [partially untested]
 
@@ -365,12 +297,11 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 2)  You can specify a nested path that needs setting (tested).
 3)  You can  specify multiple properties that need setting on the same element, more compactly (tested).
 4)  You can observe attribute changes, in lieu of listening for an event (tested).
-5)  You can copy all properties of the source to the target if you specify to="{.:.}" (tested).
-6)  Autogenerate custom element that can do pipeline processing.
+5)  You can copy all properties of the source to the target if you specify to="{.:.}" (partly tested).
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~3.2KB minified and gzipped.
+p-d, p-u and p-d-x, when combined into a single file, totals ~3.1KB minified and gzipped.
 
-When p-destal is added, the total is ~3.5 kb minified and gzipped.
+When p-destal is added, the total is ~3.3 kb minified and gzipped.
 
 ##  Differences to other "frameworks"
 

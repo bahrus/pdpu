@@ -36,13 +36,6 @@ export class P extends XtallatX(HTMLElement) {
     }
     set input(val) {
         this._input = val;
-        if (this._evalFn && (!this._destIsNA || (val && !val.isFake))) {
-            const returnObj = this._evalFn(this);
-            if (returnObj) {
-                this._handleEvent(returnObj);
-            }
-        }
-        //this._handleEvent(this._lastEvent);
     }
     static get observedAttributes() {
         return super.observedAttributes.concat([on, to, noblock, iff]);
@@ -127,28 +120,14 @@ export class P extends XtallatX(HTMLElement) {
         const prevSibling = this.getPreviousSib();
         if (!prevSibling)
             return;
-        if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
-            let evalObj = eval(prevSibling.innerHTML);
-            if (typeof (evalObj) === 'function') {
-                this._evalFn = evalObj;
-                if (!this._destIsNA && !this.hasAttribute('skip-init')) {
-                    evalObj(this);
-                }
-            }
-            else {
-                this._handleEvent(evalObj);
-            }
+        if (this._boundHandleEvent) {
+            return;
         }
         else {
-            if (this._boundHandleEvent) {
-                return;
-            }
-            else {
-                this._boundHandleEvent = this._handleEvent.bind(this);
-            }
-            prevSibling.addEventListener(this._on, this._boundHandleEvent);
-            prevSibling.removeAttribute('disabled');
+            this._boundHandleEvent = this._handleEvent.bind(this);
         }
+        prevSibling.addEventListener(this._on, this._boundHandleEvent);
+        prevSibling.removeAttribute('disabled');
     }
     onPropsChange() {
         if (!this._connected || !this._on || !this._to)

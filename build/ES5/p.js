@@ -123,28 +123,14 @@ function (_XtallatX) {
       var prevSibling = this.getPreviousSib();
       if (!prevSibling) return;
 
-      if (this._on === 'eval' && prevSibling.tagName === 'SCRIPT') {
-        var evalObj = eval(prevSibling.innerHTML);
-
-        if (typeof evalObj === 'function') {
-          this._evalFn = evalObj;
-
-          if (!this._destIsNA && !this.hasAttribute('skip-init')) {
-            evalObj(this);
-          }
-        } else {
-          this._handleEvent(evalObj);
-        }
+      if (this._boundHandleEvent) {
+        return;
       } else {
-        if (this._boundHandleEvent) {
-          return;
-        } else {
-          this._boundHandleEvent = this._handleEvent.bind(this);
-        }
-
-        prevSibling.addEventListener(this._on, this._boundHandleEvent);
-        prevSibling.removeAttribute('disabled');
+        this._boundHandleEvent = this._handleEvent.bind(this);
       }
+
+      prevSibling.addEventListener(this._on, this._boundHandleEvent);
+      prevSibling.removeAttribute('disabled');
     }
   }, {
     key: "onPropsChange",
@@ -276,15 +262,6 @@ function (_XtallatX) {
     },
     set: function set(val) {
       this._input = val;
-
-      if (this._evalFn && (!this._destIsNA || val && !val.isFake)) {
-        var returnObj = this._evalFn(this);
-
-        if (returnObj) {
-          this._handleEvent(returnObj);
-        }
-      } //this._handleEvent(this._lastEvent);
-
     }
   }], [{
     key: "observedAttributes",
