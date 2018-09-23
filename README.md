@@ -217,7 +217,7 @@ So what happens if an element fires an event, before p-d has loaded and started 
 To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add attribute **skip-init**.
 
 
-p-d is ~2.4KB minified and gzipped.
+p-d is ~2.3KB minified and gzipped.
 
 ## Counter test
 
