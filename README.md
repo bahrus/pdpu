@@ -2,6 +2,7 @@
 
 <a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
+<img src="http://img.badgesize.io/https://unpkg.com/p-d.p-u@0.0.70/build/ES6/p-d.iife.js?compression=gzip">
 
 # \<p-d\>, \<p-u\>
 
@@ -310,7 +311,36 @@ When p-destal is added, the total is ~3.3 kb minified and gzipped.
 
 While these components provide a kind of "framework built with web components", similar to Polymer, there's a fundamental difference.  Unlike Polymer (and other competing frameworks), these components don't depend on the existence of a controlling component which manages state.  Instead, it is a little more JQuery like.  It is a "peer-to-peer binding framework."  This may be more appealing for some people / use cases, less appealing to others.   But these components should be compatible with such frameworks, and may be useful for filling in some cracks with less boilerplate code.
 
+And if you want to add some state management while sticking to codeless, declarative approaches, consider using [xtal-state](https://www.webcomponents.org/element/xtal-state).  You can place a history.state watcher at the top of a DOM element, for example:
 
+```html
+<div>
+    <xtal-state-watch watch level="local"></xtal-state-watch>
+    <p-d on="history-changed" to="#handleViewableNodesChanged{firstVisibleIndex:target.history}" m="1"></p-d>
+    ...
+</div>
+```
+
+Note the use of the attribute "level='local'".  This limits the scope of the state to the local div DOM element.  Then if you need to update this local state, add another tag:
+
+```html
+<div>
+    ...
+    <iron-list>
+        ...
+    </iron-list>
+    <p-d on="scroll" to="{ironList:target}"></p-d>
+    <aggregator-fn><script nomodule>
+      ({ironList}) => {
+        firstVisibleIndex = ironList.firstVisibleIndex;
+        return firstVisibleIndex;
+      }
+    </script></aggregator-fn>
+    <p-d on="value-changed" to="{history}"></p-d>
+    <xtal-state-commit level="local" rewrite href="/scroll"></xtal-state-commit>
+...
+</div>
+```
 
 ## Install the Polymer-CLI
 
