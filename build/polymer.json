@@ -2,8 +2,8 @@
   "entrypoint": "index.html",
   "fragments": [],
   "sources": [
-    "p.js",
     "p-d.js",
+    "p-d.iife.js",
     "p-u.js",
     "p-d.p-u.js",
     "p-d-x.js",

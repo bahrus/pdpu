@@ -106,7 +106,7 @@ function (_P) {
       this._sibObs = new MutationObserver(function (mutationsList) {
         if (!_this2._lastEvent) return; //this.passDownProp(this._lastResult);
 
-        _this2._handleEvent(_this2._lastEvent);
+        _this2._hndEv(_this2._lastEvent);
       });
 
       this._sibObs.observe(elementToObserve, {

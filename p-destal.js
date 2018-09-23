@@ -6,7 +6,7 @@ export class PDestal extends PDX {
         this._previousValues = {};
     }
     static get is() { return 'p-destal'; }
-    getPreviousSib() {
+    getPSib() {
         let parent = this;
         while (parent = parent.parentNode) {
             if (parent.nodeType === 11) {
@@ -37,7 +37,7 @@ export class PDestal extends PDX {
             const fakeEvent = {
                 target: this._previousValues,
             };
-            this._handleEvent(fakeEvent);
+            this._hndEv(fakeEvent);
         }
     }
     watchLocation() {

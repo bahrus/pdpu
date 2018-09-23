@@ -59,12 +59,12 @@ export class PDX extends PD {
     }
 
     _attributeObserver!: MutationObserver;
-    attachEventListeners() {
+    attchEvListnrs() {
         if (this._on[0] !== '[') {
-            super.attachEventListeners();
+            super.attchEvListnrs();
             return;
         }
-        const prevSibling = this.getPreviousSib();
+        const prevSibling = this.getPSib();
         if(!prevSibling) return;
         const split = this._on.split(',').map(s => s.substr(1, s.length - 2));
         const config = {
@@ -82,7 +82,7 @@ export class PDX extends PD {
                 values: values,
                 target: prevSibling
             } as Event;
-            this._handleEvent(fakeEvent);
+            this._hndEv(fakeEvent);
         });
         this._attributeObserver.observe(prevSibling, config);
     }

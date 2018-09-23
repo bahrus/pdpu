@@ -64,7 +64,7 @@ export abstract class P extends XtallatX(HTMLElement){
                 if(newVal.endsWith('}')) newVal += ';';
                 this._to = newVal;
                 this.parseTo();
-                if(this._lastEvent) this._handleEvent(this._lastEvent);
+                if(this._lastEvent) this._hndEv(this._lastEvent);
                 break;
             case noblock:
                 (<any>this)[f] = newVal !== null;
@@ -72,13 +72,15 @@ export abstract class P extends XtallatX(HTMLElement){
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
-
-    getPreviousSib() : Element | null{
-        let prevSibling = this as Element | null;
-        while(prevSibling && prevSibling.tagName.startsWith('P-')){
-            prevSibling = prevSibling.previousElementSibling!;
+    /**
+     * get previous sibling
+     */
+    getPSib() : Element | null{
+        let pS = this as Element | null;
+        while(pS && pS.tagName.startsWith('P-')){
+            pS = pS.previousElementSibling!;
         }
-        return prevSibling;
+        return pS;
     }
     connectedCallback(){
         this.style.display = 'none';
@@ -91,29 +93,29 @@ export abstract class P extends XtallatX(HTMLElement){
             let lastEvent = this._lastEvent;
             if(!lastEvent){
                 lastEvent = <any>{
-                    target: this.getPreviousSib(),
+                    target: this.getPSib(),
                     isFake: true
                 } as Event;
             }
-            if(this._handleEvent) this._handleEvent(lastEvent);
+            if(this._hndEv) this._hndEv(lastEvent);
         }        
         if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
             (<any>this).addMutationObserver(<any>this as HTMLElement, false);
             this._addedSMO = true;
         }
     }
-    detach(prevSibling: Element){
-        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
+    detach(pS: Element){
+        pS.removeEventListener(this._on, this._bndHndlEv);
     }
     disconnectedCallback(){
-        const prevSibling = this.getPreviousSib();
-        if(prevSibling && this._boundHandleEvent) this.detach(prevSibling);
+        const pS = this.getPSib();
+        if(pS && this._bndHndlEv) this.detach(pS);
         this.disconnect();
     }
-    _boundHandleEvent!: any;
+    _bndHndlEv!: any;
     abstract pass(e: Event) : void;
     _lastEvent!: Event;
-    _handleEvent(e: Event){
+    _hndEv(e: Event){
         if(this.hasAttribute('debug')) debugger;
         if(!e) return;
         if(e.stopPropagation && !this._noblock) e.stopPropagation();
@@ -125,25 +127,25 @@ export abstract class P extends XtallatX(HTMLElement){
         this.pass(e);
     }
     _destIsNA!: boolean;
-    attachEventListeners(){
+    attchEvListnrs(){
         const attrFilters = [];
-        const prevSibling = this.getPreviousSib();
-        if(!prevSibling) return;
+        const pS = this.getPSib();
+        if(!pS) return;
         
-        if(this._boundHandleEvent){
+        if(this._bndHndlEv){
             return;
         }else{
-            this._boundHandleEvent = this._handleEvent.bind(this);
+            this._bndHndlEv = this._hndEv.bind(this);
         }
 
-        prevSibling.addEventListener(this._on, this._boundHandleEvent);
-        prevSibling.removeAttribute('disabled');
+        pS.addEventListener(this._on, this._bndHndlEv);
+        pS.removeAttribute('disabled');
 
     }
     _connected = false;
     onPropsChange(){
         if(!this._connected || !this._on || !this._to) return;
-        this.attachEventListeners();
+        this.attchEvListnrs();
     }
     _cssPropMap!: ICssPropMap[];
     _lastTo!: string;
@@ -161,16 +163,16 @@ export abstract class P extends XtallatX(HTMLElement){
         this._cssPropMap = [];
         const splitPassDown = this._to.split('};');
         const onlyOne = splitPassDown.length <= 2;
-        splitPassDown.forEach(passDownSelectorAndProp => {
-            if (!passDownSelectorAndProp) return;
-            const mapTokens = passDownSelectorAndProp.split('{');
-            let cssSelector = mapTokens[0];
-            if(!cssSelector && onlyOne){
-                cssSelector = '*';
+        splitPassDown.forEach(pdItem => {
+            if (!pdItem) return;
+            const mT = pdItem.split('{');
+            let cssSel = mT[0];
+            if(!cssSel && onlyOne){
+                cssSel = '*';
                 (<any>this)._m = 1;
                 (<any>this)._hasMax = true;
             }
-           this.parseMapping(mapTokens, cssSelector);
+           this.parseMapping(mT, cssSel);
         })
 
     }

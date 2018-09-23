@@ -183,7 +183,7 @@
             if (newVal.endsWith('}')) newVal += ';';
             this._to = newVal;
             this.parseTo();
-            if (this._lastEvent) this._handleEvent(this._lastEvent);
+            if (this._lastEvent) this._hndEv(this._lastEvent);
             break;
 
           case noblock:
@@ -193,16 +193,20 @@
 
         babelHelpers.get(P.prototype.__proto__ || Object.getPrototypeOf(P.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
       }
-    }, {
-      key: "getPreviousSib",
-      value: function getPreviousSib() {
-        var prevSibling = this;
+      /**
+       * get previous sibling
+       */
 
-        while (prevSibling && prevSibling.tagName.startsWith('P-')) {
-          prevSibling = prevSibling.previousElementSibling;
+    }, {
+      key: "getPSib",
+      value: function getPSib() {
+        var pS = this;
+
+        while (pS && pS.tagName.startsWith('P-')) {
+          pS = pS.previousElementSibling;
         }
 
-        return prevSibling;
+        return pS;
       }
     }, {
       key: "connectedCallback",
@@ -225,12 +229,12 @@
 
           if (!lastEvent) {
             lastEvent = {
-              target: this.getPreviousSib(),
+              target: this.getPSib(),
               isFake: true
             };
           }
 
-          if (this._handleEvent) this._handleEvent(lastEvent);
+          if (this._hndEv) this._hndEv(lastEvent);
         }
 
         if (!this._addedSMO && this.addMutationObserver) {
@@ -240,19 +244,19 @@
       }
     }, {
       key: "detach",
-      value: function detach(prevSibling) {
-        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
+      value: function detach(pS) {
+        pS.removeEventListener(this._on, this._bndHndlEv);
       }
     }, {
       key: "disconnectedCallback",
       value: function disconnectedCallback() {
-        var prevSibling = this.getPreviousSib();
-        if (prevSibling && this._boundHandleEvent) this.detach(prevSibling);
+        var pS = this.getPSib();
+        if (pS && this._bndHndlEv) this.detach(pS);
         this.disconnect();
       }
     }, {
-      key: "_handleEvent",
-      value: function _handleEvent(e) {
+      key: "_hndEv",
+      value: function _hndEv(e) {
         if (this.hasAttribute('debug')) debugger;
         if (!e) return;
         if (e.stopPropagation && !this._noblock) e.stopPropagation();
@@ -266,26 +270,26 @@
         this.pass(e);
       }
     }, {
-      key: "attachEventListeners",
-      value: function attachEventListeners() {
+      key: "attchEvListnrs",
+      value: function attchEvListnrs() {
         var attrFilters = [];
-        var prevSibling = this.getPreviousSib();
-        if (!prevSibling) return;
+        var pS = this.getPSib();
+        if (!pS) return;
 
-        if (this._boundHandleEvent) {
+        if (this._bndHndlEv) {
           return;
         } else {
-          this._boundHandleEvent = this._handleEvent.bind(this);
+          this._bndHndlEv = this._hndEv.bind(this);
         }
 
-        prevSibling.addEventListener(this._on, this._boundHandleEvent);
-        prevSibling.removeAttribute('disabled');
+        pS.addEventListener(this._on, this._bndHndlEv);
+        pS.removeAttribute('disabled');
       }
     }, {
       key: "onPropsChange",
       value: function onPropsChange() {
         if (!this._connected || !this._on || !this._to) return;
-        this.attachEventListeners();
+        this.attchEvListnrs();
       }
     }, {
       key: "parseMapping",
@@ -310,18 +314,18 @@
         var splitPassDown = this._to.split('};');
 
         var onlyOne = splitPassDown.length <= 2;
-        splitPassDown.forEach(function (passDownSelectorAndProp) {
-          if (!passDownSelectorAndProp) return;
-          var mapTokens = passDownSelectorAndProp.split('{');
-          var cssSelector = mapTokens[0];
+        splitPassDown.forEach(function (pdItem) {
+          if (!pdItem) return;
+          var mT = pdItem.split('{');
+          var cssSel = mT[0];
 
-          if (!cssSelector && onlyOne) {
-            cssSelector = '*';
+          if (!cssSel && onlyOne) {
+            cssSel = '*';
             _this5._m = 1;
             _this5._hasMax = true;
           }
 
-          _this5.parseMapping(mapTokens, cssSelector);
+          _this5.parseMapping(mT, cssSel);
         });
       }
     }, {
@@ -527,7 +531,7 @@
         this._sibObs = new MutationObserver(function (mutationsList) {
           if (!_this7._lastEvent) return; //this.passDownProp(this._lastResult);
 
-          _this7._handleEvent(_this7._lastEvent);
+          _this7._hndEv(_this7._lastEvent);
         });
 
         this._sibObs.observe(elementToObserve, {

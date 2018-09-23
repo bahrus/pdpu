@@ -76,16 +76,16 @@ function (_PD) {
       ;
     }
   }, {
-    key: "attachEventListeners",
-    value: function attachEventListeners() {
+    key: "attchEvListnrs",
+    value: function attchEvListnrs() {
       var _this2 = this;
 
       if (this._on[0] !== '[') {
-        babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "attachEventListeners", this).call(this);
+        babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
         return;
       }
 
-      var prevSibling = this.getPreviousSib();
+      var prevSibling = this.getPSib();
       if (!prevSibling) return;
 
       var split = this._on.split(',').map(function (s) {
@@ -107,7 +107,7 @@ function (_PD) {
           target: prevSibling
         };
 
-        _this2._handleEvent(fakeEvent);
+        _this2._hndEv(fakeEvent);
       });
 
       this._attributeObserver.observe(prevSibling, config);

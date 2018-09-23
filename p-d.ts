@@ -89,14 +89,14 @@ export class PD extends P {
 
     _addedSMO!: boolean; //addedSiblingMutationObserver
     addMutObs(baseElement: Element, isParent: boolean) {
-        let elementToObserve = isParent ? baseElement : baseElement.parentElement;
-        if (!elementToObserve) return; //TODO
-        this._sibObs = new MutationObserver((mutationsList: MutationRecord[]) => {
+        let elToObs = isParent ? baseElement : baseElement.parentElement;
+        if (!elToObs) return; //TODO
+        this._sibObs = new MutationObserver((m: MutationRecord[]) => {
             if (!this._lastEvent) return;
             //this.passDownProp(this._lastResult);
-            this._handleEvent(this._lastEvent);
+            this._hndEv(this._lastEvent);
         });
-        this._sibObs.observe(elementToObserve, { childList: true });
+        this._sibObs.observe(elToObs, { childList: true });
     }
 
 

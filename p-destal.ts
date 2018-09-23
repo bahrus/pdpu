@@ -6,7 +6,7 @@ export class PDestal extends PDX {
 
     _host!: HTMLElement;
     _useLocation!: boolean;
-    getPreviousSib() {
+    getPSib() {
         let parent = this as Node | null;
         while (parent = parent!.parentNode) {
             if ((<HTMLElement>parent).nodeType === 11) {
@@ -36,7 +36,7 @@ export class PDestal extends PDX {
             const fakeEvent = <any>{
                 target: this._previousValues,
             } as Event;
-            this._handleEvent(fakeEvent)
+            this._hndEv(fakeEvent)
         }
 
     }

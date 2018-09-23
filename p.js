@@ -54,7 +54,7 @@ export class P extends XtallatX(HTMLElement) {
                 this._to = newVal;
                 this.parseTo();
                 if (this._lastEvent)
-                    this._handleEvent(this._lastEvent);
+                    this._hndEv(this._lastEvent);
                 break;
             case noblock:
                 this[f] = newVal !== null;
@@ -62,12 +62,15 @@ export class P extends XtallatX(HTMLElement) {
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
-    getPreviousSib() {
-        let prevSibling = this;
-        while (prevSibling && prevSibling.tagName.startsWith('P-')) {
-            prevSibling = prevSibling.previousElementSibling;
+    /**
+     * get previous sibling
+     */
+    getPSib() {
+        let pS = this;
+        while (pS && pS.tagName.startsWith('P-')) {
+            pS = pS.previousElementSibling;
         }
-        return prevSibling;
+        return pS;
     }
     connectedCallback() {
         this.style.display = 'none';
@@ -79,28 +82,28 @@ export class P extends XtallatX(HTMLElement) {
             let lastEvent = this._lastEvent;
             if (!lastEvent) {
                 lastEvent = {
-                    target: this.getPreviousSib(),
+                    target: this.getPSib(),
                     isFake: true
                 };
             }
-            if (this._handleEvent)
-                this._handleEvent(lastEvent);
+            if (this._hndEv)
+                this._hndEv(lastEvent);
         }
         if (!this._addedSMO && this.addMutationObserver) {
             this.addMutationObserver(this, false);
             this._addedSMO = true;
         }
     }
-    detach(prevSibling) {
-        prevSibling.removeEventListener(this._on, this._boundHandleEvent);
+    detach(pS) {
+        pS.removeEventListener(this._on, this._bndHndlEv);
     }
     disconnectedCallback() {
-        const prevSibling = this.getPreviousSib();
-        if (prevSibling && this._boundHandleEvent)
-            this.detach(prevSibling);
+        const pS = this.getPSib();
+        if (pS && this._bndHndlEv)
+            this.detach(pS);
         this.disconnect();
     }
-    _handleEvent(e) {
+    _hndEv(e) {
         if (this.hasAttribute('debug'))
             debugger;
         if (!e)
@@ -115,24 +118,24 @@ export class P extends XtallatX(HTMLElement) {
         }
         this.pass(e);
     }
-    attachEventListeners() {
+    attchEvListnrs() {
         const attrFilters = [];
-        const prevSibling = this.getPreviousSib();
-        if (!prevSibling)
+        const pS = this.getPSib();
+        if (!pS)
             return;
-        if (this._boundHandleEvent) {
+        if (this._bndHndlEv) {
             return;
         }
         else {
-            this._boundHandleEvent = this._handleEvent.bind(this);
+            this._bndHndlEv = this._hndEv.bind(this);
         }
-        prevSibling.addEventListener(this._on, this._boundHandleEvent);
-        prevSibling.removeAttribute('disabled');
+        pS.addEventListener(this._on, this._bndHndlEv);
+        pS.removeAttribute('disabled');
     }
     onPropsChange() {
         if (!this._connected || !this._on || !this._to)
             return;
-        this.attachEventListeners();
+        this.attchEvListnrs();
     }
     parseMapping(mapTokens, cssSelector) {
         const splitPropPointer = mapTokens[1].split(':');
@@ -149,17 +152,17 @@ export class P extends XtallatX(HTMLElement) {
         this._cssPropMap = [];
         const splitPassDown = this._to.split('};');
         const onlyOne = splitPassDown.length <= 2;
-        splitPassDown.forEach(passDownSelectorAndProp => {
-            if (!passDownSelectorAndProp)
+        splitPassDown.forEach(pdItem => {
+            if (!pdItem)
                 return;
-            const mapTokens = passDownSelectorAndProp.split('{');
-            let cssSelector = mapTokens[0];
-            if (!cssSelector && onlyOne) {
-                cssSelector = '*';
+            const mT = pdItem.split('{');
+            let cssSel = mT[0];
+            if (!cssSel && onlyOne) {
+                cssSel = '*';
                 this._m = 1;
                 this._hasMax = true;
             }
-            this.parseMapping(mapTokens, cssSelector);
+            this.parseMapping(mT, cssSel);
         });
     }
     setVal(e, target, map) {

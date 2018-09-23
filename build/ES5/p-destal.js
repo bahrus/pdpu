@@ -15,8 +15,8 @@ function (_PDX) {
   }
 
   babelHelpers.createClass(PDestal, [{
-    key: "getPreviousSib",
-    value: function getPreviousSib() {
+    key: "getPSib",
+    value: function getPSib() {
       var parent = this;
 
       while (parent = parent.parentNode) {
@@ -55,7 +55,7 @@ function (_PDX) {
           target: this._previousValues
         };
 
-        this._handleEvent(fakeEvent);
+        this._hndEv(fakeEvent);
       }
     }
   }, {

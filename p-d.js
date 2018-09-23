@@ -85,7 +85,7 @@ export class PD extends P {
             if (!this._lastEvent)
                 return;
             //this.passDownProp(this._lastResult);
-            this._handleEvent(this._lastEvent);
+            this._hndEv(this._lastEvent);
         });
         this._sibObs.observe(elementToObserve, { childList: true });
     }
