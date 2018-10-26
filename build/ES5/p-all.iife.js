@@ -27,7 +27,7 @@
           var _this;
 
           babelHelpers.classCallCheck(this, _class);
-          _this = babelHelpers.possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+          _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(_class).apply(this, arguments));
           _this._evCount = {};
           return _this;
         }
@@ -161,7 +161,7 @@
       var _this3;
 
       babelHelpers.classCallCheck(this, P);
-      _this3 = babelHelpers.possibleConstructorReturn(this, (P.__proto__ || Object.getPrototypeOf(P)).call(this));
+      _this3 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
       _this3._addedSMO = false;
       _this3._connected = false;
       return _this3;
@@ -191,7 +191,7 @@
             break;
         }
 
-        babelHelpers.get(P.prototype.__proto__ || Object.getPrototypeOf(P.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
+        babelHelpers.get(babelHelpers.getPrototypeOf(P.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
       }
       /**
        * get previous sibling
@@ -419,7 +419,7 @@
     }], [{
       key: "observedAttributes",
       get: function get() {
-        return babelHelpers.get(P.__proto__ || Object.getPrototypeOf(P), "observedAttributes", this).concat([on, to, noblock, iff]);
+        return babelHelpers.get(babelHelpers.getPrototypeOf(P), "observedAttributes", this).concat([on, to, noblock, iff]);
       }
     }]);
     return P;
@@ -446,13 +446,15 @@
 
     function PD() {
       babelHelpers.classCallCheck(this, PD);
-      return babelHelpers.possibleConstructorReturn(this, (PD.__proto__ || Object.getPrototypeOf(PD)).apply(this, arguments));
+      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
     }
 
     babelHelpers.createClass(PD, [{
       key: "pass",
       value: function pass(e) {
+        this.attr('pds', '🔫');
         this.passDown(this.nextElementSibling, e, 0);
+        this.attr('pds', '🥍');
       }
     }, {
       key: "passDown",
@@ -507,13 +509,13 @@
 
         }
 
-        babelHelpers.get(PD.prototype.__proto__ || Object.getPrototypeOf(PD.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
+        babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
         this.onPropsChange();
       }
     }, {
       key: "connectedCallback",
       value: function connectedCallback() {
-        babelHelpers.get(PD.prototype.__proto__ || Object.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
+        babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
 
         this._upgradeProperties([m]);
 
@@ -525,16 +527,16 @@
       value: function addMutObs(baseElement, isParent) {
         var _this7 = this;
 
-        var elementToObserve = isParent ? baseElement : baseElement.parentElement;
-        if (!elementToObserve) return; //TODO
+        var elToObs = isParent ? baseElement : baseElement.parentElement;
+        if (!elToObs) return; //TODO
 
-        this._sibObs = new MutationObserver(function (mutationsList) {
+        this._sibObs = new MutationObserver(function (m) {
           if (!_this7._lastEvent) return; //this.passDownProp(this._lastResult);
 
           _this7._hndEv(_this7._lastEvent);
         });
 
-        this._sibObs.observe(elementToObserve, {
+        this._sibObs.observe(elToObs, {
           childList: true
         });
       }
@@ -554,7 +556,7 @@
     }, {
       key: "observedAttributes",
       get: function get() {
-        return babelHelpers.get(PD.__proto__ || Object.getPrototypeOf(PD), "observedAttributes", this).concat([m]);
+        return babelHelpers.get(babelHelpers.getPrototypeOf(PD), "observedAttributes", this).concat([m]);
       }
     }]);
     return PD;
@@ -569,7 +571,7 @@
 
     function PDX() {
       babelHelpers.classCallCheck(this, PDX);
-      return babelHelpers.possibleConstructorReturn(this, (PDX.__proto__ || Object.getPrototypeOf(PDX)).apply(this, arguments));
+      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDX).apply(this, arguments));
     }
 
     babelHelpers.createClass(PDX, [{
@@ -642,7 +644,7 @@
         var _this9 = this;
 
         if (this._on[0] !== '[') {
-          babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
+          babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
           return;
         }
 
@@ -682,7 +684,7 @@
       key: "disconnectedCallback",
       value: function disconnectedCallback() {
         this.disconnect();
-        babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "disconnectedCallback", this).call(this);
+        babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "disconnectedCallback", this).call(this);
       }
     }], [{
       key: "is",
@@ -710,7 +712,7 @@
 
     function PU() {
       babelHelpers.classCallCheck(this, PU);
-      return babelHelpers.possibleConstructorReturn(this, (PU.__proto__ || Object.getPrototypeOf(PU)).apply(this, arguments));
+      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PU).apply(this, arguments));
     }
 
     babelHelpers.createClass(PU, [{
@@ -764,7 +766,7 @@
     }, {
       key: "connectedCallback",
       value: function connectedCallback() {
-        babelHelpers.get(PU.prototype.__proto__ || Object.getPrototypeOf(PU.prototype), "connectedCallback", this).call(this);
+        babelHelpers.get(babelHelpers.getPrototypeOf(PU.prototype), "connectedCallback", this).call(this);
         this._connected = true;
         this.onPropsChange();
       }
@@ -788,7 +790,7 @@
       var _this11;
 
       babelHelpers.classCallCheck(this, PDestal);
-      _this11 = babelHelpers.possibleConstructorReturn(this, (PDestal.__proto__ || Object.getPrototypeOf(PDestal)).apply(this, arguments));
+      _this11 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
       _this11._previousValues = {};
       return _this11;
     }
@@ -865,7 +867,7 @@
 
     function PS() {
       babelHelpers.classCallCheck(this, PS);
-      return babelHelpers.possibleConstructorReturn(this, (PS.__proto__ || Object.getPrototypeOf(PS)).apply(this, arguments));
+      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PS).apply(this, arguments));
     }
 
     babelHelpers.createClass(PS, [{

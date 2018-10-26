@@ -16,7 +16,7 @@ function (_P) {
 
   function PU() {
     babelHelpers.classCallCheck(this, PU);
-    return babelHelpers.possibleConstructorReturn(this, (PU.__proto__ || Object.getPrototypeOf(PU)).apply(this, arguments));
+    return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PU).apply(this, arguments));
   }
 
   babelHelpers.createClass(PU, [{
@@ -70,7 +70,7 @@ function (_P) {
   }, {
     key: "connectedCallback",
     value: function connectedCallback() {
-      babelHelpers.get(PU.prototype.__proto__ || Object.getPrototypeOf(PU.prototype), "connectedCallback", this).call(this);
+      babelHelpers.get(babelHelpers.getPrototypeOf(PU.prototype), "connectedCallback", this).call(this);
       this._connected = true;
       this.onPropsChange();
     }

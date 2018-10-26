@@ -9,7 +9,7 @@ function (_PDX) {
     var _this;
 
     babelHelpers.classCallCheck(this, PDestal);
-    _this = babelHelpers.possibleConstructorReturn(this, (PDestal.__proto__ || Object.getPrototypeOf(PDestal)).apply(this, arguments));
+    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
     _this._previousValues = {};
     return _this;
   }

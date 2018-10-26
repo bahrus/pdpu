@@ -31,7 +31,9 @@ export class PD extends P {
 
 
     pass(e: Event) {
+        this.attr('pds', '🔫');
         this.passDown(this.nextElementSibling, e, 0);
+        this.attr('pds', '🥍');
     }
 
     passDown(start: Element | null, e: Event, count: number) {

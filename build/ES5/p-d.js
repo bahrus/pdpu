@@ -21,13 +21,15 @@ function (_P) {
 
   function PD() {
     babelHelpers.classCallCheck(this, PD);
-    return babelHelpers.possibleConstructorReturn(this, (PD.__proto__ || Object.getPrototypeOf(PD)).apply(this, arguments));
+    return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
   }
 
   babelHelpers.createClass(PD, [{
     key: "pass",
     value: function pass(e) {
+      this.attr('pds', '🔫');
       this.passDown(this.nextElementSibling, e, 0);
+      this.attr('pds', '🥍');
     }
   }, {
     key: "passDown",
@@ -82,13 +84,13 @@ function (_P) {
 
       }
 
-      babelHelpers.get(PD.prototype.__proto__ || Object.getPrototypeOf(PD.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
+      babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
       this.onPropsChange();
     }
   }, {
     key: "connectedCallback",
     value: function connectedCallback() {
-      babelHelpers.get(PD.prototype.__proto__ || Object.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
+      babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
 
       this._upgradeProperties([m]);
 
@@ -100,16 +102,16 @@ function (_P) {
     value: function addMutObs(baseElement, isParent) {
       var _this2 = this;
 
-      var elementToObserve = isParent ? baseElement : baseElement.parentElement;
-      if (!elementToObserve) return; //TODO
+      var elToObs = isParent ? baseElement : baseElement.parentElement;
+      if (!elToObs) return; //TODO
 
-      this._sibObs = new MutationObserver(function (mutationsList) {
+      this._sibObs = new MutationObserver(function (m) {
         if (!_this2._lastEvent) return; //this.passDownProp(this._lastResult);
 
         _this2._hndEv(_this2._lastEvent);
       });
 
-      this._sibObs.observe(elementToObserve, {
+      this._sibObs.observe(elToObs, {
         childList: true
       });
     }
@@ -129,7 +131,7 @@ function (_P) {
   }, {
     key: "observedAttributes",
     get: function get() {
-      return babelHelpers.get(PD.__proto__ || Object.getPrototypeOf(PD), "observedAttributes", this).concat([m]);
+      return babelHelpers.get(babelHelpers.getPrototypeOf(PD), "observedAttributes", this).concat([m]);
     }
   }]);
   return PD;

@@ -19,7 +19,7 @@ function () {
           var _this;
 
           babelHelpers.classCallCheck(this, newClass);
-          _this = babelHelpers.possibleConstructorReturn(this, (newClass.__proto__ || Object.getPrototypeOf(newClass)).call(this));
+          _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(newClass).call(this));
           _this._connected = false;
           _this.style.display = 'none';
           return _this;
@@ -35,7 +35,7 @@ function () {
         }, {
           key: "attributeChangedCallback",
           value: function attributeChangedCallback(name, oldVal, newVal) {
-            babelHelpers.get(newClass.prototype.__proto__ || Object.getPrototypeOf(newClass.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
+            babelHelpers.get(babelHelpers.getPrototypeOf(newClass.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
 
             switch (name) {
               case 'input':

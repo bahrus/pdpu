@@ -7,7 +7,7 @@ function (_PDX) {
 
   function PS() {
     babelHelpers.classCallCheck(this, PS);
-    return babelHelpers.possibleConstructorReturn(this, (PS.__proto__ || Object.getPrototypeOf(PS)).apply(this, arguments));
+    return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PS).apply(this, arguments));
   }
 
   babelHelpers.createClass(PS, [{

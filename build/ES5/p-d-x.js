@@ -8,7 +8,7 @@ function (_PD) {
 
   function PDX() {
     babelHelpers.classCallCheck(this, PDX);
-    return babelHelpers.possibleConstructorReturn(this, (PDX.__proto__ || Object.getPrototypeOf(PDX)).apply(this, arguments));
+    return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDX).apply(this, arguments));
   }
 
   babelHelpers.createClass(PDX, [{
@@ -81,7 +81,7 @@ function (_PD) {
       var _this2 = this;
 
       if (this._on[0] !== '[') {
-        babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
+        babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
         return;
       }
 
@@ -121,7 +121,7 @@ function (_PD) {
     key: "disconnectedCallback",
     value: function disconnectedCallback() {
       this.disconnect();
-      babelHelpers.get(PDX.prototype.__proto__ || Object.getPrototypeOf(PDX.prototype), "disconnectedCallback", this).call(this);
+      babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "disconnectedCallback", this).call(this);
     }
   }], [{
     key: "is",

@@ -24,7 +24,9 @@ export class PD extends P {
         return super.observedAttributes.concat([m]);
     }
     pass(e) {
+        this.attr('pds', '🔫');
         this.passDown(this.nextElementSibling, e, 0);
+        this.attr('pds', '🥍');
     }
     passDown(start, e, count) {
         let nextSib = start;
@@ -78,16 +80,16 @@ export class PD extends P {
         this.onPropsChange();
     }
     addMutObs(baseElement, isParent) {
-        let elementToObserve = isParent ? baseElement : baseElement.parentElement;
-        if (!elementToObserve)
+        let elToObs = isParent ? baseElement : baseElement.parentElement;
+        if (!elToObs)
             return; //TODO
-        this._sibObs = new MutationObserver((mutationsList) => {
+        this._sibObs = new MutationObserver((m) => {
             if (!this._lastEvent)
                 return;
             //this.passDownProp(this._lastResult);
             this._hndEv(this._lastEvent);
         });
-        this._sibObs.observe(elementToObserve, { childList: true });
+        this._sibObs.observe(elToObs, { childList: true });
     }
 }
 define(PD);
