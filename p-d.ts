@@ -31,9 +31,9 @@ export class PD extends P {
 
 
     pass(e: Event) {
-        this.attr('pds', '🔫');
+        this.attr('pds', '🌩️');
         this.passDown(this.nextElementSibling, e, 0);
-        this.attr('pds', '🥍');
+        this.attr('pds', '👂');
     }
 
     passDown(start: Element | null, e: Event, count: number) {
@@ -84,6 +84,7 @@ export class PD extends P {
         super.connectedCallback();
         this._upgradeProperties([m])
         this._connected = true;
+        this.attr('pds', '📞');
         this.onPropsChange();
     }
 

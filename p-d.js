@@ -24,9 +24,9 @@ export class PD extends P {
         return super.observedAttributes.concat([m]);
     }
     pass(e) {
-        this.attr('pds', '🔫');
+        this.attr('pds', '🌩️');
         this.passDown(this.nextElementSibling, e, 0);
-        this.attr('pds', '🥍');
+        this.attr('pds', '👂');
     }
     passDown(start, e, count) {
         let nextSib = start;
@@ -77,6 +77,7 @@ export class PD extends P {
         super.connectedCallback();
         this._upgradeProperties([m]);
         this._connected = true;
+        this.attr('pds', '📞');
         this.onPropsChange();
     }
     addMutObs(baseElement, isParent) {

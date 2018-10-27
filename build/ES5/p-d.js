@@ -27,9 +27,9 @@ function (_P) {
   babelHelpers.createClass(PD, [{
     key: "pass",
     value: function pass(e) {
-      this.attr('pds', '🔫');
+      this.attr('pds', '🌩️');
       this.passDown(this.nextElementSibling, e, 0);
-      this.attr('pds', '🥍');
+      this.attr('pds', '👂');
     }
   }, {
     key: "passDown",
@@ -95,6 +95,7 @@ function (_P) {
       this._upgradeProperties([m]);
 
       this._connected = true;
+      this.attr('pds', '📞');
       this.onPropsChange();
     }
   }, {
