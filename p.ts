@@ -1,4 +1,5 @@
 import {XtallatX} from 'xtal-latx/xtal-latx.js';
+import { pseudoRandomBytes } from 'crypto';
 
 export interface ICssPropMap {
     cssSelector: string;
@@ -139,7 +140,15 @@ export abstract class P extends XtallatX(HTMLElement){
         }
 
         pS.addEventListener(this._on, this._bndHndlEv);
-        pS.removeAttribute('disabled');
+        const da = pS.getAttribute('disabled');
+        if(da !== null){
+            if(da.length === 0 ||da==="1"){
+                pS.removeAttribute('disabled');
+            }else{
+                pS.setAttribute('disabled', (parseInt(da) - 1).toString());
+            }
+        }
+        
 
     }
     _connected = false;

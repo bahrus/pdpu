@@ -130,7 +130,15 @@ export class P extends XtallatX(HTMLElement) {
             this._bndHndlEv = this._hndEv.bind(this);
         }
         pS.addEventListener(this._on, this._bndHndlEv);
-        pS.removeAttribute('disabled');
+        const da = pS.getAttribute('disabled');
+        if (da !== null) {
+            if (da.length === 0 || da === "1") {
+                pS.removeAttribute('disabled');
+            }
+            else {
+                pS.setAttribute('disabled', (parseInt(da) - 1).toString());
+            }
+        }
     }
     onPropsChange() {
         if (!this._connected || !this._on || !this._to)
