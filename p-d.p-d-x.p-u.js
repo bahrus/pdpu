@@ -24,9 +24,9 @@ function XtallatX(superClass) {
             return [disabled];
         }
         /**
-         * Any component that emits events should not do so ef it is disabled.
+         * Any component that emits events should not do so if it is disabled.
          * Note that this is not enforced, but the disabled property is made available.
-         * Users of this mix-in sure ensure it doesn't call "de" if this property is set to true.
+         * Users of this mix-in should ensure not to call "de" if this property is set to true.
          */
         get disabled() {
             return this._disabled;
@@ -75,7 +75,7 @@ function XtallatX(superClass) {
         }
         /**
          * Dispatch Custom Event
-         * @param name Name of event to dispatch (with -changed if asIs is false)
+         * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
          */
@@ -453,16 +453,21 @@ class PDX extends PD {
         const firstToken = pathTokens.shift();
         const tft = target[firstToken];
         const returnObj = { [firstToken]: tft ? tft : {} };
-        let targetContext = returnObj[firstToken];
+        let tc = returnObj[firstToken]; //targetContext
         const lastToken = pathTokens.pop();
         pathTokens.forEach(token => {
-            let newContext = targetContext[token];
+            let newContext = tc[token];
             if (!newContext) {
-                newContext = targetContext[token] = {};
+                newContext = tc[token] = {};
             }
-            targetContext = newContext;
+            tc = newContext;
         });
-        targetContext[lastToken] = val;
+        if (tc[lastToken] && typeof (val) === 'object') {
+            Object.assign(tc[lastToken], val);
+        }
+        else {
+            tc[lastToken] = val;
+        }
         //this controversial line is to force the target to see new properties, even though we are updating nested properties.
         //In some scenarios, this will fail (like if updating element.dataset), but hopefully it's okay to ignore such failures 
         try {

@@ -86,7 +86,7 @@
           }
           /**
            * Dispatch Custom Event
-           * @param name Name of event to dispatch (with -changed if asIs is false)
+           * @param name Name of event to dispatch ("-changed" will be appended if asIs is false)
            * @param detail Information to be passed with the event
            * @param asIs If true, don't append event name with '-changed'
            */
@@ -126,9 +126,9 @@
           key: "disabled",
 
           /**
-           * Any component that emits events should not do so ef it is disabled.
+           * Any component that emits events should not do so if it is disabled.
            * Note that this is not enforced, but the disabled property is made available.
-           * Users of this mix-in sure ensure it doesn't call "de" if this property is set to true.
+           * Users of this mix-in should ensure not to call "de" if this property is set to true.
            */
           get: function get() {
             return this._disabled;
