@@ -64,7 +64,7 @@ All the components described in this document support an attribute (not a proper
 
 Note that we are suggesting, in the markup above, the use of the CSS grid (display: grid).  The CSS grid allows you to specify where each element inside the CSS Grid container should be displayed.
 
-It appears that the css flex/grid doesn't count elements with display:none as columns or rows.  So all the non visual components could use an attribute, nv (non visual) and apply a style for them, i.e.: 
+It appears that the css flex/grid doesn't count elements with display:none as columns or rows.  So all the non visual components, which haven't seen the light on the benefit of setting display:none, could be marked with an attribute, nv (non visual) and apply a style for them, i.e.: 
 
 ```html
 <style>
@@ -74,7 +74,11 @@ It appears that the css flex/grid doesn't count elements with display:none as co
 </style>
 ```
 
+Since p-* are all non visual components, they are given display:none style by default.
+
 Another benefit of making this explicit:  There is likely less overhead from components with display:none, as they may not get added to the [rendering tree](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/#Render_tree_construction).
+
+If you prefer attributes over separate elements to pass data from one element to another, take a look at the [pass-down](https://www.webcomponents.org/element/pass-down) component.  I'm a bit on the fence which I prefer.  I think the strongest case for using separate elements, like p-d, is that you can cleanly document what each passing event does with  a line of html commentary.
 
 
 ## Compact notation
@@ -148,6 +152,8 @@ This will create a custom element with name "my-pipeline-action".  It applies th
 
 As with all custom element definitions, some care should be taken to ensure that the custom element names are unique.  This could be challenging if generating lots of small custom elements, like shown above, to be used in a large application, especially if that large application combines somewhat loosely coupled content from different teams, who also generate many custom elements.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
+[TODO] Support multiple parameters like (aggregator-fn)[https://www.webcomponents.org/element/aggregator-fn].
+
 ## Location, Location, Location
 
 If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the code for one of these piping custom elements, you can "inline" the code quite close to where it is needed.  For now, this will only work if you essentially "hard code" the location of PDQ to a CDN with support for bare import specifiers:
@@ -217,6 +223,24 @@ So what happens if an element fires an event, before p-d has loaded and started 
 
 To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add attribute **skip-init**.
 
+Another subtle feature you might find useful:  It was mentioned before that p-d removes the disabled attribute after latching on the event handler.  But what if you want to utilize multiple p-d's on the same element.  We don't want to remove the disabled attribute until all of the elements have latched on.  
+
+You can specify the "depth" of disabling thusly:
+
+```html
+    <!-- Parse the address bar -->
+    <xtal-state-parse disabled="2" parse="location.href" level="global" 
+        with-url-pattern="id=(?<storeId>[a-z0-9-]*)">
+    </xtal-state-parse>
+    <!-- If no id found in address bar, create a new record ("session") -->
+    <p-d on="no-match-found" to="purr-sist[write]{new:target.noMatch}"  m="1" skip-init></p-d>
+    <!-- If id found in address bar, pass it to the persistence reader and writer -->
+    <p-d on="match-found" to="purr-sist{storeId:target.value.storeId}" m="2" skip-init></p-d>
+    <!-- Read stored history.state from remote database if saved -->
+    <purr-sist read></purr-sist>
+```
+
+What if you want your element to remain disabled after all the p-d's have latched?  Just set the number one higher than the number of next sibling p-d's.
 
 p-d is ~2.3KB minified and gzipped.
 
