@@ -15,6 +15,8 @@ export class PDX extends PD {
         });
     }
     commit(target, map, val) {
+        if (val === undefined)
+            return;
         if (map.propSource === '.' && map.propTarget === '.') {
             Object.assign(target, val);
             return;

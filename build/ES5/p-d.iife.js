@@ -346,6 +346,7 @@
     }, {
       key: "commit",
       value: function commit(target, map, val) {
+        if (val === undefined) return;
         target[map.propTarget] = val;
       }
     }, {

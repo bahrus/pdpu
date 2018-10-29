@@ -20,6 +20,7 @@ export class PDX extends PD {
     }
 
     commit(target: HTMLElement, map: ICssPropMap, val: any) {
+        if(val === undefined) return;
         if (map.propSource === '.' && map.propTarget === '.') {
             Object.assign(target, val);
             return;

@@ -346,6 +346,7 @@
     }, {
       key: "commit",
       value: function commit(target, map, val) {
+        if (val === undefined) return;
         target[map.propTarget] = val;
       }
     }, {
@@ -602,6 +603,8 @@
     }, {
       key: "commit",
       value: function commit(target, map, val) {
+        if (val === undefined) return;
+
         if (map.propSource === '.' && map.propTarget === '.') {
           Object.assign(target, val);
           return;

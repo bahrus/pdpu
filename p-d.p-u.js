@@ -285,6 +285,8 @@ class P extends XtallatX(HTMLElement) {
         this.commit(target, map, propFromEvent);
     }
     commit(target, map, val) {
+        if (val === undefined)
+            return;
         target[map.propTarget] = val;
     }
     getPropFromPath(val, path) {

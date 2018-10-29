@@ -192,6 +192,7 @@ export abstract class P extends XtallatX(HTMLElement){
        
     }
     commit(target: HTMLElement, map: ICssPropMap, val: any){
+        if(val===undefined) return;
         (<any>target)[map.propTarget] = val;
     }
     getPropFromPath(val: any, path: string){

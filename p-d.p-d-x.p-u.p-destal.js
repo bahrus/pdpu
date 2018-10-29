@@ -285,6 +285,8 @@ class P extends XtallatX(HTMLElement) {
         this.commit(target, map, propFromEvent);
     }
     commit(target, map, val) {
+        if (val === undefined)
+            return;
         target[map.propTarget] = val;
     }
     getPropFromPath(val, path) {
@@ -430,6 +432,8 @@ class PDX extends PD {
         });
     }
     commit(target, map, val) {
+        if (val === undefined)
+            return;
         if (map.propSource === '.' && map.propTarget === '.') {
             Object.assign(target, val);
             return;
