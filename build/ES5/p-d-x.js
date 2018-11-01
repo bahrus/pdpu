@@ -1,5 +1,6 @@
 import { PD } from './p-d.js';
-import { define } from "./node_modules/xtal-latx/define.js"; //const attrib_filter = 'attrib-filter';
+import { define } from "./node_modules/xtal-latx/define.js";
+import { createNestedProp } from "./node_modules/xtal-latx/createNestedProp.js"; //const attrib_filter = 'attrib-filter';
 
 export var PDX =
 /*#__PURE__*/
@@ -46,43 +47,10 @@ function (_PD) {
       } else if (targetPath.indexOf('.') > -1) {
         var pathTokens = targetPath.split('.'); // const lastToken = pathTokens.pop();
 
-        this.createNestedProp(target, pathTokens, val);
+        createNestedProp(target, pathTokens, val, true);
       } else {
         target[targetPath] = val;
       }
-    }
-  }, {
-    key: "createNestedProp",
-    value: function createNestedProp(target, pathTokens, val) {
-      var firstToken = pathTokens.shift();
-      var tft = target[firstToken];
-      var returnObj = babelHelpers.defineProperty({}, firstToken, tft ? tft : {});
-      var tc = returnObj[firstToken]; //targetContext
-
-      var lastToken = pathTokens.pop();
-      pathTokens.forEach(function (token) {
-        var newContext = tc[token];
-
-        if (!newContext) {
-          newContext = tc[token] = {};
-        }
-
-        tc = newContext;
-      });
-
-      if (tc[lastToken] && babelHelpers.typeof(val) === 'object') {
-        Object.assign(tc[lastToken], val);
-      } else {
-        tc[lastToken] = val;
-      } //this controversial line is to force the target to see new properties, even though we are updating nested properties.
-      //In some scenarios, this will fail (like if updating element.dataset), but hopefully it's okay to ignore such failures 
-
-
-      try {
-        Object.assign(target, returnObj);
-      } catch (e) {}
-
-      ;
     }
   }, {
     key: "attchEvListnrs",

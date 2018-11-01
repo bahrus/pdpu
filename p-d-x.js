@@ -1,5 +1,6 @@
 import { PD } from './p-d.js';
 import { define } from 'xtal-latx/define.js';
+import { createNestedProp } from 'xtal-latx/createNestedProp.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
     static get is() { return 'p-d-x'; }
@@ -30,38 +31,11 @@ export class PDX extends PD {
         else if (targetPath.indexOf('.') > -1) {
             const pathTokens = targetPath.split('.');
             // const lastToken = pathTokens.pop();
-            this.createNestedProp(target, pathTokens, val);
+            createNestedProp(target, pathTokens, val, true);
         }
         else {
             target[targetPath] = val;
         }
-    }
-    createNestedProp(target, pathTokens, val) {
-        const firstToken = pathTokens.shift();
-        const tft = target[firstToken];
-        const returnObj = { [firstToken]: tft ? tft : {} };
-        let tc = returnObj[firstToken]; //targetContext
-        const lastToken = pathTokens.pop();
-        pathTokens.forEach(token => {
-            let newContext = tc[token];
-            if (!newContext) {
-                newContext = tc[token] = {};
-            }
-            tc = newContext;
-        });
-        if (tc[lastToken] && typeof (val) === 'object') {
-            Object.assign(tc[lastToken], val);
-        }
-        else {
-            tc[lastToken] = val;
-        }
-        //this controversial line is to force the target to see new properties, even though we are updating nested properties.
-        //In some scenarios, this will fail (like if updating element.dataset), but hopefully it's okay to ignore such failures 
-        try {
-            Object.assign(target, returnObj);
-        }
-        catch (e) { }
-        ;
     }
     attchEvListnrs() {
         if (this._on[0] !== '[') {

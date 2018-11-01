@@ -1,6 +1,7 @@
 import { PD } from './p-d.js';
 import { ICssPropMap } from './p.js';
 import { define } from 'xtal-latx/define.js';
+import {createNestedProp} from 'xtal-latx/createNestedProp.js';
 
 //const attrib_filter = 'attrib-filter';
 
@@ -33,35 +34,14 @@ export class PDX extends PD {
         } else if (targetPath.indexOf('.') > -1) {
             const pathTokens = targetPath.split('.');
             // const lastToken = pathTokens.pop();
-            this.createNestedProp(target, pathTokens, val);
+            createNestedProp(target, pathTokens, val, true);
         } else {
             (<any>target)[targetPath] = val;
         }
 
     }
 
-    createNestedProp(target: any, pathTokens: string[], val: any){
-        const firstToken = pathTokens.shift() as string;
-        const tft = target[firstToken];
-        const returnObj =  {[firstToken]: tft ? tft : {}};
-        let tc = returnObj[firstToken]; //targetContext
-        const lastToken = pathTokens.pop() as string;
-        pathTokens.forEach(token =>{
-                let newContext = tc[token];
-                if(!newContext){
-                    newContext = tc[token] = {};
-                }
-                tc = newContext;
-        });
-        if(tc[lastToken] && typeof(val) === 'object'){
-            Object.assign(tc[lastToken], val);
-        } else{
-            tc[lastToken] = val;
-        }
-        //this controversial line is to force the target to see new properties, even though we are updating nested properties.
-        //In some scenarios, this will fail (like if updating element.dataset), but hopefully it's okay to ignore such failures 
-        try{Object.assign(target, returnObj)}catch(e){};
-    }
+
 
     _attributeObserver!: MutationObserver;
     attchEvListnrs() {
