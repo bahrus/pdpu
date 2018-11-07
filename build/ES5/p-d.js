@@ -1,10 +1,7 @@
 import { P } from './p.js';
 import { define } from "./node_modules/xtal-latx/define.js";
+import { PDNavDown } from './PDNavDown.js';
 var m = 'm';
-var p_d_if = 'p-d-if';
-var PDIf = 'PDIf';
-var _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
-
 /**
  * `p-d`
  *  Pass data from one element down the DOM tree to other elements
@@ -20,55 +17,42 @@ function (_P) {
   babelHelpers.inherits(PD, _P);
 
   function PD() {
+    var _this;
+
     babelHelpers.classCallCheck(this, PD);
-    return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
+    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
+    _this._pdNavDown = []; //_hasMax!: boolean;
+
+    _this._m = Infinity;
+    return _this;
   }
 
   babelHelpers.createClass(PD, [{
     key: "pass",
     value: function pass(e) {
-      this.attr('pds', '🌩️');
-      this.passDown(this.nextElementSibling, e, 0);
+      var _this2 = this;
+
+      this._lastEvent = e;
+      this.attr('pds', '🌩️'); //this.passDown(this.nextElementSibling, e, 0);
+
+      this._pdNavDown.forEach(function (pdnd) {
+        _this2.applyProps(pdnd);
+      });
+
       this.attr('pds', '👂');
     }
   }, {
-    key: "passDown",
-    value: function passDown(start, e, count) {
-      var _this = this;
+    key: "applyProps",
+    value: function applyProps(pd) {
+      var _this3 = this;
 
-      var nextSib = start;
-
-      while (nextSib) {
-        if (nextSib.tagName !== 'SCRIPT') {
-          this._cssPropMap.forEach(function (map) {
-            if (map.cssSelector === '*' || nextSib.matches && nextSib.matches(map.cssSelector)) {
-              count++;
-
-              _this.setVal(e, nextSib, map);
-            }
-
-            var fec = nextSib.firstElementChild;
-
-            if (_this.id && fec && nextSib.hasAttribute(p_d_if)) {
-              //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-              if (_this.matches(nextSib.getAttribute(p_d_if))) {
-                _this.passDown(fec, e, count);
-
-                var addedSMOTracker = nextSib[_addedSMO];
-                if (!addedSMOTracker) addedSMOTracker = nextSib[_addedSMO] = {};
-
-                if (!addedSMOTracker[_this.id]) {
-                  if (nextSib !== null) _this.addMutObs(nextSib, true);
-                  nextSib[_addedSMO][_this.id] = true;
-                }
-              }
-            }
-          });
-        }
-
-        if (this._hasMax && count >= this._m) break;
-        nextSib = nextSib.nextElementSibling;
-      }
+      pd.getMatches().forEach(function (el) {
+        _this3._cssPropMap.filter(function (map) {
+          return map.cssSelector === pd.match;
+        }).forEach(function (map) {
+          _this3.setVal(_this3._lastEvent, el, map);
+        });
+      });
     }
   }, {
     key: "attributeChangedCallback",
@@ -76,11 +60,9 @@ function (_P) {
       switch (name) {
         case m:
           if (newVal !== null) {
-            this._m = parseInt(newVal);
-            this._hasMax = true;
-          } else {
-            this._hasMax = false;
-          }
+            this._m = parseInt(newVal); //this._hasMax = true;
+          } else {//this._hasMax = false;
+            }
 
       }
 
@@ -90,31 +72,26 @@ function (_P) {
   }, {
     key: "connectedCallback",
     value: function connectedCallback() {
+      var _this4 = this;
+
       babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
 
       this._upgradeProperties([m]);
 
       this._connected = true;
       this.attr('pds', '📞');
+      var bndApply = this.applyProps.bind(this);
+
+      this._cssPropMap.forEach(function (pm) {
+        var pdnd = new PDNavDown(_this4, pm.cssSelector, function (nd) {
+          return bndApply(nd);
+        }, _this4.m);
+        pdnd.init();
+
+        _this4._pdNavDown.push(pdnd);
+      });
+
       this.onPropsChange();
-    }
-  }, {
-    key: "addMutObs",
-    value: function addMutObs(baseElement, isParent) {
-      var _this2 = this;
-
-      var elToObs = isParent ? baseElement : baseElement.parentElement;
-      if (!elToObs) return; //TODO
-
-      this._sibObs = new MutationObserver(function (m) {
-        if (!_this2._lastEvent) return; //this.passDownProp(this._lastResult);
-
-        _this2._hndEv(_this2._lastEvent);
-      });
-
-      this._sibObs.observe(elToObs, {
-        childList: true
-      });
     }
   }, {
     key: "m",

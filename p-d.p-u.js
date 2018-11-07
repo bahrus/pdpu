@@ -112,7 +112,6 @@ const to = 'to';
 class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
-        this._addedSMO = false;
         this._connected = false;
     }
     get on() {
@@ -137,12 +136,13 @@ class P extends XtallatX(HTMLElement) {
     set if(val) {
         this.attr(iff, val);
     }
-    get input() {
-        return this._input;
-    }
-    set input(val) {
-        this._input = val;
-    }
+    // _input: any;
+    // get input(){
+    //     return this._input;
+    // }
+    // set input(val){
+    //     this._input = val;
+    // }
     static get observedAttributes() {
         return super.observedAttributes.concat([on, to, noblock, iff]);
     }
@@ -180,9 +180,10 @@ class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, 'input', iff]);
+        this._upgradeProperties([on, to, noblock, iff]);
         setTimeout(() => this.doFake(), 50);
     }
+    //_addedSMO = false;
     doFake() {
         if (!this._if && !this.hasAttribute('skip-init')) {
             let lastEvent = this._lastEvent;
@@ -195,10 +196,10 @@ class P extends XtallatX(HTMLElement) {
             if (this._hndEv)
                 this._hndEv(lastEvent);
         }
-        if (!this._addedSMO && this.addMutationObserver) {
-            this.addMutationObserver(this, false);
-            this._addedSMO = true;
-        }
+        // if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
+        //     (<any>this).addMutationObserver(<any>this as HTMLElement, false);
+        //     this._addedSMO = true;
+        // }
     }
     detach(pS) {
         pS.removeEventListener(this._on, this._bndHndlEv);
@@ -324,9 +325,6 @@ class P extends XtallatX(HTMLElement) {
     }
 }
 const m = 'm';
-const p_d_if = 'p-d-if';
-const PDIf = 'PDIf';
-const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
 /**
  * `p-d`
  *  Pass data from one element down the DOM tree to other elements
@@ -336,6 +334,12 @@ const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
  * @demo demo/index.html
  */
 class PD extends P {
+    constructor() {
+        super(...arguments);
+        this._pdNavDown = [];
+        //_hasMax!: boolean;
+        this._m = Infinity;
+    }
     static get is() { return 'p-d'; }
     get m() {
         return this._m;
@@ -347,50 +351,30 @@ class PD extends P {
         return super.observedAttributes.concat([m]);
     }
     pass(e) {
+        this._lastEvent = e;
         this.attr('pds', '🌩️');
-        this.passDown(this.nextElementSibling, e, 0);
+        //this.passDown(this.nextElementSibling, e, 0);
+        this._pdNavDown.forEach(pdnd => {
+            this.applyProps(pdnd);
+        });
         this.attr('pds', '👂');
     }
-    passDown(start, e, count) {
-        let nextSib = start;
-        while (nextSib) {
-            if (nextSib.tagName !== 'SCRIPT') {
-                this._cssPropMap.forEach(map => {
-                    if (map.cssSelector === '*' || (nextSib.matches && nextSib.matches(map.cssSelector))) {
-                        count++;
-                        this.setVal(e, nextSib, map);
-                    }
-                    const fec = nextSib.firstElementChild;
-                    if (this.id && fec && nextSib.hasAttribute(p_d_if)) {
-                        //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                        if (this.matches(nextSib.getAttribute(p_d_if))) {
-                            this.passDown(fec, e, count);
-                            let addedSMOTracker = nextSib[_addedSMO];
-                            if (!addedSMOTracker)
-                                addedSMOTracker = nextSib[_addedSMO] = {};
-                            if (!addedSMOTracker[this.id]) {
-                                if (nextSib !== null)
-                                    this.addMutObs(nextSib, true);
-                                nextSib[_addedSMO][this.id] = true;
-                            }
-                        }
-                    }
-                });
-            }
-            if (this._hasMax && count >= this._m)
-                break;
-            nextSib = nextSib.nextElementSibling;
-        }
+    applyProps(pd) {
+        pd.getMatches().forEach(el => {
+            this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
+                this.setVal(this._lastEvent, el, map);
+            });
+        });
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case m:
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
-                    this._hasMax = true;
+                    //this._hasMax = true;
                 }
                 else {
-                    this._hasMax = false;
+                    //this._hasMax = false;
                 }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -401,19 +385,13 @@ class PD extends P {
         this._upgradeProperties([m]);
         this._connected = true;
         this.attr('pds', '📞');
-        this.onPropsChange();
-    }
-    addMutObs(baseElement, isParent) {
-        let elToObs = isParent ? baseElement : baseElement.parentElement;
-        if (!elToObs)
-            return; //TODO
-        this._sibObs = new MutationObserver((m) => {
-            if (!this._lastEvent)
-                return;
-            //this.passDownProp(this._lastResult);
-            this._hndEv(this._lastEvent);
+        const bndApply = this.applyProps.bind(this);
+        this._cssPropMap.forEach(pm => {
+            const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
+            pdnd.init();
+            this._pdNavDown.push(pdnd);
         });
-        this._sibObs.observe(elToObs, { childList: true });
+        this.onPropsChange();
     }
 }
 define(PD);

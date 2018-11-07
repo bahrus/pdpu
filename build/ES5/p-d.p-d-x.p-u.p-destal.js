@@ -167,7 +167,11 @@
     if (tc[lastToken] && babelHelpers.typeof(val) === 'object') {
       Object.assign(tc[lastToken], val);
     } else {
-      tc[lastToken] = val;
+      if (lastToken === undefined) {
+        returnObj[firstToken] = val;
+      } else {
+        tc[lastToken] = val;
+      }
     } //this controversial line is to force the target to see new properties, even though we are updating nested properties.
     //In some scenarios, this will fail (like if updating element.dataset), but hopefully it's okay to ignore such failures 
 
@@ -193,7 +197,6 @@
 
       babelHelpers.classCallCheck(this, P);
       _this3 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
-      _this3._addedSMO = false;
       _this3._connected = false;
       return _this3;
     }
@@ -246,12 +249,13 @@
 
         this.style.display = 'none';
 
-        this._upgradeProperties([on, to, noblock, 'input', iff]);
+        this._upgradeProperties([on, to, noblock, iff]);
 
         setTimeout(function () {
           return _this4.doFake();
         }, 50);
-      }
+      } //_addedSMO = false;
+
     }, {
       key: "doFake",
       value: function doFake() {
@@ -266,12 +270,11 @@
           }
 
           if (this._hndEv) this._hndEv(lastEvent);
-        }
+        } // if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
+        //     (<any>this).addMutationObserver(<any>this as HTMLElement, false);
+        //     this._addedSMO = true;
+        // }
 
-        if (!this._addedSMO && this.addMutationObserver) {
-          this.addMutationObserver(this, false);
-          this._addedSMO = true;
-        }
       }
     }, {
       key: "detach",
@@ -447,15 +450,14 @@
       },
       set: function set(val) {
         this.attr(iff, val);
-      }
-    }, {
-      key: "input",
-      get: function get() {
-        return this._input;
-      },
-      set: function set(val) {
-        this._input = val;
-      }
+      } // _input: any;
+      // get input(){
+      //     return this._input;
+      // }
+      // set input(val){
+      //     this._input = val;
+      // }
+
     }], [{
       key: "observedAttributes",
       get: function get() {
@@ -466,10 +468,6 @@
   }(XtallatX(HTMLElement));
 
   var m = 'm';
-  var p_d_if = 'p-d-if';
-  var PDIf = 'PDIf';
-  var _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
-
   /**
    * `p-d`
    *  Pass data from one element down the DOM tree to other elements
@@ -485,55 +483,42 @@
     babelHelpers.inherits(PD, _P);
 
     function PD() {
+      var _this6;
+
       babelHelpers.classCallCheck(this, PD);
-      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
+      _this6 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
+      _this6._pdNavDown = []; //_hasMax!: boolean;
+
+      _this6._m = Infinity;
+      return _this6;
     }
 
     babelHelpers.createClass(PD, [{
       key: "pass",
       value: function pass(e) {
-        this.attr('pds', '🌩️');
-        this.passDown(this.nextElementSibling, e, 0);
+        var _this7 = this;
+
+        this._lastEvent = e;
+        this.attr('pds', '🌩️'); //this.passDown(this.nextElementSibling, e, 0);
+
+        this._pdNavDown.forEach(function (pdnd) {
+          _this7.applyProps(pdnd);
+        });
+
         this.attr('pds', '👂');
       }
     }, {
-      key: "passDown",
-      value: function passDown(start, e, count) {
-        var _this6 = this;
+      key: "applyProps",
+      value: function applyProps(pd) {
+        var _this8 = this;
 
-        var nextSib = start;
-
-        while (nextSib) {
-          if (nextSib.tagName !== 'SCRIPT') {
-            this._cssPropMap.forEach(function (map) {
-              if (map.cssSelector === '*' || nextSib.matches && nextSib.matches(map.cssSelector)) {
-                count++;
-
-                _this6.setVal(e, nextSib, map);
-              }
-
-              var fec = nextSib.firstElementChild;
-
-              if (_this6.id && fec && nextSib.hasAttribute(p_d_if)) {
-                //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                if (_this6.matches(nextSib.getAttribute(p_d_if))) {
-                  _this6.passDown(fec, e, count);
-
-                  var addedSMOTracker = nextSib[_addedSMO];
-                  if (!addedSMOTracker) addedSMOTracker = nextSib[_addedSMO] = {};
-
-                  if (!addedSMOTracker[_this6.id]) {
-                    if (nextSib !== null) _this6.addMutObs(nextSib, true);
-                    nextSib[_addedSMO][_this6.id] = true;
-                  }
-                }
-              }
-            });
-          }
-
-          if (this._hasMax && count >= this._m) break;
-          nextSib = nextSib.nextElementSibling;
-        }
+        pd.getMatches().forEach(function (el) {
+          _this8._cssPropMap.filter(function (map) {
+            return map.cssSelector === pd.match;
+          }).forEach(function (map) {
+            _this8.setVal(_this8._lastEvent, el, map);
+          });
+        });
       }
     }, {
       key: "attributeChangedCallback",
@@ -541,11 +526,9 @@
         switch (name) {
           case m:
             if (newVal !== null) {
-              this._m = parseInt(newVal);
-              this._hasMax = true;
-            } else {
-              this._hasMax = false;
-            }
+              this._m = parseInt(newVal); //this._hasMax = true;
+            } else {//this._hasMax = false;
+              }
 
         }
 
@@ -555,31 +538,26 @@
     }, {
       key: "connectedCallback",
       value: function connectedCallback() {
+        var _this9 = this;
+
         babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
 
         this._upgradeProperties([m]);
 
         this._connected = true;
         this.attr('pds', '📞');
+        var bndApply = this.applyProps.bind(this);
+
+        this._cssPropMap.forEach(function (pm) {
+          var pdnd = new PDNavDown(_this9, pm.cssSelector, function (nd) {
+            return bndApply(nd);
+          }, _this9.m);
+          pdnd.init();
+
+          _this9._pdNavDown.push(pdnd);
+        });
+
         this.onPropsChange();
-      }
-    }, {
-      key: "addMutObs",
-      value: function addMutObs(baseElement, isParent) {
-        var _this7 = this;
-
-        var elToObs = isParent ? baseElement : baseElement.parentElement;
-        if (!elToObs) return; //TODO
-
-        this._sibObs = new MutationObserver(function (m) {
-          if (!_this7._lastEvent) return; //this.passDownProp(this._lastResult);
-
-          _this7._hndEv(_this7._lastEvent);
-        });
-
-        this._sibObs.observe(elToObs, {
-          childList: true
-        });
       }
     }, {
       key: "m",
@@ -618,13 +596,13 @@
     babelHelpers.createClass(PDX, [{
       key: "parseMapping",
       value: function parseMapping(mapTokens, cssSelector) {
-        var _this8 = this;
+        var _this10 = this;
 
         var splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(function (token) {
           var splitPropPointer = token.split(':');
 
-          _this8._cssPropMap.push({
+          _this10._cssPropMap.push({
             cssSelector: cssSelector,
             propTarget: splitPropPointer[0],
             propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
@@ -658,7 +636,7 @@
     }, {
       key: "attchEvListnrs",
       value: function attchEvListnrs() {
-        var _this9 = this;
+        var _this11 = this;
 
         if (this._on[0] !== '[') {
           babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
@@ -687,7 +665,7 @@
             target: prevSibling
           };
 
-          _this9._hndEv(fakeEvent);
+          _this11._hndEv(fakeEvent);
         });
 
         this._attributeObserver.observe(prevSibling, config);
@@ -735,7 +713,7 @@
     babelHelpers.createClass(PU, [{
       key: "pass",
       value: function pass(e) {
-        var _this10 = this;
+        var _this12 = this;
 
         this._cssPropMap.forEach(function (map) {
           var cssSel = map.cssSelector;
@@ -748,7 +726,7 @@
           } else {
             var len = cssSel.startsWith('./') ? 0 : split.length;
 
-            var host = _this10.getHost(_this10, 0, split.length);
+            var host = _this12.getHost(_this12, 0, split.length);
 
             if (host) {
               if (host.shadowRoot) {
@@ -762,7 +740,7 @@
             }
           }
 
-          _this10.setVal(e, targetElement, map);
+          _this12.setVal(e, targetElement, map);
         });
       }
     }, {
@@ -804,12 +782,12 @@
     babelHelpers.inherits(PDestal, _PDX);
 
     function PDestal() {
-      var _this11;
+      var _this13;
 
       babelHelpers.classCallCheck(this, PDestal);
-      _this11 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
-      _this11._previousValues = {};
-      return _this11;
+      _this13 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
+      _this13._previousValues = {};
+      return _this13;
     }
 
     babelHelpers.createClass(PDestal, [{
@@ -831,7 +809,7 @@
     }, {
       key: "doFakeEvent",
       value: function doFakeEvent() {
-        var _this12 = this;
+        var _this14 = this;
 
         var split = this._on.split(',');
 
@@ -841,11 +819,11 @@
           var trimmedParam = param.substr(1, param.length - 2);
           var searchParm = searchParams.get(trimmedParam);
 
-          if (!changedVal && searchParm !== _this12._previousValues[trimmedParam]) {
+          if (!changedVal && searchParm !== _this14._previousValues[trimmedParam]) {
             changedVal = true;
           }
 
-          _this12._previousValues[trimmedParam] = searchParm;
+          _this14._previousValues[trimmedParam] = searchParm;
         });
 
         if (changedVal) {
@@ -859,10 +837,10 @@
     }, {
       key: "watchLocation",
       value: function watchLocation() {
-        var _this13 = this;
+        var _this15 = this;
 
         window.addEventListener('popstate', function (e) {
-          _this13.doFakeEvent();
+          _this15.doFakeEvent();
         });
         this.doFakeEvent();
       }

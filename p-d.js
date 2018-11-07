@@ -1,9 +1,7 @@
 import { P } from './p.js';
 import { define } from 'xtal-latx/define.js';
+import { PDNavDown } from './PDNavDown.js';
 const m = 'm';
-const p_d_if = 'p-d-if';
-const PDIf = 'PDIf';
-const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
 /**
  * `p-d`
  *  Pass data from one element down the DOM tree to other elements
@@ -13,6 +11,12 @@ const _addedSMO = '_addedSMO'; //addedSiblingMutationObserver
  * @demo demo/index.html
  */
 export class PD extends P {
+    constructor() {
+        super(...arguments);
+        this._pdNavDown = [];
+        //_hasMax!: boolean;
+        this._m = Infinity;
+    }
     static get is() { return 'p-d'; }
     get m() {
         return this._m;
@@ -24,50 +28,30 @@ export class PD extends P {
         return super.observedAttributes.concat([m]);
     }
     pass(e) {
+        this._lastEvent = e;
         this.attr('pds', '🌩️');
-        this.passDown(this.nextElementSibling, e, 0);
+        //this.passDown(this.nextElementSibling, e, 0);
+        this._pdNavDown.forEach(pdnd => {
+            this.applyProps(pdnd);
+        });
         this.attr('pds', '👂');
     }
-    passDown(start, e, count) {
-        let nextSib = start;
-        while (nextSib) {
-            if (nextSib.tagName !== 'SCRIPT') {
-                this._cssPropMap.forEach(map => {
-                    if (map.cssSelector === '*' || (nextSib.matches && nextSib.matches(map.cssSelector))) {
-                        count++;
-                        this.setVal(e, nextSib, map);
-                    }
-                    const fec = nextSib.firstElementChild;
-                    if (this.id && fec && nextSib.hasAttribute(p_d_if)) {
-                        //if(!nextSibling[PDIf]) nextSibling[PDIf] = JSON.parse(nextSibling.getAttribute(p_d_if));
-                        if (this.matches(nextSib.getAttribute(p_d_if))) {
-                            this.passDown(fec, e, count);
-                            let addedSMOTracker = nextSib[_addedSMO];
-                            if (!addedSMOTracker)
-                                addedSMOTracker = nextSib[_addedSMO] = {};
-                            if (!addedSMOTracker[this.id]) {
-                                if (nextSib !== null)
-                                    this.addMutObs(nextSib, true);
-                                nextSib[_addedSMO][this.id] = true;
-                            }
-                        }
-                    }
-                });
-            }
-            if (this._hasMax && count >= this._m)
-                break;
-            nextSib = nextSib.nextElementSibling;
-        }
+    applyProps(pd) {
+        pd.getMatches().forEach(el => {
+            this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
+                this.setVal(this._lastEvent, el, map);
+            });
+        });
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
             case m:
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
-                    this._hasMax = true;
+                    //this._hasMax = true;
                 }
                 else {
-                    this._hasMax = false;
+                    //this._hasMax = false;
                 }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
@@ -78,19 +62,13 @@ export class PD extends P {
         this._upgradeProperties([m]);
         this._connected = true;
         this.attr('pds', '📞');
-        this.onPropsChange();
-    }
-    addMutObs(baseElement, isParent) {
-        let elToObs = isParent ? baseElement : baseElement.parentElement;
-        if (!elToObs)
-            return; //TODO
-        this._sibObs = new MutationObserver((m) => {
-            if (!this._lastEvent)
-                return;
-            //this.passDownProp(this._lastResult);
-            this._hndEv(this._lastEvent);
+        const bndApply = this.applyProps.bind(this);
+        this._cssPropMap.forEach(pm => {
+            const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
+            pdnd.init();
+            this._pdNavDown.push(pdnd);
         });
-        this._sibObs.observe(elToObs, { childList: true });
+        this.onPropsChange();
     }
 }
 define(PD);

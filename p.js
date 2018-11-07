@@ -6,7 +6,6 @@ const to = 'to';
 export class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
-        this._addedSMO = false;
         this._connected = false;
     }
     get on() {
@@ -31,12 +30,13 @@ export class P extends XtallatX(HTMLElement) {
     set if(val) {
         this.attr(iff, val);
     }
-    get input() {
-        return this._input;
-    }
-    set input(val) {
-        this._input = val;
-    }
+    // _input: any;
+    // get input(){
+    //     return this._input;
+    // }
+    // set input(val){
+    //     this._input = val;
+    // }
     static get observedAttributes() {
         return super.observedAttributes.concat([on, to, noblock, iff]);
     }
@@ -74,9 +74,10 @@ export class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, 'input', iff]);
+        this._upgradeProperties([on, to, noblock, iff]);
         setTimeout(() => this.doFake(), 50);
     }
+    //_addedSMO = false;
     doFake() {
         if (!this._if && !this.hasAttribute('skip-init')) {
             let lastEvent = this._lastEvent;
@@ -89,10 +90,10 @@ export class P extends XtallatX(HTMLElement) {
             if (this._hndEv)
                 this._hndEv(lastEvent);
         }
-        if (!this._addedSMO && this.addMutationObserver) {
-            this.addMutationObserver(this, false);
-            this._addedSMO = true;
-        }
+        // if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
+        //     (<any>this).addMutationObserver(<any>this as HTMLElement, false);
+        //     this._addedSMO = true;
+        // }
     }
     detach(pS) {
         pS.removeEventListener(this._on, this._bndHndlEv);
