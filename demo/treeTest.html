@@ -9,17 +9,20 @@
 
   <!-- <script src="https://unpkg.com/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script> -->
   <script type="module">
-    import "https://unpkg.com/@polymer/polymer@3.0.5/lib/elements/dom-if.js?module";
+    import "https://unpkg.com/@polymer/polymer@3.1.0/lib/elements/dom-if.js?module";
   </script>
-  <script type="module" src="https://unpkg.com/@polymer/iron-list@3.0.0-pre.21/iron-list.js?module"></script>
-  <script src="https://unpkg.com/xtal-splitting@0.0.1/xtal-splitting.js"></script>
-  <!-- <script src="https://unpkg.com/p-d.p-u@0.0.27/p-d.p-d-x.p-u.js"></script> -->
-  <script src="https://unpkg.com/xtal-fetch@0.0.34/xtal-fetch.js"></script>
+  <!-- Polymer Elements -->
+  <script type="module" src="https://unpkg.com/@polymer/iron-list@3.0.1/iron-list.js?module"></script>
+  <!-- End Polymer Elements -->
+  <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-splitting@0.0.8/xtal-splitting.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-fetch@0.0.50/xtal-fetch.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-tree@0.0.45/xtal-tree.iife.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-decorator@0.0.29/xtal-decorator.iife.js"></script>
   <script type="module" src="../p-d.js"></script>
   <script type="module" src="../p-d-x.js"></script>
   <script type="module" src="../p-u.js"></script>
 
-  <script type="module" src="https://unpkg.com/xtal-tree@0.0.27/xtal-tree.js?module"></script>
+
 
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -31,17 +34,17 @@
   <div class="vertical-section-container centered">
     <h3>Basic xtal-tree demo</h3>
     <script>
-       var fvi = -1;
+      var fvi = -1;
       function levelSetter(nodes, level) {
         nodes.forEach(node => {
           node.style = 'margin-left:' + (level * 12) + 'px';
           if (node.children) levelSetter(node.children, level + 1)
         })
       }
-      function expandAll(e){
+      function expandAll(e) {
         myTree.allExpandedNodes = myTree.viewableNodes;
       }
-      function collapseAll(e){
+      function collapseAll(e) {
         myTree.allCollapsedNodes = myTree.viewableNodes;
       }
 
@@ -67,74 +70,93 @@
     <p-d on="input" to="#myTree{searchString}"></p-d>
     <xtal-fetch fetch href="directory.json" as="json"></xtal-fetch>
     <p-d on="result-changed" to="#myTree{nodes}" m="1"></p-d>
-    <script nomodule>
-      ({
-        childrenFn: node => node.children,
-        isOpenFn: node => node.expanded,
-        levelSetterFn: levelSetter,
-        toggleNodeFn: node => {
-          
-          node.expanded = !node.expanded;
-          
-        },
-        testNodeFn: (node, search) =>{
-          if(!search) return true;
-          if(!node.nameLC) node.nameLC = node.name.toLowerCase();
-          return node.nameLC.indexOf(search.toLowerCase()) > -1;
-        },
-        compareFn: (lhs, rhs) =>{
-          if(lhs.name < rhs.name) return -1 ;
-          if(lhs.name > rhs.name) return 1;
-          return 0;
-        }
-      })
-    </script>
-    <!-- <p-d-x on="eval" to="{childrenFn:childrenFn;isOpenFn:isOpenFn;levelSetterFn:levelSetterFn;toggleNodeFn:toggleNodeFn;testNodeFn:testNodeFn;compareFn:compareFn}"></p-d-x> -->
-    <p-d-x on="eval" to="{.:.}"></p-d-x>
+    <!-- ================= Train xtal-tree how to expand / collapse nodes ========================= -->
+    <xtal-deco>
+      <script nomodule>
+        ({
+          setters: {
+            childrenFn: node => node.children,
+            isOpenFn: node => node.expanded,
+            levelSetterFn: function (nodes, level) {
+              nodes.forEach(node => {
+                node.style = 'margin-left:' + (level * 12) + 'px';
+                if (node.children) this.levelSetterFn(node.children, level + 1)
+              })
+            },
+            toggleNodeFn: node => {
+              node.expanded = !node.expanded;
+            },
+            testNodeFn: (node, search) => {
+              if (!search) return true;
+              if (!node.nameLC) node.nameLC = node.name.toLowerCase();
+              return node.nameLC.indexOf(search.toLowerCase()) > -1;
+            },
+            compareFn: (lhs, rhs) => {
+              if (lhs.name < rhs.name) return -1;
+              if (lhs.name > rhs.name) return 1;
+              return 0;
+            },
+          },
+
+          props: {
+            expandCmd: '',
+            fistVisibleIndex: -1
+          },
+          onPropsChange(name, newVal) {
+            switch (name) {
+              case 'expandCmd':
+                this[this.expandCmd] = this.viewableNodes;
+                break;
+
+            }
+          }
+        })
+      </script>
+    </xtal-deco>
     <xtal-tree id="myTree"></xtal-tree>
     <p-d on="viewable-nodes-changed" to="iron-list{items};view-nodes-change-handler{input}"></p-d>
     <p-d on="toggled-node-changed" to="#toggledNodeChangeHandler{input}"></p-d>
     <iron-list style="height:400px" id="nodeList" mutable-data p-d-if="#searchProp">
-        <template>
-          <div class="node"  style$="[[item.style]]"  p-d-if="#searchProp">
-            <span  node="[[item]]">
-                <template is="dom-if" if="[[item.children]]">
-                    <template is="dom-if" if="[[item.expanded]]">📖</template>
-                    <template is="dom-if" if="[[!item.expanded]]">📕</template>
-                  </template>
-                  <template is="dom-if" if="[[!item.children]]">📝</template>
-            </span>
-            
-            <xtal-split node="[[item]]"  search="[[search]]" text-content="[[item.name]]"></xtal-split>
-            <p-u on="click" if="xtal-split" to="/myTree{toggledNode:target.node}"></p-u>
-          </div>
-        </template>
-      </iron-list>
-      <p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
-      <script nomodule>
-        inp => {
-          if(typeof(fvi) !== 'undefined' && fvi > -1){
-            nodeList.scrollToIndex(fvi);
-          }
+      <template>
+        <div class="node" style$="[[item.style]]" p-d-if="#searchProp">
+          <span node="[[item]]">
+            <template is="dom-if" if="[[item.children]]">
+              <template is="dom-if" if="[[item.expanded]]">📖</template>
+              <template is="dom-if" if="[[!item.expanded]]">📕</template>
+            </template>
+            <template is="dom-if" if="[[!item.children]]">📝</template>
+          </span>
+
+          <xtal-split node="[[item]]" search="[[search]]" text-content="[[item.name]]"></xtal-split>
+          <p-u on="click" if="xtal-split" to="/myTree{toggledNode:target.node}"></p-u>
+        </div>
+      </template>
+    </iron-list>
+    <p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
+    <script nomodule>
+      inp => {
+        if (typeof (fvi) !== 'undefined' && fvi > -1) {
+          nodeList.scrollToIndex(fvi);
         }
-      </script>
-      <script type="module">
-        import {PDQ} from '../PDQ.js';
-        const t = PDQ.$;
-        const s = t('a <span>b</span>');
-        console.log(s);
-        PDQ.define('view-nodes-change-handler', inp =>{
-          fvi = nodeList.firstVisibleIndex;
-        })
-      </script>
-      <view-nodes-change-handler></view-nodes-change-handler>
-      <!-- <p-d id="viewNodesChangeHandler" on="eval" to="{whoknows}"></p-d> -->
-      <script noodule>
-        inp =>{
-          fvi = nodeList.firstVisibleIndex;
-        }
-      </script>
-      <p-d id="toggledNodeChangeHandler" on="eval" to="{whoknows}"></p-d>
+      }
+    </script>
+    <script type="module">
+      import { PDQ } from '../PDQ.js';
+      const t = PDQ.$;
+      const s = t('a <span>b</span>');
+      console.log(s);
+      PDQ.define('view-nodes-change-handler', inp => {
+        fvi = nodeList.firstVisibleIndex;
+      })
+    </script>
+    <view-nodes-change-handler></view-nodes-change-handler>
+    <!-- <p-d id="viewNodesChangeHandler" on="eval" to="{whoknows}"></p-d> -->
+    <script noodule>
+      inp => {
+        fvi = nodeList.firstVisibleIndex;
+      }
+    </script>
+    <p-d id="toggledNodeChangeHandler" on="eval" to="{whoknows}"></p-d>
   </div>
   <script>
 

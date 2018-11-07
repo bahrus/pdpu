@@ -71,6 +71,7 @@ export class PD extends P {
         const bndApply = this.applyProps.bind(this);
         this._cssPropMap.forEach(pm =>{
             const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
+            pdnd.root = this;
             pdnd.init();
             this._pdNavDown.push(pdnd);
         })

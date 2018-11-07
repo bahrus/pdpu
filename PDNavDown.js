@@ -14,19 +14,28 @@ export class PDNavDown extends NavDown {
             return;
         }
         const fec = sib.firstElementChild;
+        // if(this.seed.matches(attr) && (fec===null)){
+        //     console.log(fec);
+        // }
         if (fec === null)
             return;
-        if (attr !== null) {
-            if (this.seed.matches(attr)) {
-                const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
-                this.children.push(pdnd);
-                sib.__addMutObs = true;
-            }
+        if (this.root.matches(attr)) {
+            // console.log({
+            //     attr: attr,
+            //     fec: fec,
+            // })
+            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+            pdnd.root = this.root;
+            this.children.push(pdnd);
+            pdnd.init();
+            sib.__addMutObs = true;
         }
     }
     getMatches() {
-        const ret = this.matches;
-        this.children.forEach(child => ret.concat(child.getMatches()));
+        let ret = this.matches;
+        this.children.forEach(child => {
+            ret = ret.concat(child.getMatches());
+        });
         return ret;
     }
 }
