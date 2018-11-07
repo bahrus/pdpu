@@ -8,6 +8,5 @@ const cnp = xl + 'createNestedProp.js';
 jiife.processFiles([define, xlxl, ND, PDND,  'p.js', 'p-d.js'], 'p-d.iife.js');
 jiife.processFiles([define, xlxl, 'p.js', 'p-d.js', 'p-u.js'], 'p-d.p-u.js');
 jiife.processFiles([define, xlxl, cnp, 'p.js', 'p-d.js', 'p-d-x.js', 'p-u.js'], 'p-d.p-d-x.p-u.js');
-jiife.processFiles([define, xlxl, cnp, 'p.js', 'p-d.js', 'p-d-x.js', 'p-u.js', 'p-destal.js'], 'p-d.p-d-x.p-u.p-destal.js');
-jiife.processFiles([define, xlxl, cnp, 'p.js', 'p-d.js', 'p-d-x.js', 'p-u.js', 'p-destal.js', 'p-s.js'], 'p-all.iife.js');
+jiife.processFiles([define, xlxl, cnp, 'p.js', 'p-d.js', 'p-d-x.js', 'p-u.js', 'p-destal.js'], 'p-all.js');
 jiife.processFiles([define, xlxl, 'PDQ.js'], 'PDQ.iife.js');

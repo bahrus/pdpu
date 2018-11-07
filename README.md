@@ -2,7 +2,7 @@
 
 <a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
-<img src="http://img.badgesize.io/https://unpkg.com/p-d.p-u@0.0.70/build/ES6/p-d.iife.js?compression=gzip">
+<img src="http://img.badgesize.io/https://unpkg.com/p-d.p-u@0.0.75/build/ES6/p-d.iife.js?compression=gzip">
 
 # \<p-d\>, \<p-u\>
 
@@ -314,7 +314,6 @@ For that we have:
 <p-unt on="click" dispatch to="myEventName{toggledNode:target.node}" composed bubbles></p-unt>
 ```
 
-The two components, p-d and p-u, are combined into one IIFE.js file, p-d.p-u.js which totals ~2.6KB minified and gzipped.
 
 ## Deluxe version [partially untested]
 
@@ -326,9 +325,14 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 4)  You can observe attribute changes, in lieu of listening for an event (tested).
 5)  You can copy all properties of the source to the target if you specify to="{.:.}" (partly tested).
 
-p-d, p-u and p-d-x, when combined into a single file, totals ~3.1KB minified and gzipped.
 
-When p-destal is added, the total is ~3.3 kb minified and gzipped.
+There is a special string used to refer to an element of [composedPath()](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath):
+
+```html
+<p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
+```
+
+This pulls the node from event.composedPath()[0].node.
 
 ##  Differences to other "frameworks"
 
@@ -382,27 +386,7 @@ $ npm tests
 ```
 
 
-## p-s
 
-I mentioned at the beginning that there could be performance issues if using these components inside a virtual list, for example.  Although performance issues have not yet been observed, the concern is based on observations made by the [ag-grid](https://www.ag-grid.com/ag-grid-performance-hacks/) team:
 
->The grid needs to have mouse and keyboard listeners on all the cells so that the grid can fire events such as 'cellClicked' and so that the grid can perform grid operations such as selection, range selection, keyboard navigation etc. In all there are 8 events that the grid requires at the cell level which are click, dblclick, mousedown, contextmenu, mouseover, mouseout, mouseenter and mouseleave.
 
->Adding event listeners to the DOM results in a small performance hit. A grid would naturally add thousands of such listeners as even 20 visible columns and 50 visible rows means 20 (columns) x 50 (rows) x 8 (events) = 8,000 event listeners. As the user scrolls our row and column virtualisation kicks in and these listeners are getting constantly added and removed which adds a lag to scrolling.
-
-...
-
->So instead of adding listeners to each cell, we add each listener once to the container that contains the cells. That way the listeners are added once when the grid initialises and not to each individual cell.
-
-We can already do that somewhat with p-d -- wrap multiple elements inside a div tag, and then add p-d after the div tag.  The problem is that will only pass data to DOM elements under the p-d tag.  We can't pass data down to elements below the element that actually triggered the event.
-
-For that we have p-s, which stands for "pass sideways".  It differs from p-d only in that the search for matches begins from the triggering element.  Also, it can actually pass things to itself.
-
-For similar reasons, there is a special string used to refer to an element of [composedPath()](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath):
-
-```html
-<p-u on="click" if="span" to="/myTree{toggledNode:composedPath_0.node}"></p-u>
-```
-
-This pulls the node from event.composedPath()[0].node.
 
