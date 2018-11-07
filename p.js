@@ -102,7 +102,6 @@ export class P extends XtallatX(HTMLElement) {
         const pS = this.getPSib();
         if (pS && this._bndHndlEv)
             this.detach(pS);
-        this.disconnect();
     }
     _hndEv(e) {
         if (this.hasAttribute('debug'))
@@ -212,10 +211,6 @@ export class P extends XtallatX(HTMLElement) {
             }
         });
         return context;
-    }
-    disconnect() {
-        if (this._sibObs)
-            this._sibObs.disconnect();
     }
 }
 //# sourceMappingURL=p.js.map

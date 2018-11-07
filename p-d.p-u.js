@@ -208,7 +208,6 @@ class P extends XtallatX(HTMLElement) {
         const pS = this.getPSib();
         if (pS && this._bndHndlEv)
             this.detach(pS);
-        this.disconnect();
     }
     _hndEv(e) {
         if (this.hasAttribute('debug'))
@@ -319,10 +318,6 @@ class P extends XtallatX(HTMLElement) {
         });
         return context;
     }
-    disconnect() {
-        if (this._sibObs)
-            this._sibObs.disconnect();
-    }
 }
 const m = 'm';
 /**
@@ -388,6 +383,7 @@ class PD extends P {
         const bndApply = this.applyProps.bind(this);
         this._cssPropMap.forEach(pm => {
             const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
+            pdnd.root = this;
             pdnd.init();
             this._pdNavDown.push(pdnd);
         });

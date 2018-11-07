@@ -247,23 +247,23 @@
     babelHelpers.createClass(PDNavDown, [{
       key: "sibCheck",
       value: function sibCheck(sib, c) {
-        if (sib.__addMutObs) return;
+        if (sib.__aMO) return;
         var attr = sib.getAttribute(p_d_if);
 
         if (attr === null) {
-          sib.__addMutObs = true;
+          sib.__aMO = true;
           return;
         }
 
         var fec = sib.firstElementChild;
         if (fec === null) return;
 
-        if (attr !== null) {
-          if (this.seed.matches(attr)) {
-            var pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
-            this.children.push(pdnd);
-            sib.__addMutObs = true;
-          }
+        if (this.root.matches(attr)) {
+          var pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+          pdnd.root = this.root;
+          this.children.push(pdnd);
+          pdnd.init();
+          sib.__aMO = true;
         }
       }
     }, {
@@ -271,7 +271,7 @@
       value: function getMatches() {
         var ret = this.matches;
         this.children.forEach(function (child) {
-          return ret.concat(child.getMatches());
+          ret = ret.concat(child.getMatches());
         });
         return ret;
       }
@@ -383,7 +383,6 @@
       value: function disconnectedCallback() {
         var pS = this.getPSib();
         if (pS && this._bndHndlEv) this.detach(pS);
-        this.disconnect();
       }
     }, {
       key: "_hndEv",
@@ -510,11 +509,6 @@
           }
         });
         return context;
-      }
-    }, {
-      key: "disconnect",
-      value: function disconnect() {
-        if (this._sibObs) this._sibObs.disconnect();
       }
     }, {
       key: "on",
@@ -649,6 +643,7 @@
           var pdnd = new PDNavDown(_this12, pm.cssSelector, function (nd) {
             return bndApply(nd);
           }, _this12.m);
+          pdnd.root = _this12;
           pdnd.init();
 
           _this12._pdNavDown.push(pdnd);

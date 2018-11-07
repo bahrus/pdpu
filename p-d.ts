@@ -41,7 +41,7 @@ export class PD extends P {
 
     applyProps(pd: PDNavDown){
         pd.getMatches().forEach(el =>{
-            this._cssPropMap.filter(map => map.cssSelector === pd.match). forEach(map => {
+            this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
                 this.setVal(this._lastEvent, el, map)
             });
         })

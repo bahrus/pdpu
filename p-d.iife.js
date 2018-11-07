@@ -118,8 +118,10 @@ class NavDown {
         this._debouncer = debounce(() => {
             this.sync();
         }, this.mutDebounce);
-        this.sync();
-        this.addMutObs(this.seed.parentElement);
+		this.sync();
+		this.addMutObs(this.seed.parentElement);
+
+        
     }
     addMutObs(elToObs) {
         if (elToObs === null || elToObs._addedMutObs)
@@ -162,27 +164,29 @@ class PDNavDown extends NavDown {
         this.children = [];
     }
     sibCheck(sib, c) {
-        if (sib.__addMutObs)
+        if (sib.__aMO)
             return;
         const attr = sib.getAttribute(p_d_if);
         if (attr === null) {
-            sib.__addMutObs = true;
+            sib.__aMO = true;
             return;
         }
         const fec = sib.firstElementChild;
         if (fec === null)
             return;
-        if (attr !== null) {
-            if (this.seed.matches(attr)) {
-                const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
-                this.children.push(pdnd);
-                sib.__addMutObs = true;
-            }
+        if (this.root.matches(attr)) {
+            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+            pdnd.root = this.root;
+            this.children.push(pdnd);
+            pdnd.init();
+            sib.__aMO = true;
         }
     }
     getMatches() {
-        const ret = this.matches;
-        this.children.forEach(child => ret.concat(child.getMatches()));
+        let ret = this.matches;
+        this.children.forEach(child => {
+            ret = ret.concat(child.getMatches());
+        });
         return ret;
     }
 }
@@ -289,7 +293,6 @@ class P extends XtallatX(HTMLElement) {
         const pS = this.getPSib();
         if (pS && this._bndHndlEv)
             this.detach(pS);
-        this.disconnect();
     }
     _hndEv(e) {
         if (this.hasAttribute('debug'))
@@ -400,10 +403,6 @@ class P extends XtallatX(HTMLElement) {
         });
         return context;
     }
-    disconnect() {
-        if (this._sibObs)
-            this._sibObs.disconnect();
-    }
 }
 const m = 'm';
 /**
@@ -469,6 +468,7 @@ class PD extends P {
         const bndApply = this.applyProps.bind(this);
         this._cssPropMap.forEach(pm => {
             const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
+            pdnd.root = this;
             pdnd.init();
             this._pdNavDown.push(pdnd);
         });

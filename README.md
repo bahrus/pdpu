@@ -242,7 +242,6 @@ You can specify the "depth" of disabling thusly:
 
 What if you want your element to remain disabled after all the p-d's have latched?  Just set the number one higher than the number of next sibling p-d's.
 
-p-d is ~2.3KB minified and gzipped.
 
 ## Counter test
 

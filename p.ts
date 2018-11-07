@@ -111,7 +111,6 @@ export abstract class P extends XtallatX(HTMLElement){
     disconnectedCallback(){
         const pS = this.getPSib();
         if(pS && this._bndHndlEv) this.detach(pS);
-        this.disconnect();
     }
     _bndHndlEv!: any;
     abstract pass(e: Event) : void;
@@ -223,9 +222,4 @@ export abstract class P extends XtallatX(HTMLElement){
         return context;
     }
 
-    disconnect(){
-        if(this._sibObs)  this._sibObs.disconnect();
-    }
-
-    _sibObs!: MutationObserver;
 }

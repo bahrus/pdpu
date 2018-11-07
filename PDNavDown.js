@@ -6,29 +6,22 @@ export class PDNavDown extends NavDown {
         this.children = [];
     }
     sibCheck(sib, c) {
-        if (sib.__addMutObs)
+        if (sib.__aMO)
             return;
         const attr = sib.getAttribute(p_d_if);
         if (attr === null) {
-            sib.__addMutObs = true;
+            sib.__aMO = true;
             return;
         }
         const fec = sib.firstElementChild;
-        // if(this.seed.matches(attr) && (fec===null)){
-        //     console.log(fec);
-        // }
         if (fec === null)
             return;
         if (this.root.matches(attr)) {
-            // console.log({
-            //     attr: attr,
-            //     fec: fec,
-            // })
             const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
             pdnd.root = this.root;
             this.children.push(pdnd);
             pdnd.init();
-            sib.__addMutObs = true;
+            sib.__aMO = true;
         }
     }
     getMatches() {

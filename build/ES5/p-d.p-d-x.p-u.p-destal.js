@@ -286,7 +286,6 @@
       value: function disconnectedCallback() {
         var pS = this.getPSib();
         if (pS && this._bndHndlEv) this.detach(pS);
-        this.disconnect();
       }
     }, {
       key: "_hndEv",
@@ -413,11 +412,6 @@
           }
         });
         return context;
-      }
-    }, {
-      key: "disconnect",
-      value: function disconnect() {
-        if (this._sibObs) this._sibObs.disconnect();
       }
     }, {
       key: "on",
@@ -552,6 +546,7 @@
           var pdnd = new PDNavDown(_this9, pm.cssSelector, function (nd) {
             return bndApply(nd);
           }, _this9.m);
+          pdnd.root = _this9;
           pdnd.init();
 
           _this9._pdNavDown.push(pdnd);

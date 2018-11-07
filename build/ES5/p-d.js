@@ -86,6 +86,7 @@ function (_P) {
         var pdnd = new PDNavDown(_this4, pm.cssSelector, function (nd) {
           return bndApply(nd);
         }, _this4.m);
+        pdnd.root = _this4;
         pdnd.init();
 
         _this4._pdNavDown.push(pdnd);
