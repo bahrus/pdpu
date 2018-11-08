@@ -7,14 +7,14 @@
   "license": "MIT",
   "main": "p-d.js",
   "dependencies": {
-    "xtal-latx": "0.0.68"
+    "xtal-latx": "0.0.69"
   },
   "devDependencies": {
     "@types/node": "^10.9.1",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "jiife": "0.0.5",
-    "tape": "^4.9.1",
     "@types/tape": "4.2.32",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "jiife": "0.0.6",
+    "tape": "^4.9.1",
     "xtal-test": "0.0.8"
   },
   "scripts": {

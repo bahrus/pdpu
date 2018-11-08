@@ -8,7 +8,7 @@
   <title>xtal-json-merge demo</title>
   <script type="module" src="https://unpkg.com/templ-mount@0.0.37/templ-mount.js?module"></script>
   <template data-activate data-ua="HeadlessChrome">
-    <script src="../p-d.p-d-x.p-u.p-destal.js"></script>
+    <script src="../dist/p-d.iife.js"></script>
   </template>
   <template data-activate data-exclude data-ua="HeadlessChrome" >
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
@@ -17,7 +17,7 @@
     <script type="module" src="../p-destal.js"></script>
   </template>
   <script async src="https://unpkg.com/xtal-json-editor@0.0.19/xtal-json-editor.js"></script>
-  <script type="module" src="https://unpkg.com/xtal-json-merge@0.2.19/xtal-insert-json.js?module"></script>
+  <script type="module" src="https://unpkg.com/xtal-json-merge@0.2.32/xtal-insert-json.js?module"></script>
 </head>
 
 <body>
@@ -38,13 +38,9 @@
                   ]
                     </script>
     </xtal-insert-json>
-    <p-d-x to="#firstEditor{input:target.mergedProp};#insertData{input:target.mergedProp}" on="merged-prop-changed"></p-d-x>
-    <script type="module ish">
-                  (
-                    {testFn: n => n+1}
-                  )
-                </script>
-    <p-d to="{testFunction:testFn}" on="eval"></p-d>
+    <p-d to="#firstEditor{input:target.mergedProp}" on="merged-prop-changed"></p-d>
+    <p-d to="#insertData{input:target.mergedProp}" on="merged-prop-changed"></p-d>
+    
     <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
     <br>
     <div>Merge with</div>
@@ -87,7 +83,7 @@
                     }]
                 </script>
     </xtal-insert-json>
-    <p-d to="xtal-json-editor{input:detail.value}" on="merged-prop-changed"></p-d>
+    <p-d to="xtal-json-editor{input:target.mergedProp}" on="merged-prop-changed"></p-d>
     <br>
     <div>Output:</div>
     <xtal-json-editor id="secondEditor" options="{}"></xtal-json-editor>

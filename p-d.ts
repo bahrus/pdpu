@@ -33,18 +33,22 @@ export class PD extends P {
         this._lastEvent = e;
         this.attr('pds', '🌩️');
         //this.passDown(this.nextElementSibling, e, 0);
+        let count = 0;
         this._pdNavDown.forEach(pdnd =>{
-            this.applyProps(pdnd);
+            count += this.applyProps(pdnd);
         })
         this.attr('pds', '👂');
+        this.attr('mtch', count.toString());
     }
 
     applyProps(pd: PDNavDown){
-        pd.getMatches().forEach(el =>{
+        const matches = pd.getMatches();
+        matches.forEach(el =>{
             this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
                 this.setVal(this._lastEvent, el, map)
             });
-        })
+        });
+        return matches.length;
     }
 
 

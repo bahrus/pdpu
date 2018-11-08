@@ -9,6 +9,14 @@
     }
     customElements.define(tagName, custEl);
 }
+const debounce = (fn, time) => {
+    let timeout;
+    return function () {
+        const functionCall = () => fn.apply(this, arguments);
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, time);
+    };
+};
 const disabled = 'disabled';
 /**
  * Base class for many xtal- components
@@ -105,38 +113,88 @@ function XtallatX(superClass) {
         }
     };
 }
-function createNestedProp(target, pathTokens, val, clone) {
-    const firstToken = pathTokens.shift();
-    const tft = target[firstToken];
-    const returnObj = { [firstToken]: tft ? tft : {} };
-    let tc = returnObj[firstToken]; //targetContext
-    const lastToken = pathTokens.pop();
-    pathTokens.forEach(token => {
-        let newContext = tc[token];
-        if (!newContext) {
-            newContext = tc[token] = {};
-        }
-        tc = newContext;
-    });
-    if (tc[lastToken] && typeof (val) === 'object') {
-        Object.assign(tc[lastToken], val);
+class NavDown {
+    constructor(seed, match, notify, max, mutDebounce = 50) {
+        this.seed = seed;
+        this.match = match;
+        this.notify = notify;
+        this.max = max;
+        this.mutDebounce = mutDebounce;
+        //this.init();
     }
-    else {
-        if (lastToken === undefined) {
-            returnObj[firstToken] = val;
+    init() {
+        this._debouncer = debounce(() => {
+            this.sync();
+        }, this.mutDebounce);
+        this.sync();
+        this.addMutObs(this.seed.parentElement);
+    }
+    addMutObs(elToObs) {
+        if (elToObs === null)
+            return;
+        this._mutObs = new MutationObserver((m) => {
+            this._debouncer(true);
+        });
+        this._mutObs.observe(elToObs, { childList: true });
+        // (<any>elToObs)._addedMutObs = true;
+    }
+    sibCheck(sib, c) { }
+    sync(c = 0) {
+        const isF = typeof this.match === 'function';
+        this.matches = [];
+        let ns = this.seed.nextElementSibling;
+        while (ns !== null) {
+            let isG = isF ? this.match(ns) : ns.matches(this.match);
+            if (isG) {
+                this.matches.push(ns);
+                c++;
+                if (c >= this.max) {
+                    this.notify(this);
+                    return;
+                }
+                ;
+            }
+            this.sibCheck(ns, c);
+            ns = ns.nextElementSibling;
         }
-        else {
-            tc[lastToken] = val;
+        this.notify(this);
+    }
+    disconnect() {
+        this._mutObs.disconnect();
+    }
+}
+const p_d_if = 'p-d-if';
+class PDNavDown extends NavDown {
+    constructor() {
+        super(...arguments);
+        this.children = [];
+    }
+    sibCheck(sib, c) {
+        if (sib.__aMO)
+            return;
+        const attr = sib.getAttribute(p_d_if);
+        if (attr === null) {
+            sib.__aMO = true;
+            return;
+        }
+        const fec = sib.firstElementChild;
+        if (fec === null)
+            return;
+        if (this.root.matches(attr)) {
+            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+            pdnd.root = this.root;
+            this.children.push(pdnd);
+            pdnd.init();
+            sib.__aMO = true;
         }
     }
-    //this controversial line is to force the target to see new properties, even though we are updating nested properties.
-    //In some scenarios, this will fail (like if updating element.dataset), but hopefully it's okay to ignore such failures 
-    if (clone)
-        try {
-            Object.assign(target, returnObj);
-        }
-        catch (e) { }
-    ;
+    getMatches() {
+        let ret = this.matches;
+        this.children.forEach(child => {
+            ret = ret.concat(child.getMatches());
+        });
+        return ret;
+    }
 }
 const on = 'on';
 const noblock = 'noblock';
@@ -382,17 +440,21 @@ class PD extends P {
         this._lastEvent = e;
         this.attr('pds', '🌩️');
         //this.passDown(this.nextElementSibling, e, 0);
+        let count = 0;
         this._pdNavDown.forEach(pdnd => {
-            this.applyProps(pdnd);
+            count += this.applyProps(pdnd);
         });
         this.attr('pds', '👂');
+        this.attr('mtch', count.toString());
     }
     applyProps(pd) {
-        pd.getMatches().forEach(el => {
+        const matches = pd.getMatches();
+        matches.forEach(el => {
             this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
                 this.setVal(this._lastEvent, el, map);
             });
         });
+        return matches.length;
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
@@ -424,186 +486,5 @@ class PD extends P {
     }
 }
 define(PD);
-//const attrib_filter = 'attrib-filter';
-class PDX extends PD {
-    static get is() { return 'p-d-x'; }
-    parseMapping(mapTokens, cssSelector) {
-        const splitPropPointer1 = mapTokens[1].split(';');
-        splitPropPointer1.forEach(token => {
-            const splitPropPointer = token.split(':');
-            this._cssPropMap.push({
-                cssSelector: cssSelector,
-                propTarget: splitPropPointer[0],
-                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
-            });
-        });
-    }
-    commit(target, map, val) {
-        if (val === undefined)
-            return;
-        if (map.propSource === '.' && map.propTarget === '.') {
-            Object.assign(target, val);
-            return;
-        }
-        const targetPath = map.propTarget;
-        if (targetPath.startsWith('.')) {
-            const cssClass = targetPath.substr(1);
-            const method = val ? 'add' : 'remove';
-            target.classList[method](cssClass);
-        }
-        else if (targetPath.indexOf('.') > -1) {
-            const pathTokens = targetPath.split('.');
-            // const lastToken = pathTokens.pop();
-            createNestedProp(target, pathTokens, val, true);
-        }
-        else {
-            target[targetPath] = val;
-        }
-    }
-    attchEvListnrs() {
-        if (this._on[0] !== '[') {
-            super.attchEvListnrs();
-            return;
-        }
-        const prevSibling = this.getPSib();
-        if (!prevSibling)
-            return;
-        const split = this._on.split(',').map(s => s.substr(1, s.length - 2));
-        const config = {
-            attributes: true,
-            attributeFilter: split
-        };
-        this._attributeObserver = new MutationObserver(mutationRecords => {
-            const values = {};
-            split.forEach(attrib => {
-                values[attrib] = prevSibling.getAttribute(attrib);
-            });
-            const fakeEvent = {
-                mutationRecords: mutationRecords,
-                values: values,
-                target: prevSibling
-            };
-            this._hndEv(fakeEvent);
-        });
-        this._attributeObserver.observe(prevSibling, config);
-    }
-    disconnect() {
-        if (this._attributeObserver)
-            this._attributeObserver.disconnect();
-    }
-    disconnectedCallback() {
-        this.disconnect();
-        super.disconnectedCallback();
-    }
-}
-define(PDX);
-/**
- * `p-u`
- *  Pass data from one element to a targeted DOM element elsewhere
- *
- * @customElement
- * @polymer
- * @demo demo/index.html
- */
-class PU extends P {
-    static get is() { return 'p-u'; }
-    pass(e) {
-        this._cssPropMap.forEach(map => {
-            const cssSel = map.cssSelector;
-            let targetElement;
-            const split = cssSel.split('/');
-            const id = split[split.length - 1];
-            if (cssSel.startsWith('/')) {
-                targetElement = self[id];
-            }
-            else {
-                const len = cssSel.startsWith('./') ? 0 : split.length;
-                const host = this.getHost(this, 0, split.length);
-                if (host) {
-                    if (host.shadowRoot) {
-                        targetElement = host.shadowRoot.getElementById(id);
-                        if (!targetElement)
-                            targetElement = host.querySelector('#' + id);
-                    }
-                    else {
-                        targetElement = host.querySelector('#' + id);
-                    }
-                }
-                else {
-                    throw 'Target Element Not found';
-                }
-            }
-            this.setVal(e, targetElement, map);
-        });
-    }
-    getHost(el, level, maxLevel) {
-        let parent = el;
-        while (parent = parent.parentElement) {
-            if (parent.nodeType === 11) {
-                const newLevel = level + 1;
-                if (newLevel >= maxLevel)
-                    return parent['host'];
-                return this.getHost(parent['host'], newLevel, maxLevel);
-            }
-            else if (parent.tagName === 'HTML') {
-                return parent;
-            }
-        }
-    }
-    connectedCallback() {
-        super.connectedCallback();
-        this._connected = true;
-        this.onPropsChange();
-    }
-}
-define(PU);
-class PDestal extends PDX {
-    constructor() {
-        super(...arguments);
-        this._previousValues = {};
-    }
-    static get is() { return 'p-destal'; }
-    getPSib() {
-        let parent = this;
-        while (parent = parent.parentNode) {
-            if (parent.nodeType === 11) {
-                return parent['host'];
-            }
-            else if (parent.tagName.indexOf('-') > -1) {
-                return parent;
-            }
-            else if (parent.tagName === 'HTML') {
-                this.watchLocation();
-                return null;
-            }
-        }
-    }
-    doFakeEvent() {
-        const split = this._on.split(',');
-        const searchParams = new URLSearchParams(location.search);
-        let changedVal = false;
-        split.forEach(param => {
-            const trimmedParam = param.substr(1, param.length - 2);
-            const searchParm = searchParams.get(trimmedParam);
-            if (!changedVal && (searchParm !== this._previousValues[trimmedParam])) {
-                changedVal = true;
-            }
-            this._previousValues[trimmedParam] = searchParm;
-        });
-        if (changedVal) {
-            const fakeEvent = {
-                target: this._previousValues,
-            };
-            this._hndEv(fakeEvent);
-        }
-    }
-    watchLocation() {
-        window.addEventListener('popstate', e => {
-            this.doFakeEvent();
-        });
-        this.doFakeEvent();
-    }
-}
-define(PDestal);
     })();  
         

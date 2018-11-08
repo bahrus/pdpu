@@ -23,12 +23,6 @@
       "js": {"minify": false, "compile": true},
       "html": {"minify": true},
       "css" : {"minify": true}
-    },
-    {
-      "name": "ES6",
-      "js": {"minify": true, "compile": false},
-      "html": {"minify": true},
-      "css" : {"minify": true}
-    }    
+    }
   ]
 }

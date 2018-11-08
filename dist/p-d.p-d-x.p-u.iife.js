@@ -9,6 +9,14 @@
     }
     customElements.define(tagName, custEl);
 }
+const debounce = (fn, time) => {
+    let timeout;
+    return function () {
+        const functionCall = () => fn.apply(this, arguments);
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, time);
+    };
+};
 const disabled = 'disabled';
 /**
  * Base class for many xtal- components
@@ -104,6 +112,89 @@ function XtallatX(superClass) {
             });
         }
     };
+}
+class NavDown {
+    constructor(seed, match, notify, max, mutDebounce = 50) {
+        this.seed = seed;
+        this.match = match;
+        this.notify = notify;
+        this.max = max;
+        this.mutDebounce = mutDebounce;
+        //this.init();
+    }
+    init() {
+        this._debouncer = debounce(() => {
+            this.sync();
+        }, this.mutDebounce);
+        this.sync();
+        this.addMutObs(this.seed.parentElement);
+    }
+    addMutObs(elToObs) {
+        if (elToObs === null)
+            return;
+        this._mutObs = new MutationObserver((m) => {
+            this._debouncer(true);
+        });
+        this._mutObs.observe(elToObs, { childList: true });
+        // (<any>elToObs)._addedMutObs = true;
+    }
+    sibCheck(sib, c) { }
+    sync(c = 0) {
+        const isF = typeof this.match === 'function';
+        this.matches = [];
+        let ns = this.seed.nextElementSibling;
+        while (ns !== null) {
+            let isG = isF ? this.match(ns) : ns.matches(this.match);
+            if (isG) {
+                this.matches.push(ns);
+                c++;
+                if (c >= this.max) {
+                    this.notify(this);
+                    return;
+                }
+                ;
+            }
+            this.sibCheck(ns, c);
+            ns = ns.nextElementSibling;
+        }
+        this.notify(this);
+    }
+    disconnect() {
+        this._mutObs.disconnect();
+    }
+}
+const p_d_if = 'p-d-if';
+class PDNavDown extends NavDown {
+    constructor() {
+        super(...arguments);
+        this.children = [];
+    }
+    sibCheck(sib, c) {
+        if (sib.__aMO)
+            return;
+        const attr = sib.getAttribute(p_d_if);
+        if (attr === null) {
+            sib.__aMO = true;
+            return;
+        }
+        const fec = sib.firstElementChild;
+        if (fec === null)
+            return;
+        if (this.root.matches(attr)) {
+            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+            pdnd.root = this.root;
+            this.children.push(pdnd);
+            pdnd.init();
+            sib.__aMO = true;
+        }
+    }
+    getMatches() {
+        let ret = this.matches;
+        this.children.forEach(child => {
+            ret = ret.concat(child.getMatches());
+        });
+        return ret;
+    }
 }
 function createNestedProp(target, pathTokens, val, clone) {
     const firstToken = pathTokens.shift();
@@ -382,17 +473,21 @@ class PD extends P {
         this._lastEvent = e;
         this.attr('pds', '🌩️');
         //this.passDown(this.nextElementSibling, e, 0);
+        let count = 0;
         this._pdNavDown.forEach(pdnd => {
-            this.applyProps(pdnd);
+            count += this.applyProps(pdnd);
         });
         this.attr('pds', '👂');
+        this.attr('mtch', count.toString());
     }
     applyProps(pd) {
-        pd.getMatches().forEach(el => {
+        const matches = pd.getMatches();
+        matches.forEach(el => {
             this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
                 this.setVal(this._lastEvent, el, map);
             });
         });
+        return matches.length;
     }
     attributeChangedCallback(name, oldVal, newVal) {
         switch (name) {
