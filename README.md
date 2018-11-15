@@ -118,6 +118,18 @@ What we end up with is shown below:
 </div>
 ```
 
+##  Is this really one-way data flow?
+
+I may be missing something big, as I'm no expert in this field.  I hope the following statements / speculation is accurate:
+
+**NB III**.  These components don't make claim to be guaranteeing a pure functional flow of data, only a conceptual outline of one, which could serve that purpose if required.  The goal of these components is to make the markup logical, to help organize how things *should* flow.  
+
+A functional programming absolutist could fairly raise the following objection:  Sure, you are passing objects in one direction, but what is to prevent a downstream component from updating a sub property, making the data flow direction more ambiguous?  I kind of think the risks of this situation being problematic are low, as long as components don't adding internal watchers on sub properties via ES6 proxies, and updating the objects via said proxies. 
+
+Anyway, these "connector" components are certainly compatible with a pure functional model, *if the web components themselves adhere to the necessary discipline to make it so*.  For example, if when components raise events, they only put into the event detail a deep clone of some internal (sub)object, and if downstream components only bind to the event detail, and/or if components receiving said events make a redux-like clone before updating, this would, I think, satisfy the functional purist.
+
+Is this a goal worth pursuing? Each person is, to some degree, a product of their experience, and, based on my experience, this isn't a pressing goal, partly based on my speculation two paragraphs above.  I'm more concerned about what the costs would be in imposing the kind of discipline it would require, especially as JS isn't Scala or Haskell -- basically unnecessary code bloat addressing an issue that (again in my experience) rarely if ever happens (in a way that causes problems).  Perhaps if this is a concern for you, you could develop web components in a functional language that compiles to WebAssembly (if that's possible, seems like it should be).  Just a friendly suggestion.
+
 
 ## Recursive sibling drilldown -- Invitation Only
 
