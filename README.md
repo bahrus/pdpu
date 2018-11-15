@@ -8,11 +8,13 @@
 
 This package contains two primary custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
 
+
 These two components dream the impossible dream -- be able to progressively, declaratively, glue native DOM / web components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
+
 
 Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  
 
-These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree).  See the section "p-s" for more discussion about this. 
+These components, instead, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree).  
 
 Here I am defining a "framework" as a "common, centrally managed language used to glue components together."  What distinguishes polymer's helper elements from a framework is that they are themselves components.  The "language" can thus easily evolve, like natural languages.  Who still uses the word lasslorn? 
 
@@ -20,9 +22,11 @@ It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/w
 
 NB:  Lit-html (also by the Polymer team) appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  hyperHTML has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
 
+NB II:  If all you want is clean, declarative HTML syntax for building components or web compositions, take a look at these [slightly](https://vuejs.org/) [better known](https://svelte.technology/) technologies.  The components described here are part of a thought experiment to see if a subset of what those frameworks do could be done with no compilation steps, no limitations on the server, no installation steps even.
+
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
-When this event monitoring is enabled, if the previous element is disabled, the disabled attribute is removed.
+When this event monitoring is enabled, if the previous element is disabled, the disabled attribute is removed (more on that later).
 
 ##  Downward flow amongst siblings with p-d. 
 
