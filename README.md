@@ -376,14 +376,7 @@ Note the use of the attribute "level='local'".  This limits the scope of the sta
     <iron-list>
         ...
     </iron-list>
-    <p-d on="scroll" to="{ironList:target}"></p-d>
-    <aggregator-fn><script nomodule>
-      ({ironList}) => {
-        firstVisibleIndex = ironList.firstVisibleIndex;
-        return firstVisibleIndex;
-      }
-    </script></aggregator-fn>
-    <p-d on="value-changed" to="{history}"></p-d>
+    <p-d on="scroll" to="{history:target.firstVisibleIndex}"></p-d>
     <xtal-state-commit level="local" rewrite href="/scroll"></xtal-state-commit>
 ...
 </div>
@@ -396,9 +389,9 @@ An interesting, untested question is which frameworks or renderers would these c
 
 In what scenarios would there be too many cooks in the kitchen? Let's put aside the question of "should" and consider only "could" first.
 
-The easiest scenario is complementing a server-side framework.  
+The easiest scenario is complementing a mostly static website  or server-side framework.  That's been the primary "vantage point" motivating this cmoponent.
 
-Next in ease would be complementing other "helper" elements, like virtualized lists or lit-html or HyperHTML rendered regions.  Do these renderers need to really care what siblings are telling each other?  I think usually not.  In fact this scenario has been the focus of trying out this component (especially in combination with iron-list.)
+Next in ease (and focus) would be complementing other "helper" elements, like virtualized lists or lit-html or HyperHTML rendered regions.  Do these renderers need to really care what siblings are telling each other?  I think usually not.  In fact this scenario has been the focus of trying out this component (especially in combination with iron-list.)
 
 The least likely candidates are those frameworks that like to blow everything away on re-rendering.  In that case, I could only see it working if the framework passes some properties to the eldest sibling, and leaves it at that.  Perhaps the use cases could be a little wider than that, but that's probably wishful thinking.
 
@@ -410,9 +403,9 @@ Tied to this sentiment is my observation that with all the emphasis placed on th
 
 The question becomes how much information can be stored as attribute / tag data?
  
-Another other approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
+A different approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
 
-An intriguing third option is to use directives instead of web components.  This has the most merit if you aren't conext switching between literal tags and difficult to digest JavaScript expressions.  But that isn't always the case.  A nickle here, a dime there, soon you are talking 65 cents!
+An intriguing third option is to use directives instead of web components.  This has the most merit if you aren't constantly context switching between literal tags and difficult to digest JavaScript expressions.  But that isn't always the case.  A nickle here, a dime there, soon you are talking 65 cents!
 
 \</grain-of-salt\>
 
