@@ -390,9 +390,9 @@ Note the use of the attribute "level='local'".  This limits the scope of the sta
 ```
 
 \<grain-of-salt level="Infinity"\>
-## Theoretcal musings
+## Theoretcal musings to help sooth you into a coma
 
-An interesting, untested question is which frameworks or renderers would these components be compatible with?  Previously, I optimistically stated nothing to see here, but on further reflection, it is not nearly so obvious.  What follows is mostly arm-chair speculation, subject to change with more research.
+An interesting, untested question is which frameworks or renderers would these components be compatible with?  Previously, I optimistically, sloppily stated nothing to see here, it would work, and could help reduce boilerplate code.  But on further reflection, it is not nearly so obvious.  What follows is mostly arm-chair speculation, subject to change with more research.
 
 In what scenarios would there be too many cooks in the kitchen? Let's put aside the question of "should" and consider only "could" first.
 
@@ -400,15 +400,19 @@ The easiest scenario is complementing a server-side framework.
 
 Next in ease would be complementing other "helper" elements, like virtualized lists or lit-html or HyperHTML rendered regions.  Do these renderers need to really care what siblings are telling each other?  I think usually not.  In fact this scenario has been the focus of trying out this component (especially in combination with iron-list.)
 
-The least likely candidates are those frameworks that like to blow everything away on rendering.  In that case, I could only see it working if the framework passes some properties to the eldest sibling, and leaves it at that.  Perhaps the use cases could be a little wider than that, but that's probably wishful thinking.
+The least likely candidates are those frameworks that like to blow everything away on re-rendering.  In that case, I could only see it working if the framework passes some properties to the eldest sibling, and leaves it at that.  Perhaps the use cases could be a little wider than that, but that's probably wishful thinking.
 
-Now to the why.
+Now to the "should" question..
 
-Among the premises behind this component is that the Chrome team is onto something when they preach "less JavaScript."  My gut reaction to that is "Problem solved:  Do as much as possible on the server, and then let's encapsulate what JavaScript is doing repeatedly into easily digestible HTML data -- tags + attributes."
+Among the premises behind this component is that the Chrome team is onto something when they preach "less JavaScript."  My gut reaction to that is "Problem solved:  Do as much as possible on the server, and then let's encapsulate what boilerplate JavaScript is doing repeatedly into easily digestible HTML data -- tags + attributes."  Yes, use web components to do common JS tasks.
 
-Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens somewhat when the thing generating the "initial HTML" is actually JavaScript.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free form JavaScript, which seems quite plausible. The question becomes how much information can be stored as data?
+Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens somewhat when the thing generating the "initial HTML" is actually JavaScript, which ultimately is what pretty much every framework does.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free-form JavaScript (3 times as I recall), which seems quite plausible. 
+
+The question becomes how much information can be stored as attribute / tag data?
  
-There's only one other approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
+Another other approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
+
+An intriguing third option is to use directives instead of web components.  This has the most merit if you aren't conext switching between literal tags and difficult to digest JavaScript expressions.  But that isn't always the case.  A nickle here, a dime there, soon you are talking 65 cents!
 
 \</grain-of-salt\>
 
