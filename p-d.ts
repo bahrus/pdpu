@@ -76,7 +76,7 @@ export class PD extends P {
         this._cssPropMap.forEach(pm =>{
             const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
             pdnd.root = this;
-            pdnd.ignore = 'p-d';
+            pdnd.ignore = 'p-d,p-d-x,script';
             pdnd.init();
             this._pdNavDown.push(pdnd);
         })
