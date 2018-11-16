@@ -408,8 +408,7 @@ Among the premises behind this component is that the Chrome team is onto somethi
 
 Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens somewhat when the thing generating the "initial HTML" is actually JavaScript.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free form JavaScript, which seems quite plausible. The question becomes how much information can be stored as data?
  
-
-So even then, wouldn't it pay to "offload" as much as possible into declarative data?  There's only one other approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
+There's only one other approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
 
 \</grain-of-salt\>
 
