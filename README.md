@@ -133,7 +133,7 @@ Is this a goal worth pursuing? Each person is, to some degree, a product of thei
 
 I recognize the desire for, and use of pure functional solutions built on top of JavaScript is quite high, and, as I said, I **think** these connector components are compatible with that.
 
-\</grain-of-salt level="Infinity"\>
+\</grain-of-salt\>
 
 ## Recursive sibling drilldown -- Invitation Only
 
