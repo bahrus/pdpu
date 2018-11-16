@@ -127,7 +127,7 @@ I may be missing something big, as I'm no expert in this field.  I hope the foll
 
 A functional programming absolutist could fairly raise the following objection:  Sure, you are passing objects in one direction, but what is to prevent a downstream component from updating a sub property, making the data flow direction more ambiguous?  I kind of think the risks of this situation being problematic are low, as long as upstream components don't add internal watchers on sub properties via ES6 proxies, and downstream elements update those properties using the same proxy. 
 
-Anyway, these "connector" components are, I think, compatible with a pure functional model, *if the web components themselves adhere to the necessary discipline to make it so*.  For example, if when components raise events, they only put into the event detail a deep clone of some internal (sub)object, and if downstream components only bind to the event detail, and/or if components receiving said events make treat the event as an immutable think requiring careful cloning before updating, this would, I think, satisfy the functional purist.
+Anyway, these "connector" components are, I think, compatible with a pure functional model, *if the web components themselves adhere to the necessary discipline to make it so*.  For example, if when components raise events, they only put into the event detail a deep clone of some internal (sub)object, and if downstream components only bind to the event detail, and/or if components receiving said events treat the event as an immutable thing requiring careful cloning before updating, this would, I think, satisfy the functional purist.
 
 Is this a goal worth pursuing? Each person is, to some degree, a product of their experience, and, based on my experience, this isn't a pressing concern, partly based on my speculation two paragraphs above.  I'm more concerned about what the costs would be in imposing the kind of discipline it would require, especially as JS isn't Scala or Haskell -- basically unnecessary code bloat addressing an issue that (again in my experience) rarely if ever happens (in a way that causes problems).  Perhaps if this is a concern for you, you could develop web components in a functional language that compiles to WebAssembly (if that's possible, seems like it should be).  Just a friendly, very naiive suggestion.
 
@@ -172,7 +172,7 @@ This will create a custom element with name "my-pipeline-action".  It applies th
 
 As with all custom element definitions, some care should be taken to ensure that the custom element names are unique.  This could be challenging if generating lots of small custom elements, like shown above, to be used in a large application, especially if that large application combines somewhat loosely coupled content from different teams, who also generate many custom elements.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
-[TODO] Support multiple parameters like (aggregator-fn)[https://www.webcomponents.org/element/aggregator-fn].
+[TODO] Support multiple parameters like [aggregator-fn](https://www.webcomponents.org/element/aggregator-fn).
 
 ## Location, Location, Location
 
@@ -202,7 +202,7 @@ Now if you add a breakpoint, it will take you to the code, where you can see the
 
 ## Debugging Tips
 
-Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some beneifits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
+Although the markup / code above is a little more verbose than standard ways of adding event handlers, it does have some benefits.  If you do view the live elements, you can sort of "walk through" the DOM elements and custom elements, and see how data is transformed from step to step.  This would be particularly easy if there were a nice browser extension that can quickly view web component properties, regardless of their flavor.  Unfortunately, [existing](https://chrome.google.com/webstore/detail/polyspector/naoehbibkfilaolkmfiehggkfjndlhpd?hl=en) [extensions](https://chrome.google.com/webstore/detail/stencil-inspector/komnnoelcbjpjfnbhmdpgmlbklmicmdi/related) don't seem to support that yet. 
 
 But I am quite excited to see Firefox nightly making some [giant leaps forward](https://blog.nightly.mozilla.org/2018/09/06/developer-tools-support-for-web-components-in-firefox-63/) in supporting universal web component debugging.
 
@@ -354,9 +354,9 @@ There is a special string used to refer to an element of [composedPath()](https:
 
 This pulls the node from event.composedPath()[0].node.
 
-##  Differences to other "frameworks"
+##  Differences to other frameworks
 
-While these components provide a kind of "framework built with web components", similar to Polymer, there's a fundamental difference.  Unlike Polymer (and other competing frameworks), these components don't depend on the existence of a controlling component which manages state.  Instead, it is a little more JQuery like.  It is a "peer-to-peer binding framework."  This may be more appealing for some people / use cases, less appealing to others.   But these components should be compatible with such frameworks, and may be useful for filling in some cracks with less boilerplate code.
+While these components provide a kind of "framework built with web components", similar to Polymer, there's a fundamental difference.  Unlike Polymer (and other competing frameworks), these components don't depend on the existence of a controlling component which manages state.  Instead, it is a little more JQuery like.  It is a "peer-to-peer binding framework."  This may be more appealing for some people / use cases, less appealing to others.  
 
 And if you want to add some state management while sticking to codeless, declarative approaches, consider using [xtal-state](https://www.webcomponents.org/element/xtal-state).  You can place a history.state watcher at the top of a DOM element, for example:
 
@@ -388,6 +388,30 @@ Note the use of the attribute "level='local'".  This limits the scope of the sta
 ...
 </div>
 ```
+
+\<grain-of-salt level="Infinity"\>
+## Theoretcal musings
+
+An interesting, untested question is which frameworks or renderers would these components be compatible with?  Previously, I optimistically stated nothing to see here, but on further reflection, it is not nearly so obvious.  What follows is mostly arm-chair speculation, subject to change with more research.
+
+In what scenarios would there be too many cooks in the kitchen? Let's put aside the question of "should" and consider only "could" first.
+
+The easiest scenario is complementing a server-side framework.  
+
+Next in ease would be complementing other "helper" elements, like virtualized lists or lit-html or HyperHTML rendered regions.  Do these renderers need to really care what siblings are telling each other?  I think usually not.  In fact this scenario has been the focus of trying out this component (especially in combination with iron-list.)
+
+The least likely candidates are those frameworks that like to blow everything away on rendering.  In that case, I could only see it working if the framework passes some properties to the eldest sibling, and leaves it at that.  Perhaps the use cases could be a little wider than that, but that's probably wishful thinking.
+
+Now to the why.
+
+Among the premises behind this component is that the Chrome team is onto something when they preach "less JavaScript."  My gut reaction to that is "Problem solved:  Do as much as possible on the server, and then let's encapsulate what JavaScript is doing repeatedly into easily digestible HTML data -- tags + attributes."
+
+Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens somewhat when the thing generating the "initial HTML" is actually JavaScript.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free form JavaScript, which seems quite plausible. The question becomes how much information can be stored as data?
+ 
+
+So even then, wouldn't it pay to "offload" as much as possible into declarative data?  There's only one other approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
+
+\</grain-of-salt\>
 
 ## Install the Polymer-CLI
 
