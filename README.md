@@ -389,17 +389,17 @@ An interesting, untested question is which frameworks or renderers would these c
 
 In what scenarios would there be too many cooks in the kitchen? Let's put aside the question of "should" and consider only "could" first.
 
-The easiest scenario is complementing a mostly static website  or server-side framework.  That's been the primary "vantage point" motivating this cmoponent.
+The easiest scenario is complementing a mostly static website  or server-side framework.  That's been the primary "vantage point" motivating these components.
 
 Next in ease (and focus) would be complementing other "helper" elements, like virtualized lists or lit-html or HyperHTML rendered regions.  Do these renderers need to really care what siblings are telling each other?  I think usually not.  In fact this scenario has been the focus of trying out this component (especially in combination with iron-list.)
 
 The least likely candidates are those frameworks that like to blow everything away on re-rendering.  In that case, I could only see it working if the framework passes some properties to the eldest sibling, and leaves it at that.  Perhaps the use cases could be a little wider than that, but that's probably wishful thinking.
 
-Now to the "should" question..
+Now to the "should" question...
 
 Among the premises behind this component is that the Chrome team is onto something when they preach "less JavaScript."  My gut reaction to that is "Problem solved:  Do as much as possible on the server, and then let's encapsulate what boilerplate JavaScript is doing repeatedly into easily digestible HTML data -- tags + attributes."  Yes, use web components to do common JS tasks.
 
-Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens somewhat when the thing generating the "initial HTML" is actually JavaScript, which ultimately is what pretty much every framework does.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free-form JavaScript (3 times as I recall), which seems quite plausible. 
+Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens significantly when this easy to digest HTML is actually encoded in JavaScript, which ultimately is what pretty much every framework does these days.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free-form JavaScript (3 times as I recall), which seems quite plausible. 
 
 The question becomes how much information can be stored as attribute / tag data?
  

@@ -7,7 +7,7 @@
   "license": "MIT",
   "main": "p-d.js",
   "dependencies": {
-    "xtal-latx": "0.0.70"
+    "xtal-latx": "0.0.71"
   },
   "devDependencies": {
     "@types/node": "^10.9.1",
