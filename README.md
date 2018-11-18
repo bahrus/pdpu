@@ -6,11 +6,16 @@
 
 # \<p-d\>, \<p-u\>
 
+NB I:  The lack of HTML Import support has landed a big, temporary(?) blow to HTML/CSS centric component definitions.  If you are a (P)React developer who sees no reason to mourn that fact, but do want to build high performing components that can be used by the [entire web developer community](https://w3techs.com/technologies/overview/javascript_library/all), and yet do so with a tiny footprint, read no further.  There are excellent alternatives for you - LitElement, Stencil, HyperHTMLElement, just to name a few.  Shoo! 😊. 
+
+NB II:  If all you want (on top of great performance and great other features) is clean, declarative HTML syntax for building components or web compositions, take a look at these [slightly](https://vuejs.org/) [better known](https://svelte.technology/) technologies.  The components described here are part of a thought experiment to see if a subset of what those frameworks do could be done with no compilation steps, no limitations on the server, no installation steps even (at least during development).  
+
+In fact, the components described here would make more sense to be used in the opposite way -- as part of a compile target from JavaScript to HTML.  If that idea strikes you as being as ridulous as the Sun orbiting the Earth, congratulations!  You are a normal developer with great career prospects!  Shoo! 😊
+
+
 This package contains two primary custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
 
-
 These two components dream the impossible dream -- be able to progressively, declaratively, glue native DOM / web components together in a relatively "framework-less" way, where the browser is the only framework that really matters.  It does this by reflecting properties of "producer" components down to other "consumer" components as they change.
-
 
 Actually, Polymer proved that the dream isn't that far fetched.  These components are inspired by Polymer's helper elements.  It should be noted that Polymer's binding support places great emphasis on performance -- so they can be used inside a rapidly scrolling virtual list, for example.  
 
@@ -20,9 +25,8 @@ Here I am defining a "framework" as a "common, centrally managed language used t
 
 It's kind of like metaprogramming [in nemerle](https://github.com/rsdn/nemerle/wiki/Macros-tutorial) or [sweet.js](https://www.sweetjs.org/), only a hell of a lot easier.
 
-NB:  Lit-html (also by the Polymer team) appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  hyperHTML has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
+NB III:  Lit-html (also by the Polymer team) appears to meet the requirements for avoiding the "centrally managed language" label.  Like sweet.js above, one can define one's preferred syntax fairly easily (scroll to the bottom of this [link](https://github.com/Polymer/lit-html/issues/399) to see how, as has been done [here](https://github.com/bgotink/lit-html-brackets) ).  In addition, the ability to define [directives](https://polymer.github.io/lit-html/guide/writing-templates.html#directives) also weakens the claim that the syntax is centrally managed, perhaps.  hyperHTML has [something that may be equivalent](https://viperhtml.js.org/hyperhtml/documentation/#api-3). 
 
-NB II:  If all you want is clean, declarative HTML syntax for building components or web compositions, take a look at these [slightly](https://vuejs.org/) [better known](https://svelte.technology/) technologies.  The components described here are part of a thought experiment to see if a subset of what those frameworks do could be done with no compilation steps, no limitations on the server, no installation steps even.
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
@@ -118,22 +122,15 @@ What we end up with is shown below:
 </div>
 ```
 
-\<grain-of-salt level="Infinity"\>
 ##  Is this really one-way data flow?
 
-I may be missing something big, as I'm no expert in this field.  I hope the following statements / speculation is accurate:
-
-**NB III**.  These components don't make claim to be guaranteeing a pure functional flow of data, only a conceptual outline of one, which could serve that purpose if required.  The goal of these components is to make the markup logical, to help organize how things *should* flow.  
+NB IV.  These components don't make claim to be guaranteeing a pure functional flow of data, only a conceptual outline of one, which could serve that purpose if required.  The goal of these components is to make the markup logical, to help organize how things *should* flow.  
 
 A functional programming absolutist could fairly raise the following objection:  Sure, you are passing objects in one direction, but what is to prevent a downstream component from updating a sub property, making the data flow direction more ambiguous?  I kind of think the risks of this situation being problematic are low, as long as upstream components don't add internal watchers on sub properties via ES6 proxies, and downstream elements update those properties using the same proxy. 
 
 Anyway, these "connector" components are, I think, compatible with a pure functional model, *if the web components themselves adhere to the necessary discipline to make it so*.  For example, if when components raise events, they only put into the event detail a deep clone of some internal (sub)object, and if downstream components only bind to the event detail, and/or if components receiving said events treat the event as an immutable thing requiring careful cloning before updating, this would, I think, satisfy the functional purist.
 
-Is this a goal worth pursuing? Each person is, to some degree, a product of their experience, and, based on my experience, this isn't a pressing concern, partly based on my speculation two paragraphs above.  I'm more concerned about what the costs would be in imposing the kind of discipline it would require, especially as JS isn't Scala or Haskell -- basically unnecessary code bloat addressing an issue that (again in my experience) rarely if ever happens (in a way that causes problems).  Perhaps if this is a concern for you, you could develop web components in a functional language that compiles to WebAssembly (if that's possible, seems like it should be).  Just a friendly, very naiive suggestion.
-
-I recognize the desire for, and use of pure functional solutions built on top of JavaScript is quite high, and, as I said, I **think** these connector components are compatible with that.
-
-\</grain-of-salt\>
+Is this a goal worth pursuing? Each person is, to some degree, a product of their experience, and, based on my experience, this isn't a pressing concern, partly based on my speculation two paragraphs above. I **think** these connector components are compatible with that.
 
 ## Recursive sibling drilldown -- Invitation Only
 
@@ -383,9 +380,9 @@ Note the use of the attribute "level='local'".  This limits the scope of the sta
 ```
 
 \<grain-of-salt level="Infinity"\>
-## Theoretcal musings to help sooth you into a coma
+## Theoretcal musings to help soothe you into a coma
 
-An interesting, untested question is which frameworks or renderers would these components be compatible with?  Previously, I optimistically, sloppily stated nothing to see here, it would work, and could help reduce boilerplate code.  But on further reflection, it is not nearly so obvious.  What follows is mostly arm-chair speculation, subject to change with more research.
+An interesting, untested question is which frameworks or renderers would these components be compatible with?  Previously, I optimistically and sloppily stated nothing to see here, it would work, and could help reduce boilerplate code.  But on further reflection, it is not nearly so obvious.  What follows is mostly arm-chair speculation, subject to change with more research.
 
 In what scenarios would there be too many cooks in the kitchen? Let's put aside the question of "should" and consider only "could" first.
 
@@ -399,13 +396,56 @@ Now to the "should" question...
 
 Among the premises behind this component is that the Chrome team is onto something when they preach "less JavaScript."  My gut reaction to that is "Problem solved:  Do as much as possible on the server, and then let's encapsulate what boilerplate JavaScript is doing repeatedly into easily digestible HTML data -- tags + attributes."  Yes, use web components to do common JS tasks.
 
-Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is built primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens significantly when this easy to digest HTML is actually encoded in JavaScript, which ultimately is what pretty much every framework does these days.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free-form JavaScript (3 times as I recall), which seems quite plausible. 
+Tied to this sentiment is my observation that with all the emphasis placed on the size of the framework, if once the framework is there,  your application is **built** primarily in HTML / CSS, isn't that "doing less JavaScript"?  The argument weakens significantly when this easy to digest HTML is actually encoded in JavaScript, which ultimately is what pretty much every framework does these days.  But according to the Chrome team, HTML inside JavaScript strings is quite a bit cheaper than free-form JavaScript (3 times as I recall), which seems quite plausible. 
 
 The question becomes how much information can be stored as attribute / tag data?
  
-A different approach that makes sense to me, based on this line of reasoning -- generating [UI's based on JSON data](https://www.webcomponents.org/element/json-form-custom-element).  
+A different approach that makes sense to me, based on this line of reasoning -- generating UI's based on JSON data.  
 
-An intriguing third option is to use directives instead of web components.  This has the most merit if you aren't constantly context switching between literal tags and difficult to digest JavaScript expressions.  But that isn't always the case.  A nickle here, a dime there, soon you are talking 65 cents!
+An intriguing third option -- so long as HTML can't be imported, so everything must be in JavaScript, why not use directives instead of web components to encapsulate boilder-plate logic that could be more data-driven.  This has the most merit if you aren't constantly context switching between literal tags and difficult to digest JavaScript expressions.  But that isn't always the case.  A nickle here, a dime there, soon you are talking 65 cents!
+
+### Imagine
+
+Imagine a world where HTML Imports existed.  [It's not that hard to do.](https://github.com/w3c/webcomponents/blob/gh-pages/proposals/html-module-spec-changes.md)
+
+Imagine that the performance gap that we see today between HTML and JS also exists with HTML Imports vs JS Imports.  
+
+Or imagine you are building a server-centric application (not necessarily node-based) or enhancing a static website with a little pixie-dust JavaScript.  Do such things exist?  I think they do.
+
+The science is as strong for the benefits of vaccinations as it is for the performance benefits of data-centric formats like HTML over JS.  The Google Chrome team states this repeatedly, and I've yet to see anyone dispute this fundamental fact.  Will that always be the case?  I have no idea.  
+
+If our goal is to improve peformance, which seems highly correlated to doing less Javascript, what if one "framework" is 3kb in size, and then you build (not necessarily develop!) your UI in a data-centric format, like HTML, on top of that?  Vs another framework of equal size, and you build (not necessarily develop) your UI in JavaScript syntax?  
+
+Note that in the case of Vue, and Svelte, you are actually developing in HTML, but building to JavaScript, if I understand correctly.
+
+p-d,p-u take the philosophical stance that if we can just find some common things we do with JavaScript boilerplate, and turn it into a (primarily) data-centric format, that can be unobtrusively mixed with other data-centric HTML tags, the amount of JavaScript will go down, and the oceans will stop rising.
+
+Now, just as you can to do "cross format development" like Vue and Svelte allow, you could it with these components too, but in the opposite direction:
+
+Develop using (for example) tagged template literals, with all the nice compile-time checks that TypeScript affords, and then compile to the fastest performing format, which, science may tell us, is largely HTML-based. Compiling would be necessary with every code change, similar to webpack-based application development today. 
+
+Or, if the tools match your scenario workflow better, develop using an HTML-based editing tool, and run a similar (but far less transformative) compilation during optimization time (but no need to do any build during development).
+
+In either situation, I could see these components (or someting similar) helping.
+
+Let me hasten to mention that the size of p-d,p-u, as it stands, is still a bit bigger than some great alternative libraries.  I'm sure that in more practied hands it could be brought down further, and also use all the state-of-the optimizations, which these aren't doing.   I have some ideas I'm looking at still to reduce the size.   
+
+I also hasten to add that once you get into generating lists on the client territory, things become murky again.  
+
+But if performance, not simplicity, is our parimary goal, this scenario could be rarer than one would think. Most lists don't need to change after they are rendered once.  So that could be generated on the server, and then allow components within that list to talk to eachother using elements like p-d,p-u.   
+
+But what happens if the list changes?  There are four scenarios:
+
+1.  You are getting a basically entirely different list.
+2.  There are only a few changes, like after a save.
+3.  Sometimes scenario 1, sometimes scenario 2.
+4.  You are working with a virtual list, that changes as you scroll.
+
+I know things like Vitual DOM and tagged templates help considerably in scenario 2 (and thus partially in scenario 3).  But based on the PWA Hacker news results, at least, probably not with scenario 1.
+
+Still, I do think the use case for tagged template literal definitions being used for client-side list generation is quite strong, particularly around virtual lists.  But even there, I think that data-driven expressions inside those lists could be beneficial to performance.  i.e. keep as much as possible within the tick marks, as little context switching between JavaScript and Strings. 
+
+Let me also hasten to mention that there is currently no build process in existence that takes tagged template syntax, and, during optimization time, compiles it the scientifically fastest format, that may include custom elements like p-d,p-u.
 
 \</grain-of-salt\>
 

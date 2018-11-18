@@ -1,6 +1,7 @@
 import { P, ICssPropMap } from './p.js';
 import { define } from 'xtal-latx/define.js';
 import {PDNavDown} from './PDNavDown.js';
+import {NavDown} from 'xtal-latx/NavDown.js';
 
 const m = 'm';
 
@@ -27,8 +28,6 @@ export class PD extends P {
         return super.observedAttributes.concat([m]);
     }
 
-
-
     pass(e: Event) {
         this._lastEvent = e;
         this.attr('pds', '🌩️');
@@ -40,9 +39,11 @@ export class PD extends P {
         this.attr('pds', '👂');
         this.attr('mtch', count.toString());
     }
-
-    applyProps(pd: PDNavDown){
-        const matches = pd.getMatches();
+    getMatches(pd: NavDown){
+        return pd.matches;
+    }
+    applyProps(pd: NavDown){
+        const matches = this.getMatches(pd);//const matches = pd.getMatches();
         matches.forEach(el =>{
             this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
                 this.setVal(this._lastEvent, el, map)
@@ -50,9 +51,6 @@ export class PD extends P {
         });
         return matches.length;
     }
-
-
-
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         switch (name) {
 
@@ -84,8 +82,6 @@ export class PD extends P {
         this.onPropsChange();
 
     }
-
-
 
 }
 define(PD);
