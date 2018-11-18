@@ -39,15 +39,15 @@ p-d  passes information from that previous sibling's event down the p-d instance
 <!--- verbose syntax -->
 <div style="display:grid">
     <input/>                                                                    
-    <p-d on="input" to="url-builder{input:target.value}" m="1"></p-d>
+    <p-d on="input" to="url-builder" prop="input" val="target.value" m="1"></p-d>
     <url-builder prepend="api/allEmployees?startsWith="></url-builder>    
-    <p-d on="value-changed"  to="fetch-data{url:detail.value}" m="1"></p-d>
+    <p-d on="value-changed" to="fetch-data" prop="url" val="detail.value" m="1"></p-d>
     <fetch-data></fetch-data>                                                   
-    <p-d on="fetch-complete" to="my-filter{input:detail.value}" m="2"></p-d>
+    <p-d on="fetch-complete" to="my-filter" prop="input" val="detail.value" m="2"></p-d>
     <my-filter select="isActive"></my-filter>                                   
-    <p-d on="value-changed"  to="#activeList{items:detail.value}" m="1"></p-d>
+    <p-d on="value-changed"  to="#activeList" prop="items" val="detail.value" m="1"></p-d>
     <my-filter select="!isActive"></my-filter>                                  
-    <p-d on="value-changed"  to="#inactiveList{items:target.value}" m="1"></p-d>
+    <p-d on="value-changed"  to="#inactiveList" prop="items" val="target.value" m="1"></p-d>
     <h3>Active</h3>
     <my-grid id="activeList"></my-grid>
     <h3>Inactive</h3>
@@ -105,15 +105,15 @@ What we end up with is shown below:
 </style>
 <div style="display:grid">
     <input/>                                                                    
-    <p-d on="input" to="{input}"></p-d>
+    <p-d on="input" prop="input"></p-d>
     <url-builder prepend="api/allEmployees?startsWith=" nv></url-builder>   
-    <p-d on="value-changed"  to="{url}"></p-d>
+    <p-d on="value-changed"  prop="url"></p-d>
     <fetch-data></fetch-data>                                                   
-    <p-d on="fetch-complete" to="my-filter{input}" m="2"></p-d>
+    <p-d on="fetch-complete" to="my-filter" prop="input" m="2"></p-d>
     <my-filter select="isActive" nv></my-filter>                                   
-    <p-d on="value-changed"  to="#activeList{items}" m="1"></p-d>
+    <p-d on="value-changed"  to="#activeList" prop="items" m="1"></p-d>
     <my-filter select="!isActive" nv></my-filter>                                  
-    <p-d on="value-changed"  to="#inactiveList{items}" m="1"></p-d>
+    <p-d on="value-changed"  to="#inactiveList" prop="items" m="1"></p-d>
     <h3>Active</h3>
     <my-grid id="activeList"></my-grid>
     <h3>Inactive</h3>
@@ -129,7 +129,7 @@ A functional programming absolutist could fairly raise the following objection: 
 
 Anyway, these "connector" components are, I think, compatible with a pure functional model, *if the web components themselves adhere to the necessary discipline to make it so*.  For example, if when components raise events, they only put into the event detail a deep clone of some internal (sub)object, and if downstream components only bind to the event detail, and/or if components receiving said events treat the event as an immutable thing requiring careful cloning before updating, this would, I think, satisfy the functional purist.
 
-Is this a goal worth pursuing? Each person is, to some degree, a product of their experience, and, based on my experience, this isn't a pressing concern, partly based on my speculation two paragraphs above. I **think** these connector components are compatible with that.
+Is this a goal worth pursuing? Each person is, to some degree, a product of their experience, and, based on my experience, this isn't a pressing concern, partly based on my speculation two paragraphs above. but if it is for you, I **think** these connector components are compatible with that.
 
 ## Recursive sibling drilldown -- Invitation Only
 
@@ -137,7 +137,7 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
 
 ```html   
     <text-box></text-box>                                                               
-    <p-d id="myPassDownTag" on="input" to="url-builder{input}"></p-d>
+    <p-d id="myPassDownTag" on="input" to="url-builder" prop="input"></p-d>
     <h3>Search Employees</h3>
     <div p-d-if="#myPassDownTag">
         <url-builder></url-builder>
@@ -163,7 +163,7 @@ This will create a custom element with name "my-pipeline-action".  It applies th
 
 ```html
 <my-pipeline-action></my-pipeline-action>
-<p-d on="value-changed" to="{input}">
+<p-d on="value-changed" prop="input">
 ```
 
 As with all custom element definitions, some care should be taken to ensure that the custom element names are unique.  This could be challenging if generating lots of small custom elements, like shown above, to be used in a large application, especially if that large application combines somewhat loosely coupled content from different teams, who also generate many custom elements.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
@@ -175,7 +175,7 @@ As with all custom element definitions, some care should be taken to ensure that
 If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the code for one of these piping custom elements, you can "inline" the code quite close to where it is needed.  For now, this will only work if you essentially "hard code" the location of PDQ to a CDN with support for bare import specifiers:
 
 ```html
-<p-d on="selected-root-nodes-changed" to="{input:target}"></p-d>
+<p-d on="selected-root-nodes-changed" prop="input" val="target"></p-d>
 <script type="module">
     import {PDQ} from 'https://unpkg.com/p-d.p-u@0.0.64/PDQ.js?module';
     PDQ.define('selected-node-change-handler', (input) =>{
@@ -249,9 +249,9 @@ You can specify the "depth" of disabling thusly:
         with-url-pattern="id=(?<storeId>[a-z0-9-]*)">
     </xtal-state-parse>
     <!-- If no id found in address bar, create a new record ("session") -->
-    <p-d on="no-match-found" to="purr-sist[write]{new:target.noMatch}"  m="1" skip-init></p-d>
+    <p-d on="no-match-found" to="purr-sist[write]" prop="new" val="target.noMatch"  m="1" skip-init></p-d>
     <!-- If id found in address bar, pass it to the persistence reader and writer -->
-    <p-d on="match-found" to="purr-sist{storeId:target.value.storeId}" m="2" skip-init></p-d>
+    <p-d on="match-found" to="purr-sist" prop="storeId" val="target.value.storeId" m="2" skip-init></p-d>
     <!-- Read stored history.state from remote database if saved -->
     <purr-sist read></purr-sist>
 ```
@@ -283,7 +283,7 @@ With these two combined the counter would look like:
         </script>
     </xtal-deco>
     <button>Increment</button>
-    <p-d on="counter-changed" to="{innerText}"></p-d>
+    <p-d on="counter-changed" prop="innerText"></p-d>
     <div></div>
 ```
 
