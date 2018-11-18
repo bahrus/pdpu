@@ -6,12 +6,11 @@
 
 # \<p-d\>, \<p-u\>
 
-NB I:  The lack of HTML Import support has landed a big, temporary(?) blow to HTML/CSS centric component definitions.  If you are a (P)React developer who sees no reason to mourn that fact, but do want to build high performing components that can be used by the [entire web developer community](https://w3techs.com/technologies/overview/javascript_library/all), and yet do so with a tiny footprint, read no further.  There are excellent alternatives for you - LitElement, Stencil, HyperHTMLElement, just to name a few.  Shoo! 😊. 
+NB I:  The lack of HTML Import support has landed a big, temporary(?) blow to HTML/CSS centric component definitions.  If you are a (P)React developer who sees no reason to mourn that fact, but do want to build high performing components that can be used by the [entire web developer community](https://w3techs.com/technologies/overview/javascript_library/all), and yet do so with a tiny footprint, read no further.  There are excellent alternatives for you - LitElement, Stencil, HyperHTMLElement just to name a few.  p-d, p-u have nothing to offer you.  Away with you! 😥. 
 
 NB II:  If all you want (on top of great performance and great other features) is clean, declarative HTML syntax for building components or web compositions, take a look at these [slightly](https://vuejs.org/) [better known](https://svelte.technology/) technologies.  The components described here are part of a thought experiment to see if a subset of what those frameworks do could be done with no compilation steps, no limitations on the server, no installation steps even (at least during development).  
 
-In fact, the components described here would make more sense to be used in the opposite way -- as part of a compile target from JavaScript to HTML.  If that idea strikes you as being as ridulous as the Sun orbiting the Earth, congratulations!  You are a normal developer with great career prospects!  Shoo! 😊
-
+In fact, the components described here would make more sense to be used in the opposite way -- as part of a compile target from JavaScript to HTML.  If that idea strikes you as being as ridiculous as the Sun orbiting the Earth, congratulations!  You are a normal developer with great career prospects!  I'm afraid p-d and p-u will also have to part ways with you as well 😥.  
 
 This package contains two primary custom elements:  p-d and p-u, which stand for "pass down" and "pass up."
 
@@ -420,7 +419,7 @@ Note that in the case of Vue, and Svelte, you are actually developing in HTML, b
 
 p-d,p-u take the philosophical stance that if we can just find some common things we do with JavaScript boilerplate, and turn it into a (primarily) data-centric format, that can be unobtrusively mixed with other data-centric HTML tags, the amount of JavaScript will go down, and the oceans will stop rising.
 
-Now, just as you can to do "cross format development" like Vue and Svelte allow, you could it with these components too, but in the opposite direction:
+Now, just as you can to do "cross format development" like Vue and Svelte allow, you could that with these components too, but in the opposite direction:
 
 Develop using (for example) tagged template literals, with all the nice compile-time checks that TypeScript affords, and then compile to the fastest performing format, which, science may tell us, is largely HTML-based. Compiling would be necessary with every code change, similar to webpack-based application development today. 
 
@@ -446,6 +445,14 @@ I know things like Vitual DOM and tagged templates help considerably in scenario
 Still, I do think the use case for tagged template literal definitions being used for client-side list generation is quite strong, particularly around virtual lists.  But even there, I think that data-driven expressions inside those lists could be beneficial to performance.  i.e. keep as much as possible within the tick marks, as little context switching between JavaScript and Strings. 
 
 Let me also hasten to mention that there is currently no build process in existence that takes tagged template syntax, and, during optimization time, compiles it the scientifically fastest format, that may include custom elements like p-d,p-u.
+
+Focusing on the virtual list scenario, let's stipulate that a highly optimized version of these components, done by someone who knows what they're doing, could rougly match the same performance one would get with a lit directive.  Are there any advantages of using this component in that case?
+
+The advantages I see are:
+
+1.  These components are compatible with both workflows (HTML, JS)  Directives are not.
+2.  These components don't lock you in to Lit.
+
 
 \</grain-of-salt\>
 
