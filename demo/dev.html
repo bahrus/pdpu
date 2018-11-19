@@ -13,8 +13,8 @@
   <template data-activate data-exclude data-ua="HeadlessChrome" >
     <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script type="module" src="../p-d.js"></script>
-    <script type="module" src="../p-d-x.js"></script>
-    <script type="module" src="../p-destal.js"></script>
+    <!-- <script type="module" src="../p-d-x.js"></script>
+    <script type="module" src="../p-destal.js"></script> -->
   </template>
   <script async src="https://unpkg.com/xtal-json-editor@0.0.19/xtal-json-editor.js"></script>
   <script type="module" src="https://unpkg.com/xtal-json-merge@0.2.32/xtal-insert-json.js?module"></script>
@@ -22,7 +22,7 @@
 
 <body>
   <templ-mount></templ-mount>
-  <p-destal on="[a]" to="{a:target.a}"></p-destal>
+  <!-- <p-destal on="[a]" to="{a:target.a}"></p-destal> -->
   <div class="vertical-section-container centered">
     <h3>Basic xtal-json-merge demo</h3>
 
@@ -38,8 +38,8 @@
                   ]
                     </script>
     </xtal-insert-json>
-    <p-d to="#firstEditor{input:target.mergedProp}" on="merged-prop-changed"></p-d>
-    <p-d to="#insertData{input:target.mergedProp}" on="merged-prop-changed"></p-d>
+    <p-d on="merged-prop-changed" to="#firstEditor" prop="input" val="target.mergedProp" debug></p-d>
+    <p-d on="merged-prop-changed" to="#insertData"  prop="input" val="target.mergedProp" ></p-d>
     
     <xtal-json-editor id="firstEditor" options="{}"></xtal-json-editor>
     <br>
@@ -83,7 +83,7 @@
                     }]
                 </script>
     </xtal-insert-json>
-    <p-d to="xtal-json-editor{input:target.mergedProp}" on="merged-prop-changed"></p-d>
+    <p-d on="merged-prop-changed" to="xtal-json-editor" prop="input" val="target.mergedProp" ></p-d>
     <br>
     <div>Output:</div>
     <xtal-json-editor id="secondEditor" options="{}"></xtal-json-editor>

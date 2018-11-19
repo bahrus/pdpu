@@ -1,20 +1,19 @@
 import {XtallatX} from 'xtal-latx/xtal-latx.js';
-import { pseudoRandomBytes } from 'crypto';
 
-export interface ICssPropMap {
-    cssSelector: string;
-    propTarget: string;
-    propSource?: string;
-}
+
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';
 const to = 'to';
+const prop ='prop';
+const val = 'val';
+
 export abstract class P extends XtallatX(HTMLElement){
     constructor(){
         super();
         
     }
+    //* region props
     _on!: string;
     get on(){
         return this._on;
@@ -42,41 +41,44 @@ export abstract class P extends XtallatX(HTMLElement){
     set if(val){
         this.attr(iff, val);
     }
-    // _input: any;
-    // get input(){
-    //     return this._input;
-    // }
-    // set input(val){
-    //     this._input = val;
-        
-    // }
-    static get observedAttributes(){
-        return super.observedAttributes.concat([on, to, noblock, iff]);
+
+    _prop!: string;
+    get prop(){return this._prop;}
+    set prop(val){
+        this.attr(prop, val);
     }
+
+    _val!: string;
+    get val(){return this._val;}
+    set val(val){
+        this.attr(prop, val);
+    }
+    
+    static get observedAttributes(){
+        return super.observedAttributes.concat([on, to, noblock, iff, prop, val]);
+    }
+
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         const f = '_' + name;
         switch(name){
             case iff:
             case on:
-                (<any>this)[f] = newVal;
-                break;
+            case prop:
+            case val:
             case to:
-                this._destIsNA = newVal === '{NA}';
-                if(newVal.endsWith('}')) newVal += ';';
-                this._to = newVal;
-                this.parseTo();
-                if(this._lastEvent) this._hndEv(this._lastEvent);
+                (<any>this)[f] = newVal;
                 break;
             case noblock:
                 (<any>this)[f] = newVal !== null;
                 break;
+            
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
     /**
      * get previous sibling
      */
-    getPSib() : Element | null{
+    getPreviousSib() : Element | null{
         let pS = this as Element | null;
         while(pS && pS.tagName.startsWith('P-')){
             pS = pS.previousElementSibling!;
@@ -85,51 +87,16 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     connectedCallback(){
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, iff]);
-        setTimeout(() => this.doFake(), 50);
+        this._upgradeProperties([on, to, noblock, iff, prop, val]);
+        this.init();
     }
-    //_addedSMO = false;
-    doFake(){
-        if(!this._if && !this.hasAttribute('skip-init')){
-            let lastEvent = this._lastEvent;
-            if(!lastEvent){
-                lastEvent = <any>{
-                    target: this.getPSib(),
-                    isFake: true
-                } as Event;
-            }
-            if(this._hndEv) this._hndEv(lastEvent);
-        }        
-        // if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
-        //     (<any>this).addMutationObserver(<any>this as HTMLElement, false);
-        //     this._addedSMO = true;
-        // }
-    }
-    detach(pS: Element){
-        pS.removeEventListener(this._on, this._bndHndlEv);
-    }
-    disconnectedCallback(){
-        const pS = this.getPSib();
-        if(pS && this._bndHndlEv) this.detach(pS);
-    }
-    _bndHndlEv!: any;
-    abstract pass(e: Event) : void;
-    _lastEvent!: Event;
-    _hndEv(e: Event){
-        if(this.hasAttribute('debug')) debugger;
-        if(!e) return;
-        if(e.stopPropagation && !this._noblock) e.stopPropagation();
-        if(this._if && !(e.target as HTMLElement).matches(this._if)) return;
-        this._lastEvent = e;
-        if(!this._cssPropMap){
-            return;
-        }
-        this.pass(e);
-    }
-    _destIsNA!: boolean;
+    init(){
+        this.attchEvListnrs();
+        this.doFake();
+    };
     attchEvListnrs(){
         const attrFilters = [];
-        const pS = this.getPSib();
+        const pS = this.getPreviousSib();
         if(!pS) return;
         
         if(this._bndHndlEv){
@@ -150,49 +117,42 @@ export abstract class P extends XtallatX(HTMLElement){
         
 
     }
-    _connected = false;
-    onPropsChange(){
-        if(!this._connected || !this._on || !this._to) return;
-        this.attchEvListnrs();
-    }
-    _cssPropMap!: ICssPropMap[];
-    _lastTo!: string;
-    parseMapping(mapTokens: string[], cssSelector: string){
-        const splitPropPointer = mapTokens[1].split(':');
-        this._cssPropMap.push({
-            cssSelector: cssSelector,
-            propTarget:splitPropPointer[0],
-            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
-        });
-    }
-    parseTo() {
-        if(this._cssPropMap && this._to === this._lastTo) return;
-        this._lastTo = this._to;
-        this._cssPropMap = [];
-        const splitPassDown = this._to.split('};');
-        const onlyOne = splitPassDown.length <= 2;
-        splitPassDown.forEach(pdItem => {
-            if (!pdItem) return;
-            const mT = pdItem.split('{');
-            let cssSel = mT[0];
-            if(!cssSel && onlyOne){
-                cssSel = '*';
-                (<any>this)._m = 1;
-                (<any>this)._hasMax = true;
+    doFake(){
+        if(!this._if && !this.hasAttribute('skip-init')){
+            let lastEvent = this._lastEvent;
+            if(!lastEvent){
+                lastEvent = <any>{
+                    target: this.getPreviousSib(),
+                    isFake: true
+                } as Event;
             }
-           this.parseMapping(mT, cssSel);
-        })
+            if(this._hndEv) this._hndEv(lastEvent);
+        }        
 
     }
-    setVal(e: Event, target: any, map: ICssPropMap){
+
+    _bndHndlEv!: any;
+    abstract pass(e: Event) : void;
+    _lastEvent: Event | null = null;
+    _hndEv(e: Event){
+        if(this.hasAttribute('debug')) debugger;
+        if(!e) return;
+        if(e.stopPropagation && !this._noblock) e.stopPropagation();
+        if(this._if && !(e.target as HTMLElement).matches(this._if)) return;
+        this._lastEvent = e;
+        this.pass(e);
+    }
+    _destIsNA!: boolean;
+
+    setVal(e: Event, target: any){
         const gpfp = this.getPropFromPath.bind(this);
-        const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
-        this.commit(target, map, propFromEvent);
+        const propFromEvent = this.val ? gpfp(e, this.val) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
+        this.commit(target, propFromEvent);
        
     }
-    commit(target: HTMLElement, map: ICssPropMap, val: any){
+    commit(target: HTMLElement, val: any){
         if(val===undefined) return;
-        (<any>target)[map.propTarget] = val;
+        (<any>target)[this.prop] = val;
     }
     getPropFromPath(val: any, path: string){
         if(!path || path==='.') return val;
@@ -221,5 +181,11 @@ export abstract class P extends XtallatX(HTMLElement){
         });
         return context;
     }
-
+    detach(pS: Element){
+        pS.removeEventListener(this._on, this._bndHndlEv);
+    }
+    disconnectedCallback(){
+        const pS = this.getPreviousSib();
+        if(pS && this._bndHndlEv) this.detach(pS);
+    }
 }

@@ -1,4 +1,4 @@
-import {P, ICssPropMap} from './p.js';
+import {P} from './p.js';
 import {define} from 'xtal-latx/define.js';
 /**
  * `p-u`
@@ -12,8 +12,9 @@ export class PU extends P{
     static get is(){return 'p-u';}
     pass(e: Event){
         
-        this._cssPropMap.forEach(map =>{
-            const cssSel = map.cssSelector;
+        //this._cssPropMap.forEach(map =>{
+            //const cssSel = map.cssSelector;
+            const cssSel = this.to;
             let targetElement: HTMLElement;
             const split = cssSel.split('/');
             const id = split[split.length - 1];
@@ -33,8 +34,8 @@ export class PU extends P{
                     throw 'Target Element Not found';
                 }
             }
-            this.setVal(e, targetElement, map);
-        })
+            this.setVal(e, targetElement);
+        //})
     }
 
     _host!: HTMLElement
@@ -53,8 +54,6 @@ export class PU extends P{
     }
     connectedCallback(){
         super.connectedCallback();
-        this._connected = true;
-        this.onPropsChange();
     }
 
     

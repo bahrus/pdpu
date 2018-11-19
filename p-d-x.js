@@ -42,7 +42,7 @@ export class PDX extends PD {
             super.attchEvListnrs();
             return;
         }
-        const prevSibling = this.getPSib();
+        const prevSibling = this.getPreviousSib();
         if (!prevSibling)
             return;
         const split = this._on.split(',').map(s => s.substr(1, s.length - 2));

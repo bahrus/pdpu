@@ -6,7 +6,7 @@ export class PDestal extends PDX {
 
     _host!: HTMLElement;
     _useLocation!: boolean;
-    getPSib() {
+    getPreviousSib() {
         let parent = this as Node | null;
         while (parent = parent!.parentNode) {
             if ((<HTMLElement>parent).nodeType === 11) {

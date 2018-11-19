@@ -15,7 +15,7 @@ export class PDNavDown extends NavDown {
         if (fec === null) return;
         if (this.root.matches(attr)) {
             
-            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, null, this.mutDebounce);
             pdnd.root = this.root;
             this.children.push(pdnd);
             pdnd.init();

@@ -38,12 +38,13 @@ export class PD extends P {
         this.attr('pds', '👂');
         this.attr('mtch', count.toString());
     }
+    getMatches(pd) {
+        return pd.matches;
+    }
     applyProps(pd) {
-        const matches = pd.getMatches();
+        const matches = this.getMatches(pd); //const matches = pd.getMatches();
         matches.forEach(el => {
-            this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
-                this.setVal(this._lastEvent, el, map);
-            });
+            this.setVal(this._lastEvent, el);
         });
         return matches.length;
     }
@@ -59,22 +60,18 @@ export class PD extends P {
                 }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
-        this.onPropsChange();
+        //this.onPropsChange();
     }
     connectedCallback() {
-        super.connectedCallback();
         this._upgradeProperties([m]);
-        this._connected = true;
         this.attr('pds', '📞');
         const bndApply = this.applyProps.bind(this);
-        this._cssPropMap.forEach(pm => {
-            const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
-            pdnd.root = this;
-            pdnd.ignore = 'p-d,p-d-x,script';
-            pdnd.init();
-            this._pdNavDown.push(pdnd);
-        });
-        this.onPropsChange();
+        const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
+        pdnd.root = this;
+        pdnd.ignore = 'p-d,p-d-x,script';
+        pdnd.init();
+        this._pdNavDown.push(pdnd);
+        super.connectedCallback();
     }
 }
 define(PD);

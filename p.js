@@ -3,10 +3,12 @@ const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';
 const to = 'to';
+const prop = 'prop';
+const val = 'val';
 export class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
-        this._connected = false;
+        this._lastEvent = null;
     }
     get on() {
         return this._on;
@@ -30,31 +32,26 @@ export class P extends XtallatX(HTMLElement) {
     set if(val) {
         this.attr(iff, val);
     }
-    // _input: any;
-    // get input(){
-    //     return this._input;
-    // }
-    // set input(val){
-    //     this._input = val;
-    // }
+    get prop() { return this._prop; }
+    set prop(val) {
+        this.attr(prop, val);
+    }
+    get val() { return this._val; }
+    set val(val) {
+        this.attr(prop, val);
+    }
     static get observedAttributes() {
-        return super.observedAttributes.concat([on, to, noblock, iff]);
+        return super.observedAttributes.concat([on, to, noblock, iff, prop, val]);
     }
     attributeChangedCallback(name, oldVal, newVal) {
         const f = '_' + name;
         switch (name) {
             case iff:
             case on:
-                this[f] = newVal;
-                break;
+            case prop:
+            case val:
             case to:
-                this._destIsNA = newVal === '{NA}';
-                if (newVal.endsWith('}'))
-                    newVal += ';';
-                this._to = newVal;
-                this.parseTo();
-                if (this._lastEvent)
-                    this._hndEv(this._lastEvent);
+                this[f] = newVal;
                 break;
             case noblock:
                 this[f] = newVal !== null;
@@ -65,7 +62,7 @@ export class P extends XtallatX(HTMLElement) {
     /**
      * get previous sibling
      */
-    getPSib() {
+    getPreviousSib() {
         let pS = this;
         while (pS && pS.tagName.startsWith('P-')) {
             pS = pS.previousElementSibling;
@@ -74,53 +71,17 @@ export class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, iff]);
-        setTimeout(() => this.doFake(), 50);
+        this._upgradeProperties([on, to, noblock, iff, prop, val]);
+        this.init();
     }
-    //_addedSMO = false;
-    doFake() {
-        if (!this._if && !this.hasAttribute('skip-init')) {
-            let lastEvent = this._lastEvent;
-            if (!lastEvent) {
-                lastEvent = {
-                    target: this.getPSib(),
-                    isFake: true
-                };
-            }
-            if (this._hndEv)
-                this._hndEv(lastEvent);
-        }
-        // if(!(<any>this)._addedSMO && (<any>this).addMutationObserver){
-        //     (<any>this).addMutationObserver(<any>this as HTMLElement, false);
-        //     this._addedSMO = true;
-        // }
+    init() {
+        this.attchEvListnrs();
+        this.doFake();
     }
-    detach(pS) {
-        pS.removeEventListener(this._on, this._bndHndlEv);
-    }
-    disconnectedCallback() {
-        const pS = this.getPSib();
-        if (pS && this._bndHndlEv)
-            this.detach(pS);
-    }
-    _hndEv(e) {
-        if (this.hasAttribute('debug'))
-            debugger;
-        if (!e)
-            return;
-        if (e.stopPropagation && !this._noblock)
-            e.stopPropagation();
-        if (this._if && !e.target.matches(this._if))
-            return;
-        this._lastEvent = e;
-        if (!this._cssPropMap) {
-            return;
-        }
-        this.pass(e);
-    }
+    ;
     attchEvListnrs() {
         const attrFilters = [];
-        const pS = this.getPSib();
+        const pS = this.getPreviousSib();
         if (!pS)
             return;
         if (this._bndHndlEv) {
@@ -140,48 +101,40 @@ export class P extends XtallatX(HTMLElement) {
             }
         }
     }
-    onPropsChange() {
-        if (!this._connected || !this._on || !this._to)
-            return;
-        this.attchEvListnrs();
-    }
-    parseMapping(mapTokens, cssSelector) {
-        const splitPropPointer = mapTokens[1].split(':');
-        this._cssPropMap.push({
-            cssSelector: cssSelector,
-            propTarget: splitPropPointer[0],
-            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
-        });
-    }
-    parseTo() {
-        if (this._cssPropMap && this._to === this._lastTo)
-            return;
-        this._lastTo = this._to;
-        this._cssPropMap = [];
-        const splitPassDown = this._to.split('};');
-        const onlyOne = splitPassDown.length <= 2;
-        splitPassDown.forEach(pdItem => {
-            if (!pdItem)
-                return;
-            const mT = pdItem.split('{');
-            let cssSel = mT[0];
-            if (!cssSel && onlyOne) {
-                cssSel = '*';
-                this._m = 1;
-                this._hasMax = true;
+    doFake() {
+        if (!this._if && !this.hasAttribute('skip-init')) {
+            let lastEvent = this._lastEvent;
+            if (!lastEvent) {
+                lastEvent = {
+                    target: this.getPreviousSib(),
+                    isFake: true
+                };
             }
-            this.parseMapping(mT, cssSel);
-        });
+            if (this._hndEv)
+                this._hndEv(lastEvent);
+        }
     }
-    setVal(e, target, map) {
+    _hndEv(e) {
+        if (this.hasAttribute('debug'))
+            debugger;
+        if (!e)
+            return;
+        if (e.stopPropagation && !this._noblock)
+            e.stopPropagation();
+        if (this._if && !e.target.matches(this._if))
+            return;
+        this._lastEvent = e;
+        this.pass(e);
+    }
+    setVal(e, target) {
         const gpfp = this.getPropFromPath.bind(this);
-        const propFromEvent = map.propSource ? gpfp(e, map.propSource) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
-        this.commit(target, map, propFromEvent);
+        const propFromEvent = this.val ? gpfp(e, this.val) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
+        this.commit(target, propFromEvent);
     }
-    commit(target, map, val) {
+    commit(target, val) {
         if (val === undefined)
             return;
-        target[map.propTarget] = val;
+        target[this.prop] = val;
     }
     getPropFromPath(val, path) {
         if (!path || path === '.')
@@ -211,6 +164,14 @@ export class P extends XtallatX(HTMLElement) {
             }
         });
         return context;
+    }
+    detach(pS) {
+        pS.removeEventListener(this._on, this._bndHndlEv);
+    }
+    disconnectedCallback() {
+        const pS = this.getPreviousSib();
+        if (pS && this._bndHndlEv)
+            this.detach(pS);
     }
 }
 //# sourceMappingURL=p.js.map

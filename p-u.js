@@ -11,33 +11,34 @@ import { define } from 'xtal-latx/define.js';
 export class PU extends P {
     static get is() { return 'p-u'; }
     pass(e) {
-        this._cssPropMap.forEach(map => {
-            const cssSel = map.cssSelector;
-            let targetElement;
-            const split = cssSel.split('/');
-            const id = split[split.length - 1];
-            if (cssSel.startsWith('/')) {
-                targetElement = self[id];
-            }
-            else {
-                const len = cssSel.startsWith('./') ? 0 : split.length;
-                const host = this.getHost(this, 0, split.length);
-                if (host) {
-                    if (host.shadowRoot) {
-                        targetElement = host.shadowRoot.getElementById(id);
-                        if (!targetElement)
-                            targetElement = host.querySelector('#' + id);
-                    }
-                    else {
+        //this._cssPropMap.forEach(map =>{
+        //const cssSel = map.cssSelector;
+        const cssSel = this.to;
+        let targetElement;
+        const split = cssSel.split('/');
+        const id = split[split.length - 1];
+        if (cssSel.startsWith('/')) {
+            targetElement = self[id];
+        }
+        else {
+            const len = cssSel.startsWith('./') ? 0 : split.length;
+            const host = this.getHost(this, 0, split.length);
+            if (host) {
+                if (host.shadowRoot) {
+                    targetElement = host.shadowRoot.getElementById(id);
+                    if (!targetElement)
                         targetElement = host.querySelector('#' + id);
-                    }
                 }
                 else {
-                    throw 'Target Element Not found';
+                    targetElement = host.querySelector('#' + id);
                 }
             }
-            this.setVal(e, targetElement, map);
-        });
+            else {
+                throw 'Target Element Not found';
+            }
+        }
+        this.setVal(e, targetElement);
+        //})
     }
     getHost(el, level, maxLevel) {
         let parent = el;
@@ -55,8 +56,6 @@ export class PU extends P {
     }
     connectedCallback() {
         super.connectedCallback();
-        this._connected = true;
-        this.onPropsChange();
     }
 }
 define(PU);

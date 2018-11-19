@@ -1,4 +1,4 @@
-import { P, ICssPropMap } from './p.js';
+import { P} from './p.js';
 import { define } from 'xtal-latx/define.js';
 import {PDNavDown} from './PDNavDown.js';
 import {NavDown} from 'xtal-latx/NavDown.js';
@@ -45,9 +45,7 @@ export class PD extends P {
     applyProps(pd: NavDown){
         const matches = this.getMatches(pd);//const matches = pd.getMatches();
         matches.forEach(el =>{
-            this._cssPropMap.filter(map => map.cssSelector === pd.match).forEach(map => {
-                this.setVal(this._lastEvent, el, map)
-            });
+            this.setVal(this._lastEvent!, el);
         });
         return matches.length;
     }
@@ -63,24 +61,19 @@ export class PD extends P {
                 }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
-        this.onPropsChange();
+        //this.onPropsChange();
     }
     connectedCallback() {
-        super.connectedCallback();
+        
         this._upgradeProperties([m])
-        this._connected = true;
         this.attr('pds', '📞');
         const bndApply = this.applyProps.bind(this);
-        this._cssPropMap.forEach(pm =>{
-            const pdnd = new PDNavDown(this, pm.cssSelector, nd => bndApply(nd), this.m);
-            pdnd.root = this;
-            pdnd.ignore = 'p-d,p-d-x,script';
-            pdnd.init();
-            this._pdNavDown.push(pdnd);
-        })
-        
-        this.onPropsChange();
-
+        const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
+        pdnd.root = this;
+        pdnd.ignore = 'p-d,p-d-x,script';
+        pdnd.init();
+        this._pdNavDown.push(pdnd);
+        super.connectedCallback();
     }
 
 }
