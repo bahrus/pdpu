@@ -184,7 +184,7 @@ class PDNavDown extends NavDown {
         if (fec === null)
             return;
         if (this.root.matches(attr)) {
-            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, this.mutDebounce);
+            const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, null, this.mutDebounce);
             pdnd.root = this.root;
             this.children.push(pdnd);
             pdnd.init();
@@ -328,7 +328,7 @@ class P extends XtallatX(HTMLElement) {
     }
     setVal(e, target) {
         const gpfp = this.getPropFromPath.bind(this);
-        const propFromEvent = this.prop ? gpfp(e, this.prop) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
+        const propFromEvent = this.val ? gpfp(e, this.val) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
         this.commit(target, propFromEvent);
     }
     commit(target, val) {
@@ -426,21 +426,22 @@ class PD extends P {
             case m:
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
-                    //this._hasMax = true;
                 }
                 else {
-                    //this._hasMax = false;
                 }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
-        //this.onPropsChange();
+    }
+    newNavDown() {
+        const bndApply = this.applyProps.bind(this);
+        return new NavDown(this, this.to, bndApply, this.m);
     }
     connectedCallback() {
         this._upgradeProperties([m]);
         this.attr('pds', '📞');
-        const bndApply = this.applyProps.bind(this);
-        const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
-        pdnd.root = this;
+        const pdnd = this.newNavDown();
+        //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
+        //pdnd.root = this;
         pdnd.ignore = 'p-d,p-d-x,script';
         pdnd.init();
         this._pdNavDown.push(pdnd);
@@ -459,33 +460,34 @@ define(PD);
 class PU extends P {
     static get is() { return 'p-u'; }
     pass(e) {
-        this._cssPropMap.forEach(map => {
-            const cssSel = map.cssSelector;
-            let targetElement;
-            const split = cssSel.split('/');
-            const id = split[split.length - 1];
-            if (cssSel.startsWith('/')) {
-                targetElement = self[id];
-            }
-            else {
-                const len = cssSel.startsWith('./') ? 0 : split.length;
-                const host = this.getHost(this, 0, split.length);
-                if (host) {
-                    if (host.shadowRoot) {
-                        targetElement = host.shadowRoot.getElementById(id);
-                        if (!targetElement)
-                            targetElement = host.querySelector('#' + id);
-                    }
-                    else {
+        //this._cssPropMap.forEach(map =>{
+        //const cssSel = map.cssSelector;
+        const cssSel = this.to;
+        let targetElement;
+        const split = cssSel.split('/');
+        const id = split[split.length - 1];
+        if (cssSel.startsWith('/')) {
+            targetElement = self[id];
+        }
+        else {
+            const len = cssSel.startsWith('./') ? 0 : split.length;
+            const host = this.getHost(this, 0, split.length);
+            if (host) {
+                if (host.shadowRoot) {
+                    targetElement = host.shadowRoot.getElementById(id);
+                    if (!targetElement)
                         targetElement = host.querySelector('#' + id);
-                    }
                 }
                 else {
-                    throw 'Target Element Not found';
+                    targetElement = host.querySelector('#' + id);
                 }
             }
-            this.setVal(e, targetElement, map);
-        });
+            else {
+                throw 'Target Element Not found';
+            }
+        }
+        this.setVal(e, targetElement);
+        //})
     }
     getHost(el, level, maxLevel) {
         let parent = el;
@@ -503,8 +505,6 @@ class PU extends P {
     }
     connectedCallback() {
         super.connectedCallback();
-        this._con = true;
-        this.onPropsChange();
     }
 }
 define(PU);

@@ -1,15 +1,13 @@
 {
   "sources":[
    "p-d.js",
-   "p-d.iife.js",
+   "dist/p-d.iife.js",
    "p-u.js",
-   "p-d.p-u.js",
-   "p-d-x.js",
-   "p-d.p-d-x.p-u.js",
+   
    "p-destal.js",
-   "p-all.iife.js",
+   "dist/p-all.iife.js",
    "PDQ.js",
-   "PDQ.iife.js"
+   "dist/PDQ.iife.js"
   ],
   "npm": true,
   "lint": {

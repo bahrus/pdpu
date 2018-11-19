@@ -1,6 +1,6 @@
 import { P } from './p.js';
 import { define } from 'xtal-latx/define.js';
-import { PDNavDown } from './PDNavDown.js';
+import { NavDown } from 'xtal-latx/NavDown.js';
 const m = 'm';
 /**
  * `p-d`
@@ -53,21 +53,22 @@ export class PD extends P {
             case m:
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
-                    //this._hasMax = true;
                 }
                 else {
-                    //this._hasMax = false;
                 }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
-        //this.onPropsChange();
+    }
+    newNavDown() {
+        const bndApply = this.applyProps.bind(this);
+        return new NavDown(this, this.to, bndApply, this.m);
     }
     connectedCallback() {
         this._upgradeProperties([m]);
         this.attr('pds', '📞');
-        const bndApply = this.applyProps.bind(this);
-        const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
-        pdnd.root = this;
+        const pdnd = this.newNavDown();
+        //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
+        //pdnd.root = this;
         pdnd.ignore = 'p-d,p-d-x,script';
         pdnd.init();
         this._pdNavDown.push(pdnd);

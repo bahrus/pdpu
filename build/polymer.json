@@ -1,0 +1,40 @@
+{
+  "entrypoint": "index.html",
+  "fragments": [],
+  "sources": [
+    "p-d.js",
+    "dist/p-d.iife.js",
+    "p-u.js",
+    "p-destal.js",
+    "dist/p-all.iife.js",
+    "PDQ.js",
+    "dist/PDQ.iife.js",
+    "index.html"
+  ],
+  "extraDependencies": [
+    "bower_components/webcomponentsjs/*.js"
+  ],
+  "builds": [
+    {
+      "name": "ES5",
+      "js": {
+        "minify": false,
+        "compile": true
+      },
+      "html": {
+        "minify": true
+      },
+      "css": {
+        "minify": true
+      }
+    }
+  ],
+  "lint": {
+    "rules": [
+      "polymer-3"
+    ]
+  },
+  "npm": true,
+  "componentDir": "node_modules/",
+  "moduleResolution": "node"
+}
