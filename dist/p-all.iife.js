@@ -451,7 +451,7 @@ class PD extends P {
     applyProps(pd) {
         //if(this._iIP && this.skI()) return;
         if (this._iIP)
-            return;
+            return 0;
         const matches = this.getMatches(pd); //const matches = pd.getMatches();
         matches.forEach(el => {
             this.setVal(this._lastEvent, el);

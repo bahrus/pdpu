@@ -534,7 +534,7 @@
         var _this8 = this;
 
         //if(this._iIP && this.skI()) return;
-        if (this._iIP) return;
+        if (this._iIP) return 0;
         var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
         matches.forEach(function (el) {
