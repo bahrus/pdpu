@@ -1,28 +1,18 @@
 import { PD } from './p-d.js';
+//import { ICssPropMap } from './p.js';
 import { define } from 'xtal-latx/define.js';
 import { createNestedProp } from 'xtal-latx/createNestedProp.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
     static get is() { return 'p-d-x'; }
-    parseMapping(mapTokens, cssSelector) {
-        const splitPropPointer1 = mapTokens[1].split(';');
-        splitPropPointer1.forEach(token => {
-            const splitPropPointer = token.split(':');
-            this._cssPropMap.push({
-                cssSelector: cssSelector,
-                propTarget: splitPropPointer[0],
-                propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
-            });
-        });
-    }
-    commit(target, map, val) {
+    commit(target, val) {
         if (val === undefined)
             return;
-        if (map.propSource === '.' && map.propTarget === '.') {
+        if (this.val === '.' && this.prop === '.') {
             Object.assign(target, val);
             return;
         }
-        const targetPath = map.propTarget;
+        const targetPath = this.prop;
         if (targetPath.startsWith('.')) {
             const cssClass = targetPath.substr(1);
             const method = val ? 'add' : 'remove';
