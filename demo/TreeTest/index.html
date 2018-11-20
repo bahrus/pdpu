@@ -133,13 +133,13 @@
           <span node="[[item]]"
             data-on="click: pass-to-id:myTree{toggledNode:target.node} skip-init"
           >
+          <p-u on="click" to="myTree" prop="toggledNode" val="target.node" skip-init></p-u>
           <if-diff if="[[item.children]]" tag="hasChildren" m="1"></if-diff>
           <if-diff if="[[item.expanded]]" tag="isExpanded" m="1"></if-diff>
           <span data-has-children="-1" data-is-expanded="-1" node="[[item]]"></span>
           </span>
-          <xtal-split node="[[item]]" search="[[search]]" text-content="[[item.name]]"
-            data-on="click: pass-to-id:myTree{toggledNode:target.node} skip-init"
-          ></xtal-split>
+          <xtal-split node="[[item]]" search="[[search]]" text-content="[[item.name]]"></xtal-split>
+          <p-u on="click" to="myTree" prop="toggledNode" val="target.node" skip-init></p-u>
           
         </div>
       </template>
@@ -162,6 +162,7 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/purr-sist@0.0.13/purr-sist.iife.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/if-diff@0.0.11/if-diff.iife.js"></script>
     <script type="module" src="../../p-d.js"></script>
+    <script type="module" src="../../p-u.js"></script>
   </div>
 </body>
 

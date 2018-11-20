@@ -11,14 +11,12 @@ import { define } from 'xtal-latx/define.js';
 export class PU extends P {
     static get is() { return 'p-u'; }
     pass(e) {
-        //this._cssPropMap.forEach(map =>{
-        //const cssSel = map.cssSelector;
         const cssSel = this.to;
-        let targetElement;
         const split = cssSel.split('/');
         const id = split[split.length - 1];
+        let targetElement;
         if (cssSel.startsWith('/')) {
-            targetElement = self[id];
+            targetElement = self[cssSel];
         }
         else {
             const len = cssSel.startsWith('./') ? 0 : split.length;
@@ -38,7 +36,6 @@ export class PU extends P {
             }
         }
         this.setVal(e, targetElement);
-        //})
     }
     getHost(el, level, maxLevel) {
         let parent = el;

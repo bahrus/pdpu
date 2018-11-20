@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div id="myTarget"></div>
+        <div data-test="abc" >Click me</div>
+        <p-u on="click" to="myTarget" prop="innerText" val="target.dataset.test" skip-init></p-u>
+        <script type="module" src="../../p-u.js"></script>
+    </div>
+</body>
+</html>
