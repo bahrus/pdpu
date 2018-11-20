@@ -247,57 +247,6 @@
     return NavDown;
   }();
 
-  var p_d_if = 'p-d-if';
-
-  var PDNavDown =
-  /*#__PURE__*/
-  function (_NavDown) {
-    babelHelpers.inherits(PDNavDown, _NavDown);
-
-    function PDNavDown() {
-      var _this6;
-
-      babelHelpers.classCallCheck(this, PDNavDown);
-      _this6 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDNavDown).apply(this, arguments));
-      _this6.children = [];
-      return _this6;
-    }
-
-    babelHelpers.createClass(PDNavDown, [{
-      key: "sibCheck",
-      value: function sibCheck(sib, c) {
-        if (sib.__aMO) return;
-        var attr = sib.getAttribute(p_d_if);
-
-        if (attr === null) {
-          sib.__aMO = true;
-          return;
-        }
-
-        var fec = sib.firstElementChild;
-        if (fec === null) return;
-
-        if (this.root.matches(attr)) {
-          var pdnd = new PDNavDown(fec, this.match, this.notify, this.max, null, this.mutDebounce);
-          pdnd.root = this.root;
-          this.children.push(pdnd);
-          pdnd.init();
-          sib.__aMO = true;
-        }
-      }
-    }, {
-      key: "getMatches",
-      value: function getMatches() {
-        var ret = this.matches;
-        this.children.forEach(function (child) {
-          ret = ret.concat(child.getMatches());
-        });
-        return ret;
-      }
-    }]);
-    return PDNavDown;
-  }(NavDown);
-
   var on = 'on';
   var noblock = 'noblock';
   var iff = 'if';
@@ -311,12 +260,12 @@
     babelHelpers.inherits(P, _XtallatX);
 
     function P() {
-      var _this7;
+      var _this6;
 
       babelHelpers.classCallCheck(this, P);
-      _this7 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
-      _this7._lastEvent = null;
-      return _this7;
+      _this6 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
+      _this6._lastEvent = null;
+      return _this6;
     }
 
     babelHelpers.createClass(P, [{
@@ -548,20 +497,20 @@
     babelHelpers.inherits(PD, _P);
 
     function PD() {
-      var _this8;
+      var _this7;
 
       babelHelpers.classCallCheck(this, PD);
-      _this8 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
-      _this8._pdNavDown = []; //_hasMax!: boolean;
+      _this7 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
+      _this7._pdNavDown = []; //_hasMax!: boolean;
 
-      _this8._m = Infinity;
-      return _this8;
+      _this7._m = Infinity;
+      return _this7;
     }
 
     babelHelpers.createClass(PD, [{
       key: "pass",
       value: function pass(e) {
-        var _this9 = this;
+        var _this8 = this;
 
         this._lastEvent = e;
         this.attr('pds', '🌩️'); //this.passDown(this.nextElementSibling, e, 0);
@@ -569,7 +518,7 @@
         var count = 0;
 
         this._pdNavDown.forEach(function (pdnd) {
-          count += _this9.applyProps(pdnd);
+          count += _this8.applyProps(pdnd);
         });
 
         this.attr('pds', '👂');
@@ -583,12 +532,12 @@
     }, {
       key: "applyProps",
       value: function applyProps(pd) {
-        var _this10 = this;
+        var _this9 = this;
 
         var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
         matches.forEach(function (el) {
-          _this10.setVal(_this10._lastEvent, el);
+          _this9.setVal(_this9._lastEvent, el);
         });
         return matches.length;
       }

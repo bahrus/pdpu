@@ -22,15 +22,13 @@ function (_P) {
   babelHelpers.createClass(PU, [{
     key: "pass",
     value: function pass(e) {
-      //this._cssPropMap.forEach(map =>{
-      //const cssSel = map.cssSelector;
       var cssSel = this.to;
-      var targetElement;
       var split = cssSel.split('/');
       var id = split[split.length - 1];
+      var targetElement;
 
       if (cssSel.startsWith('/')) {
-        targetElement = self[id];
+        targetElement = self[cssSel];
       } else {
         var len = cssSel.startsWith('./') ? 0 : split.length;
         var host = this.getHost(this, 0, split.length);
@@ -47,7 +45,7 @@ function (_P) {
         }
       }
 
-      this.setVal(e, targetElement); //})
+      this.setVal(e, targetElement);
     }
   }, {
     key: "getHost",

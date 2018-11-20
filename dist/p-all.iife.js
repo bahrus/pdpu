@@ -482,6 +482,21 @@ class PD extends P {
     }
 }
 define(PD);
+class PDR extends PD {
+    static get is() {
+        return 'p-d-r';
+    }
+    getMatches(pd) {
+        return pd.getMatches();
+    }
+    newNavDown() {
+        const bndApply = this.applyProps.bind(this);
+        const pdnd = new PDNavDown(this, this.to, bndApply, this.m);
+        pdnd.root = this;
+        return pdnd;
+    }
+}
+define(PDR);
 //const attrib_filter = 'attrib-filter';
 class PDX extends PD {
     static get is() { return 'p-d-x'; }
@@ -566,14 +581,12 @@ define(PDX);
 class PU extends P {
     static get is() { return 'p-u'; }
     pass(e) {
-        //this._cssPropMap.forEach(map =>{
-        //const cssSel = map.cssSelector;
         const cssSel = this.to;
-        let targetElement;
         const split = cssSel.split('/');
         const id = split[split.length - 1];
+        let targetElement;
         if (cssSel.startsWith('/')) {
-            targetElement = self[id];
+            targetElement = self[cssSel];
         }
         else {
             const len = cssSel.startsWith('./') ? 0 : split.length;
@@ -593,7 +606,6 @@ class PU extends P {
             }
         }
         this.setVal(e, targetElement);
-        //})
     }
     getHost(el, level, maxLevel) {
         let parent = el;

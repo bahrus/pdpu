@@ -684,12 +684,46 @@
     return PD;
   }(P);
 
-  define(PD); //const attrib_filter = 'attrib-filter';
+  define(PD);
+
+  var PDR =
+  /*#__PURE__*/
+  function (_PD) {
+    babelHelpers.inherits(PDR, _PD);
+
+    function PDR() {
+      babelHelpers.classCallCheck(this, PDR);
+      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDR).apply(this, arguments));
+    }
+
+    babelHelpers.createClass(PDR, [{
+      key: "getMatches",
+      value: function getMatches(pd) {
+        return pd.getMatches();
+      }
+    }, {
+      key: "newNavDown",
+      value: function newNavDown() {
+        var bndApply = this.applyProps.bind(this);
+        var pdnd = new PDNavDown(this, this.to, bndApply, this.m);
+        pdnd.root = this;
+        return pdnd;
+      }
+    }], [{
+      key: "is",
+      get: function get() {
+        return 'p-d-r';
+      }
+    }]);
+    return PDR;
+  }(PD);
+
+  define(PDR); //const attrib_filter = 'attrib-filter';
 
   var PDX =
   /*#__PURE__*/
-  function (_PD) {
-    babelHelpers.inherits(PDX, _PD);
+  function (_PD2) {
+    babelHelpers.inherits(PDX, _PD2);
 
     function PDX() {
       babelHelpers.classCallCheck(this, PDX);
@@ -816,15 +850,13 @@
     babelHelpers.createClass(PU, [{
       key: "pass",
       value: function pass(e) {
-        //this._cssPropMap.forEach(map =>{
-        //const cssSel = map.cssSelector;
         var cssSel = this.to;
-        var targetElement;
         var split = cssSel.split('/');
         var id = split[split.length - 1];
+        var targetElement;
 
         if (cssSel.startsWith('/')) {
-          targetElement = self[id];
+          targetElement = self[cssSel];
         } else {
           var len = cssSel.startsWith('./') ? 0 : split.length;
           var host = this.getHost(this, 0, split.length);
@@ -841,7 +873,7 @@
           }
         }
 
-        this.setVal(e, targetElement); //})
+        this.setVal(e, targetElement);
       }
     }, {
       key: "getHost",
