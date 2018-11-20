@@ -58,7 +58,7 @@
         <!-- Pass value to history.draft.value -->
         <p-d-x on="input" to="xtal-state-update" prop="history.draft.value" val="target.value" m="1" skip-init></p-d-x>
         <!-- Pass (JSON) value to key / value aggregator -->
-        <p-d on="input" to="val" val="target.value"></p-d>
+        <p-d on="input" prop="val" val="target.value"></p-d>
         <!-- ============================  End UI Input fields =============================== -->
     
         <!-- Combine key / value fields into one object -->
