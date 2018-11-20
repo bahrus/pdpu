@@ -111,7 +111,7 @@ What we end up with is shown below:
 </div>
 ```
 
-## Recursive sibling drilldown with p-d-r -- Invitation Only [TODO]
+## Recursive sibling drilldown with p-d-r -- Invitation Only
 
 To keep performance optimal and scalable, the p-d element only tests downstream siblings -- not children of siblings.  However, the use case for being able to drilldown inside a DOM node is quite high.  Unlike Polymer, permission to do this must be granted explicitly, using the p-d-if attribute on elements where drilldown is needed.  The value of the attribute is used to test against the p-d element (hence you will want to specify some marker, like an ID, on the p-d element, which can be used to validate the invitation.)
 
@@ -124,6 +124,155 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
         <my-filter></my-filter>
     </div>
 ```
+
+<!--
+```
+<custom-element-demo>
+  <template>
+    <div>
+  
+    <xtal-state-watch watch level="global"></xtal-state-watch>
+    <p-d on="history-changed" to="xtal-tree" prop="firstVisibleIndex" val="target.history.firstVisibleIndex"></p-d>
+    <h3>Basic xtal-tree demo</h3>
+   
+    <!--   Expand All / Collapse All / Sort  / Search Buttons -->
+    
+    <button disabled data-expand-cmd="allExpandedNodes">Expand All</button>
+    <p-d on="click" to="xtal-tree" prop="expandCmd" val="target.dataset.expandCmd" m="1" skip-init></p-d>
+    <button disabled data-expand-cmd="allCollapsedNodes">Collapse All</button>
+    <p-d on="click" to="xtal-tree" prop="expandCmd" val="target.dataset.expandCmd" m="1" skip-init></p-d>
+    <button disabled data-dir="asc">Sort Asc</button>
+    <p-d on="click" to="xtal-tree" prop="sorted" val="target.dataset.dir" m="1" skip-init></p-d>
+    <button disabled data-dir="desc">Sort Desc</button>
+    <p-d on="click" to="xtal-tree" prop="sorted" val="target.dataset.dir" m="1" skip-init></p-d>
+    <input disabled type="text" placeholder="Search">
+    <p-d-r on="input" to="xtal-split" prop="search" val="target.value"></p-d-r>
+    <p-d on="input" to="xtal-tree" prop="searchString" val="target.value"></p-d>
+
+    <!-- ================= Get Sample JSON with Tree Structure (File Directory), Pass to xtal-tree -->
+    <xtal-fetch fetch href="https://unpkg.com/xtal-tree@0.0.34/demo/directory.json" as="json"></xtal-fetch>
+    <!-- =================  Pass JSON object to xtal-tree for processing ========================= -->
+    <p-d on="fetch-complete" to="xtal-tree" prop="nodes" val="target.value" m="1"></p-d>
+
+    <!-- ================= Train xtal-tree how to expand / collapse nodes ========================= -->
+    <xtal-deco>
+      <script nomodule>
+        ({
+          childrenFn: node => node.children,
+          isOpenFn: node => node.expanded,
+          levelSetterFn: function (nodes, level) {
+            nodes.forEach(node => {
+              node.style = 'margin-left:' + (level * 12) + 'px';
+              if (node.children) this.levelSetterFn(node.children, level + 1)
+            })
+          },
+          toggleNodeFn: node => {
+            node.expanded = !node.expanded;
+          },
+          testNodeFn: (node, search) => {
+            if (!search) return true;
+            if (!node.nameLC) node.nameLC = node.name.toLowerCase();
+            return node.nameLC.indexOf(search.toLowerCase()) > -1;
+          },
+          compareFn: (lhs, rhs) => {
+            if (lhs.name < rhs.name) return -1;
+            if (lhs.name > rhs.name) return 1;
+            return 0;
+          },
+          props:{
+              expandCmd: '',
+              fistVisibleIndex: -1
+            },
+            onPropsChange(name, newVal){
+              switch(name){
+                case 'expandCmd':
+                  this[this.expandCmd] = this.viewableNodes;
+                  break;
+                  
+              }
+            }
+        })
+      </script>
+    </xtal-deco>
+    <xtal-tree id="myTree"></xtal-tree>
+    <p-d on="viewable-nodes-changed" to="iron-list" prop="items" val="target.viewableNodes" m="1"></p-d>
+    <p-d on="viewable-nodes-changed" to="iron-list" prop="newFirstVisibleIndex" val="target.firstVisibleIndex" m="1"></p-d>
+    <!-- ==============  Styling of iron-list ================== -->
+    <style>
+      div.node {
+        cursor: pointer;
+      }
+
+      span.match {
+        font-weight: bold;
+        background-color: yellowgreen;
+      }
+
+      span[data-has-children="1"][data-is-expanded="1"]::after{
+        content: "📖";
+      }
+
+      span[data-has-children="1"][data-is-expanded="-1"]::after{
+        content: "📕";
+      }
+
+      span[data-has-children="-1"]::after{
+        content: "📝";
+      }
+    </style>
+    
+    <xtal-deco><script nomodule>
+      ({
+        props: {
+          newFirstVisibleIndex: -1,
+        },
+        onPropsChange: function (name, newVal) {
+          switch (name) {
+            case 'newFirstVisibleIndex':
+              if(!this.items || this.newFirstVisibleIndex < 0) return;
+              this.scrollToIndex(this.newFirstVisibleIndex);
+          }
+        }
+      })
+    </script></xtal-deco>
+    <iron-list style="height:400px;overflow-x:hidden" id="nodeList" mutable-data p-d-if="p-d-r">
+      <template>
+        <div class="node" style$="[[item.style]]" p-d-if="p-d-r">
+          <span node="[[item]]" p-d-if="p-d-r">
+            <if-diff if="[[item.children]]" tag="hasChildren" m="1"></if-diff>
+            <if-diff if="[[item.expanded]]" tag="isExpanded" m="1"></if-diff>
+            <span data-has-children="-1" data-is-expanded="-1" node="[[item]]"></span>
+          </span>
+          <p-u on="click" to="myTree" prop="toggledNode" val="target.node" skip-init></p-u>
+          <xtal-split node="[[item]]" search="[[search]]" text-content="[[item.name]]"></xtal-split>
+          <p-u on="click" to="myTree" prop="toggledNode" val="target.node" skip-init></p-u>
+          
+        </div>
+      </template>
+    </iron-list>
+    <p-d on="scroll" to="xtal-state-commit" prop="history" val="target.firstVisibleIndex"></p-d>
+    <xtal-state-commit level="global" rewrite href="/scroll" with-path="firstVisibleIndex"></xtal-state-commit>
+    <!-- Polyfill for retro browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <!-- End Polyfill for retro browsers -->
+
+    <!-- Polymer Elements -->
+    <script type="module" src="https://unpkg.com/@polymer/iron-list@3.0.1/iron-list.js?module"></script>
+    <!-- End Polymer Elements -->
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-splitting@0.0.8/xtal-splitting.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-fetch@0.0.52/xtal-fetch.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-decorator@0.0.27/xtal-decorator.iife.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-tree@0.0.38/xtal-tree.iife.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-state@0.0.42/xtal-state.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/purr-sist@0.0.13/purr-sist.iife.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/if-diff@0.0.11/if-diff.iife.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.79/dist/p-all.iife.js"></script>
+  </div>
+  </template>
+</custom-element-demo>
+```
+-->
 
 ###  Defining a piping custom element
 
