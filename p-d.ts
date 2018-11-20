@@ -1,6 +1,6 @@
 import { P} from './p.js';
 import { define } from 'xtal-latx/define.js';
-import {PDNavDown} from './PDNavDown.js';
+
 import {NavDown} from 'xtal-latx/NavDown.js';
 
 const m = 'm';
