@@ -726,7 +726,8 @@
     return PDR;
   }(PD);
 
-  define(PDR); //const attrib_filter = 'attrib-filter';
+  define(PDR); //import { ICssPropMap } from './p.js';
+  //const attrib_filter = 'attrib-filter';
 
   var PDX =
   /*#__PURE__*/
@@ -739,32 +740,16 @@
     }
 
     babelHelpers.createClass(PDX, [{
-      key: "parseMapping",
-      value: function parseMapping(mapTokens, cssSelector) {
-        var _this10 = this;
-
-        var splitPropPointer1 = mapTokens[1].split(';');
-        splitPropPointer1.forEach(function (token) {
-          var splitPropPointer = token.split(':');
-
-          _this10._cssPropMap.push({
-            cssSelector: cssSelector,
-            propTarget: splitPropPointer[0],
-            propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
-          });
-        });
-      }
-    }, {
       key: "commit",
-      value: function commit(target, map, val) {
+      value: function commit(target, val) {
         if (val === undefined) return;
 
-        if (map.propSource === '.' && map.propTarget === '.') {
+        if (this.val === '.' && this.prop === '.') {
           Object.assign(target, val);
           return;
         }
 
-        var targetPath = map.propTarget;
+        var targetPath = this.prop;
 
         if (targetPath.startsWith('.')) {
           var cssClass = targetPath.substr(1);
@@ -781,7 +766,7 @@
     }, {
       key: "attchEvListnrs",
       value: function attchEvListnrs() {
-        var _this11 = this;
+        var _this10 = this;
 
         if (this._on[0] !== '[') {
           babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
@@ -810,7 +795,7 @@
             target: prevSibling
           };
 
-          _this11._hndEv(fakeEvent);
+          _this10._hndEv(fakeEvent);
         });
 
         this._attributeObserver.observe(prevSibling, config);
@@ -920,12 +905,12 @@
     babelHelpers.inherits(PDestal, _PDX);
 
     function PDestal() {
-      var _this12;
+      var _this11;
 
       babelHelpers.classCallCheck(this, PDestal);
-      _this12 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
-      _this12._previousValues = {};
-      return _this12;
+      _this11 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
+      _this11._previousValues = {};
+      return _this11;
     }
 
     babelHelpers.createClass(PDestal, [{
@@ -947,7 +932,7 @@
     }, {
       key: "doFakeEvent",
       value: function doFakeEvent() {
-        var _this13 = this;
+        var _this12 = this;
 
         var split = this._on.split(',');
 
@@ -957,11 +942,11 @@
           var trimmedParam = param.substr(1, param.length - 2);
           var searchParm = searchParams.get(trimmedParam);
 
-          if (!changedVal && searchParm !== _this13._previousValues[trimmedParam]) {
+          if (!changedVal && searchParm !== _this12._previousValues[trimmedParam]) {
             changedVal = true;
           }
 
-          _this13._previousValues[trimmedParam] = searchParm;
+          _this12._previousValues[trimmedParam] = searchParm;
         });
 
         if (changedVal) {
@@ -975,10 +960,10 @@
     }, {
       key: "watchLocation",
       value: function watchLocation() {
-        var _this14 = this;
+        var _this13 = this;
 
         window.addEventListener('popstate', function (e) {
-          _this14.doFakeEvent();
+          _this13.doFakeEvent();
         });
         this.doFakeEvent();
       }
