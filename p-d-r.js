@@ -5,6 +5,9 @@ export class PDR extends PD {
     static get is() {
         return 'p-d-r';
     }
+    getMatches(pd) {
+        return pd.getMatches();
+    }
     newNavDown() {
         const bndApply = this.applyProps.bind(this);
         const pdnd = new PDNavDown(this, this.to, bndApply, this.m);

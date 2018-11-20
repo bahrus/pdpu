@@ -31,7 +31,7 @@
     <button disabled data-dir="desc">Sort Desc</button>
     <p-d on="click" to="xtal-tree" prop="sorted" val="target.dataset.dir" m="1" skip-init></p-d>
     <input disabled type="text" placeholder="Search">
-    <p-d-r on="input" to="xtal-split" prop="search" val="target.val"></p-d-r>
+    <p-d-r on="input" to="xtal-split" prop="search" val="target.value"></p-d-r>
     <p-d on="input" to="xtal-tree" prop="searchString" val="target.value"></p-d>
 
     <!-- ================= Get Sample JSON with Tree Structure (File Directory), Pass to xtal-tree -->
@@ -120,12 +120,12 @@
         }
       })
     </script></xtal-deco>
-    <iron-list style="height:400px;overflow-x:hidden" id="nodeList" mutable-data data-pd
+    <iron-list style="height:400px;overflow-x:hidden" id="nodeList" mutable-data p-d-if="p-d-r"
       data-on="scroll: pass-to-next:{history:target.firstVisibleIndex}"
     >
       <template>
-        <div class="node" style$="[[item.style]]" data-pd>
-          <span node="[[item]]">
+        <div class="node" style$="[[item.style]]" p-d-if="p-d-r">
+          <span node="[[item]]" p-d-if="p-d-r">
             <if-diff if="[[item.children]]" tag="hasChildren" m="1"></if-diff>
             <if-diff if="[[item.expanded]]" tag="isExpanded" m="1"></if-diff>
             <span data-has-children="-1" data-is-expanded="-1" node="[[item]]"></span>
