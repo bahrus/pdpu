@@ -21,26 +21,20 @@ function (_P) {
 
     babelHelpers.classCallCheck(this, PD);
     _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
-    _this._pdNavDown = []; //_hasMax!: boolean;
+    _this._pdNavDown = null; //_hasMax!: boolean;
 
     _this._m = Infinity;
+    _this._iIP = false;
     return _this;
   }
 
   babelHelpers.createClass(PD, [{
     key: "pass",
     value: function pass(e) {
-      var _this2 = this;
-
       this._lastEvent = e;
       this.attr('pds', '🌩️'); //this.passDown(this.nextElementSibling, e, 0);
 
-      var count = 0;
-
-      this._pdNavDown.forEach(function (pdnd) {
-        count += _this2.applyProps(pdnd);
-      });
-
+      var count = this.applyProps(this._pdNavDown);
       this.attr('pds', '👂');
       this.attr('mtch', count.toString());
     }
@@ -52,12 +46,14 @@ function (_P) {
   }, {
     key: "applyProps",
     value: function applyProps(pd) {
-      var _this3 = this;
+      var _this2 = this;
 
+      //if(this._iIP && this.skI()) return;
+      if (this._iIP) return;
       var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
       matches.forEach(function (el) {
-        _this3.setVal(_this3._lastEvent, el);
+        _this2.setVal(_this2._lastEvent, el);
       });
       return matches.length;
     }
@@ -86,14 +82,21 @@ function (_P) {
       this._upgradeProperties([m]);
 
       this.attr('pds', '📞');
+
+      if (!this.to) {
+        //apply to next only
+        this.to = '*';
+        this.m = 1;
+      }
+
       var pdnd = this.newNavDown(); //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
       //pdnd.root = this;
 
-      pdnd.ignore = 'p-d,p-d-x,script';
+      pdnd.ignore = 'p-d,p-d-x,p-d-r,script';
+      this._iIP = true;
       pdnd.init();
-
-      this._pdNavDown.push(pdnd);
-
+      this._iIP = false;
+      this._pdNavDown = pdnd;
       babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
     }
   }, {

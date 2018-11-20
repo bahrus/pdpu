@@ -16,6 +16,7 @@ export class PD extends P {
         this._pdNavDown = null;
         //_hasMax!: boolean;
         this._m = Infinity;
+        this._iIP = false;
     }
     static get is() { return 'p-d'; }
     get m() {
@@ -39,6 +40,9 @@ export class PD extends P {
         return pd.matches;
     }
     applyProps(pd) {
+        //if(this._iIP && this.skI()) return;
+        if (this._iIP)
+            return;
         const matches = this.getMatches(pd); //const matches = pd.getMatches();
         matches.forEach(el => {
             this.setVal(this._lastEvent, el);
@@ -72,7 +76,9 @@ export class PD extends P {
         //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
         //pdnd.root = this;
         pdnd.ignore = 'p-d,p-d-x,p-d-r,script';
+        this._iIP = true;
         pdnd.init();
+        this._iIP = false;
         this._pdNavDown = pdnd;
         super.connectedCallback();
     }

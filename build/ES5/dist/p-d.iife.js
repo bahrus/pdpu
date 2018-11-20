@@ -344,9 +344,14 @@
         }
       }
     }, {
+      key: "skI",
+      value: function skI() {
+        return this.hasAttribute('skip-init');
+      }
+    }, {
       key: "doFake",
       value: function doFake() {
-        if (!this._if && !this.hasAttribute('skip-init')) {
+        if (!this._if && !this.skI()) {
           var lastEvent = this._lastEvent;
 
           if (!lastEvent) {
@@ -501,26 +506,20 @@
 
       babelHelpers.classCallCheck(this, PD);
       _this7 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
-      _this7._pdNavDown = []; //_hasMax!: boolean;
+      _this7._pdNavDown = null; //_hasMax!: boolean;
 
       _this7._m = Infinity;
+      _this7._iIP = false;
       return _this7;
     }
 
     babelHelpers.createClass(PD, [{
       key: "pass",
       value: function pass(e) {
-        var _this8 = this;
-
         this._lastEvent = e;
         this.attr('pds', '🌩️'); //this.passDown(this.nextElementSibling, e, 0);
 
-        var count = 0;
-
-        this._pdNavDown.forEach(function (pdnd) {
-          count += _this8.applyProps(pdnd);
-        });
-
+        var count = this.applyProps(this._pdNavDown);
         this.attr('pds', '👂');
         this.attr('mtch', count.toString());
       }
@@ -532,12 +531,14 @@
     }, {
       key: "applyProps",
       value: function applyProps(pd) {
-        var _this9 = this;
+        var _this8 = this;
 
+        //if(this._iIP && this.skI()) return;
+        if (this._iIP) return;
         var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
         matches.forEach(function (el) {
-          _this9.setVal(_this9._lastEvent, el);
+          _this8.setVal(_this8._lastEvent, el);
         });
         return matches.length;
       }
@@ -566,14 +567,21 @@
         this._upgradeProperties([m]);
 
         this.attr('pds', '📞');
+
+        if (!this.to) {
+          //apply to next only
+          this.to = '*';
+          this.m = 1;
+        }
+
         var pdnd = this.newNavDown(); //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
         //pdnd.root = this;
 
-        pdnd.ignore = 'p-d,p-d-x,script';
+        pdnd.ignore = 'p-d,p-d-x,p-d-r,script';
+        this._iIP = true;
         pdnd.init();
-
-        this._pdNavDown.push(pdnd);
-
+        this._iIP = false;
+        this._pdNavDown = pdnd;
         babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
       }
     }, {

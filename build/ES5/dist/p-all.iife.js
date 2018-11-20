@@ -430,9 +430,14 @@
         }
       }
     }, {
+      key: "skI",
+      value: function skI() {
+        return this.hasAttribute('skip-init');
+      }
+    }, {
       key: "doFake",
       value: function doFake() {
-        if (!this._if && !this.hasAttribute('skip-init')) {
+        if (!this._if && !this.skI()) {
           var lastEvent = this._lastEvent;
 
           if (!lastEvent) {
@@ -587,26 +592,20 @@
 
       babelHelpers.classCallCheck(this, PD);
       _this8 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
-      _this8._pdNavDown = []; //_hasMax!: boolean;
+      _this8._pdNavDown = null; //_hasMax!: boolean;
 
       _this8._m = Infinity;
+      _this8._iIP = false;
       return _this8;
     }
 
     babelHelpers.createClass(PD, [{
       key: "pass",
       value: function pass(e) {
-        var _this9 = this;
-
         this._lastEvent = e;
         this.attr('pds', '🌩️'); //this.passDown(this.nextElementSibling, e, 0);
 
-        var count = 0;
-
-        this._pdNavDown.forEach(function (pdnd) {
-          count += _this9.applyProps(pdnd);
-        });
-
+        var count = this.applyProps(this._pdNavDown);
         this.attr('pds', '👂');
         this.attr('mtch', count.toString());
       }
@@ -618,12 +617,14 @@
     }, {
       key: "applyProps",
       value: function applyProps(pd) {
-        var _this10 = this;
+        var _this9 = this;
 
+        //if(this._iIP && this.skI()) return;
+        if (this._iIP) return;
         var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
         matches.forEach(function (el) {
-          _this10.setVal(_this10._lastEvent, el);
+          _this9.setVal(_this9._lastEvent, el);
         });
         return matches.length;
       }
@@ -652,14 +653,21 @@
         this._upgradeProperties([m]);
 
         this.attr('pds', '📞');
+
+        if (!this.to) {
+          //apply to next only
+          this.to = '*';
+          this.m = 1;
+        }
+
         var pdnd = this.newNavDown(); //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
         //pdnd.root = this;
 
-        pdnd.ignore = 'p-d,p-d-x,script';
+        pdnd.ignore = 'p-d,p-d-x,p-d-r,script';
+        this._iIP = true;
         pdnd.init();
-
-        this._pdNavDown.push(pdnd);
-
+        this._iIP = false;
+        this._pdNavDown = pdnd;
         babelHelpers.get(babelHelpers.getPrototypeOf(PD.prototype), "connectedCallback", this).call(this);
       }
     }, {
@@ -733,13 +741,13 @@
     babelHelpers.createClass(PDX, [{
       key: "parseMapping",
       value: function parseMapping(mapTokens, cssSelector) {
-        var _this11 = this;
+        var _this10 = this;
 
         var splitPropPointer1 = mapTokens[1].split(';');
         splitPropPointer1.forEach(function (token) {
           var splitPropPointer = token.split(':');
 
-          _this11._cssPropMap.push({
+          _this10._cssPropMap.push({
             cssSelector: cssSelector,
             propTarget: splitPropPointer[0],
             propSource: splitPropPointer.length > 0 ? splitPropPointer[1] : undefined
@@ -773,7 +781,7 @@
     }, {
       key: "attchEvListnrs",
       value: function attchEvListnrs() {
-        var _this12 = this;
+        var _this11 = this;
 
         if (this._on[0] !== '[') {
           babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
@@ -802,7 +810,7 @@
             target: prevSibling
           };
 
-          _this12._hndEv(fakeEvent);
+          _this11._hndEv(fakeEvent);
         });
 
         this._attributeObserver.observe(prevSibling, config);
@@ -912,12 +920,12 @@
     babelHelpers.inherits(PDestal, _PDX);
 
     function PDestal() {
-      var _this13;
+      var _this12;
 
       babelHelpers.classCallCheck(this, PDestal);
-      _this13 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
-      _this13._previousValues = {};
-      return _this13;
+      _this12 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
+      _this12._previousValues = {};
+      return _this12;
     }
 
     babelHelpers.createClass(PDestal, [{
@@ -939,7 +947,7 @@
     }, {
       key: "doFakeEvent",
       value: function doFakeEvent() {
-        var _this14 = this;
+        var _this13 = this;
 
         var split = this._on.split(',');
 
@@ -949,11 +957,11 @@
           var trimmedParam = param.substr(1, param.length - 2);
           var searchParm = searchParams.get(trimmedParam);
 
-          if (!changedVal && searchParm !== _this14._previousValues[trimmedParam]) {
+          if (!changedVal && searchParm !== _this13._previousValues[trimmedParam]) {
             changedVal = true;
           }
 
-          _this14._previousValues[trimmedParam] = searchParm;
+          _this13._previousValues[trimmedParam] = searchParm;
         });
 
         if (changedVal) {
@@ -967,10 +975,10 @@
     }, {
       key: "watchLocation",
       value: function watchLocation() {
-        var _this15 = this;
+        var _this14 = this;
 
         window.addEventListener('popstate', function (e) {
-          _this15.doFakeEvent();
+          _this14.doFakeEvent();
         });
         this.doFakeEvent();
       }
