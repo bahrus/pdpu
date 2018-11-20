@@ -13,11 +13,8 @@
 
   <div data-pd>
   
-    <!-- <xtal-state-watch watch level="global" 
-      data-on="history-changed: 
-                pass-to:xtal-tree{firstVisibleIndex:target.history.firstVisibleIndex}
-              "
-    ></xtal-state-watch> -->
+    <xtal-state-watch watch level="global"></xtal-state-watch>
+    <p-d on="history-changed" to="xtal-tree" prop="firstVisibleIndex" val="target.history.firstVisibleIndex"></p-d>
     <h3>Basic xtal-tree demo</h3>
    
     <!--   Expand All / Collapse All / Sort  / Search Buttons -->
@@ -120,9 +117,7 @@
         }
       })
     </script></xtal-deco>
-    <iron-list style="height:400px;overflow-x:hidden" id="nodeList" mutable-data p-d-if="p-d-r"
-      data-on="scroll: pass-to-next:{history:target.firstVisibleIndex}"
-    >
+    <iron-list style="height:400px;overflow-x:hidden" id="nodeList" mutable-data p-d-if="p-d-r">
       <template>
         <div class="node" style$="[[item.style]]" p-d-if="p-d-r">
           <span node="[[item]]" p-d-if="p-d-r">
@@ -137,6 +132,7 @@
         </div>
       </template>
     </iron-list>
+    <p-d on="scroll" to="xtal-state-commit" prop="history" val="target.firstVisibleIndex"></p-d>
     <xtal-state-commit level="global" rewrite href="/scroll" with-path="firstVisibleIndex"></xtal-state-commit>
     <!-- Polyfill for retro browsers -->
     <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
