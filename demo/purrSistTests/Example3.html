@@ -34,7 +34,7 @@
         <!-- Watch for initial history state or popstate events, populate UI components
              that need to initialize when these events occur.
          -->
-        <xtal-state-watch watch="popstate" level="global"></xtal-state-watch>
+        <xtal-state-watch disabled="3" watch="popstate" level="global"></xtal-state-watch>
 
         <!-- ====== initialize key input field ===== -->
         <p-d on="history-changed" to="input" prop="value" val="target.history.draft.key" m="1" skip-init></p-d>
