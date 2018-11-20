@@ -101,8 +101,11 @@ export class P extends XtallatX(HTMLElement) {
             }
         }
     }
+    skI() {
+        return this.hasAttribute('skip-init');
+    }
     doFake() {
-        if (!this._if && !this.hasAttribute('skip-init')) {
+        if (!this._if && !this.skI()) {
             let lastEvent = this._lastEvent;
             if (!lastEvent) {
                 lastEvent = {

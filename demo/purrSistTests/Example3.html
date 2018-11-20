@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Example 3</title>
+</head>
+
+<body>
+    <div style="display:flex;flex-direction: column">
+
+        <!-- Parse the address bar -->
+        <xtal-state-parse disabled="2" parse="location.href" level="global" 
+            with-url-pattern="id=(?<storeId>[a-z0-9-]*)">
+        </xtal-state-parse>
+
+        <!-- If no id found in address bar, "pass-down (p-d)" message to purr-sist writer 
+            and xtal-state-update history initializer  to  create a new record ("session") 
+            in both history and remote store -->
+        <p-d on="no-match-found" to="purr-sist[write],xtal-state-update[init]" prop="new" val="target.noMatch"  m="2" skip-init></p-d>
+
+        <!-- If id found in address bar, pass it to the persistence reader and writer -->
+        <p-d on="match-found" to="purr-sist" prop="storeId" val="target.value.storeId" m="2" skip-init></p-d>
+
+        <!-- Read stored history.state from remote database if id found in address bar -->
+        <purr-sist read></purr-sist>
+
+        <!-- If persisted history.state found, repopulate history.state-->
+        <p-d on="value-changed" prop="history" val="target.value"></p-d>
+        <xtal-state-update init rewrite level="global"></xtal-state-update>
+
+        <!-- Watch for initial history state or popstate events, populate UI components
+             that need to initialize when these events occur.
+         -->
+        <xtal-state-watch watch="popstate" level="global"></xtal-state-watch>
+
+        <!-- ====== initialize key input field ===== -->
+        <p-d on="history-changed" to="input{value:target.history.draft.key}" m="1" skip-init></p-d>
+        <!-- ====== initialize textarea (JSON) field ====== -->
+        <p-d on="history-changed" to="textarea{value:target.history.draft.value}" m="1" skip-init></p-d>
+
+        <!--  ====== Sync up history with xtal-state-update, which feeds into persistence writer.  
+                    SyncHistory doesn't update history, but downstream elements are notified as if it is  -->
+        <p-d on="history-changed" to="xtal-state-update{syncHistory:target.history}" m="1" skip-init></p-d>
+
+        <!-- ==========================  UI Input Fields ===================================-->
+        <!-- Add a new key (or replace existing one) -->
+        <input type="text" placeholder="key">
+        <!-- Save key to history.draft.key -->
+        <p-d-x on="input" to="xtal-state-update{history.draft.key:target.value}" m="1" skip-init></p-d-x>
+        <!-- Pass key to aggregator that creates key / value object -->
+        <p-d on="input" to="aggregator-fn{key:target.value}" m="1"></p-d>
+
+        <!-- Edit (JSON) value -->
+        <textarea placeholder="value (JSON optional)"></textarea>
+        <!-- Pass value to history.draft.value -->
+        <p-d-x on="input" to="xtal-state-update{history.draft.value:target.value}" m="1" skip-init></p-d-x>
+        <!-- Pass (JSON) value to key / value aggregator -->
+        <p-d on="input" to="{val:target.value}"></p-d>
+        <!-- ============================  End UI Input fields =============================== -->
+    
+        <!-- Combine key / value fields into one object -->
+        <aggregator-fn><script nomodule>
+        ({ key, val }) => {
+            if (key === undefined || val === undefined) return null;
+            try {
+                return { [key]: JSON.parse(val) };
+            } catch (e) {
+                return { [key]: val };
+            }
+        }
+        </script></aggregator-fn>
+        <!-- Pass Aggregated Object to button's "obj" property -->
+        <p-d on="value-changed" to="button{obj:target.value}" m="1"></p-d>
+         
+        <button>Insert Key/Value pair</button>
+        <!-- Pass button's "obj" property to history via history-state-update-->
+        <p-d-x on="click" to="xtal-state-update{history.submitted:target.obj}" skip-init m="1"></p-d-x>
+
+        <!-- Update (merge) into global history.state object the new submitted object -->
+        <xtal-state-update make level="global" url-search="(?<store>(.*?))" replace-url-value="?id=$<store>"></xtal-state-update>
+
+        <!-- Send new history.state object to object persister -->
+        <p-d on="history-changed" to="{historyEvent:target}" skip-init></p-d>
+
+        <!-- Persist history.state to remote store-->   
+        <purr-sist write></purr-sist>
+
+        <!-- Pass persisted object to JSON viewer -->
+        <p-d on="value-changed" to="{input}"></p-d>
+        <xtal-json-editor options="{}" height="300px"></xtal-json-editor>
+        
+        <!-- Reload window to see if changes persist -->
+        <button onclick="window.location.reload()">Reload Window</button>
+
+        <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/purr-sist@0.0.20/purr-sist.iife.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.79/dist/p-all.iife.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.29/xtal-json-editor.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/aggregator-fn@0.0.11/aggregator-fn.iife.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-state@0.0.54/xtal-state.js"></script>
+    </div>
+</body>
+</html>

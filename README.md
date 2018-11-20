@@ -117,7 +117,7 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
 
 ```html   
     <text-box></text-box>                                                               
-    <p-d id="myPassDownTag" on="input" to="url-builder" prop="input"></p-d>
+    <p-d-r id="myPassDownTag" on="input" to="url-builder" prop="input"></p-d-r>
     <h3>Search Employees</h3>
     <div p-d-if="#myPassDownTag">
         <url-builder></url-builder>

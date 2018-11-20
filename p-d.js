@@ -13,7 +13,7 @@ const m = 'm';
 export class PD extends P {
     constructor() {
         super(...arguments);
-        this._pdNavDown = [];
+        this._pdNavDown = null;
         //_hasMax!: boolean;
         this._m = Infinity;
     }
@@ -31,10 +31,7 @@ export class PD extends P {
         this._lastEvent = e;
         this.attr('pds', '🌩️');
         //this.passDown(this.nextElementSibling, e, 0);
-        let count = 0;
-        this._pdNavDown.forEach(pdnd => {
-            count += this.applyProps(pdnd);
-        });
+        const count = this.applyProps(this._pdNavDown);
         this.attr('pds', '👂');
         this.attr('mtch', count.toString());
     }
@@ -66,12 +63,17 @@ export class PD extends P {
     connectedCallback() {
         this._upgradeProperties([m]);
         this.attr('pds', '📞');
+        if (!this.to) {
+            //apply to next only
+            this.to = '*';
+            this.m = 1;
+        }
         const pdnd = this.newNavDown();
         //const pdnd = new PDNavDown(this, this.to, nd => bndApply(nd), this.m);
         //pdnd.root = this;
-        pdnd.ignore = 'p-d,p-d-x,script';
+        pdnd.ignore = 'p-d,p-d-x,p-d-r,script';
         pdnd.init();
-        this._pdNavDown.push(pdnd);
+        this._pdNavDown = pdnd;
         super.connectedCallback();
     }
 }
