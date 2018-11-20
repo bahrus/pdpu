@@ -14,7 +14,7 @@ These two components dream the impossible dream -- be able to progressively, dec
 Use cases:
 
 1.  If you just need to connect some elements of a mostly static or server-rendered web site, these components provide a light weight way of doing that.
-2.  These components allow you to keep code-centric building at bay as much as possible.  Why is this important?  Because browsers can process HTML signicantly faster than JS.  That doesn't mean you have to edit HTML files.  You could edit in Javascript, but compile to HTML for optimum performance.  
+2.  These components allow you to keep code-centric **builds** at bay as much as possible.  Why is this important?  Because browsers can process HTML signicantly faster than JS.  That doesn't mean you have to edit HTML files.  Theoretically, you could edit in JavaScript and benefit from the tooling (type checks, etc), but compile to HTML for optimum performance.  
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
@@ -368,7 +368,7 @@ So what happens if an element fires an event, before p-d has loaded and started 
 
 To accommodate these difficulties, by defaut, a "fake" event is "emitted" just before the event connection is made.  I believe this default choice greatly improves the usefulness of these components.  However, there are situations where we definitely don't want to take action without actual user interaction (for example, with button clicks). To prevent that from happening, add attribute **skip-init**.
 
-Another subtle feature you might find useful:  It was mentioned before that p-d removes the disabled attribute after latching on the event handler.  But what if you want to utilize multiple p-d's on the same element.  We don't want to remove the disabled attribute until all of the elements have latched on.  
+Another subtle feature you might find useful:  It was mentioned before that p-d removes the disabled attribute after latching on the event handler.  But what if you want to utilize multiple p-d's on the same element?  We don't want to remove the disabled attribute until all of the elements have latched on.  
 
 You can specify the "depth" of disabling thusly:
 
@@ -397,8 +397,7 @@ A nice companion custom element that works well together with p-d is [xtal-decor
 With these two combined the counter would look like:
 
 ```html
-    <xtal-deco>
-        <script nomodule>
+    <xtal-deco><script nomodule>
         ({
             on: {
                 click:{
@@ -409,8 +408,7 @@ With these two combined the counter would look like:
                 counter: 0
             }
         })
-        </script>
-    </xtal-deco>
+    </script></xtal-deco>
     <button>Increment</button>
     <p-d on="counter-changed" prop="innerText"></p-d>
     <div></div>
@@ -444,7 +442,7 @@ p-u can pass data in any direction, but the primary intent is to pass it up the 
 Sample markup:
 
 ```html
- <p-u on="click" to="/myTree{toggledNode:target.node}"></p-u>
+ <p-u on="click" to="/myTree" prop="toggledNode" val="target.node"></p-u>
 ```
 
 Unlike p-d, p-u doesn't worry about DOM nodes getting created after any passing of data takes place.  If you are using p-u to pass data to previous siblings, or parents of the p-u element,or previous siblings of the parent, etc, then it is quite likely that the DOM element will already have been created, as a natural result of how the browser, and frameworks, typically render DOM.  If, however, you choose to target DOM elements out of this range, it's more of a crapshoot, and do so at your own risk.
@@ -456,7 +454,7 @@ For that we have:
 ## Punting [Untested]
 
 ```html
-<p-unt on="click" dispatch to="myEventName{toggledNode:target.node}" composed bubbles></p-unt>
+<p-unt on="click" dispatch to="myEventName" detail-prop="toggledNode" val="target.node" composed bubbles></p-unt>
 ```
 
 
@@ -488,7 +486,7 @@ And if you want to add some state management while sticking to codeless, declara
 ```html
 <div>
     <xtal-state-watch watch level="local"></xtal-state-watch>
-    <p-d on="history-changed" to="#handleViewableNodesChanged{firstVisibleIndex:target.history}" m="1"></p-d>
+    <p-d on="history-changed" to="#handleViewableNodesChanged" prop="firstVisibleIndex" val="target.history" m="1"></p-d>
     ...
 </div>
 ```
