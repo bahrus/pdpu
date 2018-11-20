@@ -22,22 +22,17 @@
    
     <!--   Expand All / Collapse All / Sort  / Search Buttons -->
     
-    <button disabled data-expand-cmd="allExpandedNodes"
-      data-on="click: pass-to:xtal-tree{expandCmd:target.dataset.expandCmd}{1} skip-init"
-    >Expand All</button>
-    <button disabled data-expand-cmd="allCollapsedNodes"
-      data-on="click: pass-to:xtal-tree{expandCmd:target.dataset.expandCmd}{1} skip-init"
-    >Collapse All</button>
-    <button disabled data-dir="asc"
-      data-on="click: pass-to:xtal-tree{sorted:target.dataset.dir}{1} skip-init"
-    >Sort Asc</button>
-    <button disabled data-dir="desc"
-      data-on="click: pass-to:xtal-tree{sorted:target.dataset.dir}{1} skip-init"
-    >Sort Desc</button>
-    <input disabled type="text" placeholder="Search"
-      data-on="input: pass-to:xtal-split{search:target.value} and-pass-to:xtal-tree{searchString:target.value}{1} recursive"
-    >
-    
+    <button disabled data-expand-cmd="allExpandedNodes">Expand All</button>
+    <p-d on="click" to="xtal-tree" prop="expandCmd" val="target.dataset.expandCmd" m="1" skip-init></p-d>
+    <button disabled data-expand-cmd="allCollapsedNodes">Collapse All</button>
+    <p-d on="click" to="xtal-tree" prop="expandCmd" val="target.dataset.expandCmd" m="1" skip-init></p-d>
+    <button disabled data-dir="asc">Sort Asc</button>
+    <p-d on="click" to="xtal-tree" prop="sorted" val="target.dataset.dir" m="1" skip-init></p-d>
+    <button disabled data-dir="desc">Sort Desc</button>
+    <p-d on="click" to="xtal-tree" prop="sorted" val="target.dataset.dir" m="1" skip-init></p-d>
+    <input disabled type="text" placeholder="Search">
+    <p-d-r on="input" to="xtal-split" prop="search" val="target.val"></p-d-r>
+    <p-d on="input" to="xtal-tree" prop="searchString" val="target.value"></p-d>
 
     <!-- ================= Get Sample JSON with Tree Structure (File Directory), Pass to xtal-tree -->
     <xtal-fetch fetch href="https://unpkg.com/xtal-tree@0.0.34/demo/directory.json" as="json"></xtal-fetch>
@@ -155,12 +150,12 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-fetch@0.0.52/xtal-fetch.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-decorator@0.0.27/xtal-decorator.iife.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-tree@0.0.38/xtal-tree.iife.js"></script>
-    <!-- <script type="module" src="https://cdn.jsdelivr.net/npm/pass-down@0.0.10/pass-down.iife.js"></script> -->
     <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-state@0.0.42/xtal-state.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/purr-sist@0.0.13/purr-sist.iife.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/if-diff@0.0.11/if-diff.iife.js"></script>
     <script type="module" src="../../p-d.js"></script>
     <script type="module" src="../../p-u.js"></script>
+    <script type="module" src="../../p-d-r.js"></script>
   </div>
 </body>
 
