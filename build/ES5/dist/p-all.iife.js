@@ -457,12 +457,19 @@
         if (this._if && !e.target.matches(this._if)) return;
         this._lastEvent = e;
         this.pass(e);
+      } //https://stackoverflow.com/questions/476436/is-there-a-null-coalescing-operator-in-javascript
+
+    }, {
+      key: "$N",
+      value: function $N(value, ifnull) {
+        if (value === null || value === undefined) return ifnull;
+        return value;
       }
     }, {
       key: "setVal",
       value: function setVal(e, target) {
         var gpfp = this.getPropFromPath.bind(this);
-        var propFromEvent = this.val ? gpfp(e, this.val) : gpfp(e, 'detail.value') || gpfp(e, 'target.value');
+        var propFromEvent = this.val ? gpfp(e, this.val) : this.$N(gpfp(e, 'detail.value'), gpfp(e, 'target.value'));
         this.commit(target, propFromEvent);
       }
     }, {
