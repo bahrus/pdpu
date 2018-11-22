@@ -300,6 +300,8 @@ class P extends XtallatX(HTMLElement) {
         while (pS && pS.tagName.startsWith('P-')) {
             pS = pS.previousElementSibling;
         }
+        if (pS === null)
+            pS = this.parentElement;
         return pS;
     }
     connectedCallback() {
@@ -674,7 +676,7 @@ class PDestal extends PDX {
     }
 }
 define(PDestal);
-class PS extends PD {
+class PS extends PDR {
     static get is() { return 'p-s'; }
     getPreviousSib() {
         const parent = this.parentElement;

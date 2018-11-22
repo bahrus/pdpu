@@ -388,6 +388,7 @@
           pS = pS.previousElementSibling;
         }
 
+        if (pS === null) pS = this.parentElement;
         return pS;
       }
     }, {
@@ -978,8 +979,8 @@
 
   var PS =
   /*#__PURE__*/
-  function (_PD3) {
-    babelHelpers.inherits(PS, _PD3);
+  function (_PDR) {
+    babelHelpers.inherits(PS, _PDR);
 
     function PS() {
       babelHelpers.classCallCheck(this, PS);
@@ -1001,7 +1002,7 @@
       }
     }]);
     return PS;
-  }(PD);
+  }(PDR);
 
   define(PS);
 })();

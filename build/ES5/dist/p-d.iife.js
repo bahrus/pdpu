@@ -302,6 +302,7 @@
           pS = pS.previousElementSibling;
         }
 
+        if (pS === null) pS = this.parentElement;
         return pS;
       }
     }, {

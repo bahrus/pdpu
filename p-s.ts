@@ -1,6 +1,6 @@
-import {PD} from './p-d.js';
+import {PDR} from './p-d-r.js';
 import {define} from 'xtal-latx/define.js';
-export class PS extends PD{
+export class PS extends PDR{
     static get is(){return 'p-s';}
 
     getPreviousSib() : Element | null{

@@ -83,6 +83,7 @@ export abstract class P extends XtallatX(HTMLElement){
         while(pS && pS.tagName.startsWith('P-')){
             pS = pS.previousElementSibling!;
         }
+        if(pS === null) pS = this.parentElement;
         return pS;
     }
     connectedCallback(){
