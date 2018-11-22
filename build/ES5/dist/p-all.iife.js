@@ -266,7 +266,7 @@
     babelHelpers.createClass(PDNavDown, [{
       key: "sibCheck",
       value: function sibCheck(sib, c) {
-        if (sib.__aMO) return;
+        //if ((<any>sib).__aMO) return;
         var attr = sib.getAttribute(p_d_if);
 
         if (attr === null) {
@@ -281,8 +281,7 @@
           var pdnd = new PDNavDown(fec, this.match, this.notify, this.max, null, this.mutDebounce);
           pdnd.root = this.root;
           this.children.push(pdnd);
-          pdnd.init();
-          sib.__aMO = true;
+          pdnd.init(); //(<any>sib).__aMO = true;
         }
       }
     }, {

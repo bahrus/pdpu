@@ -4,7 +4,7 @@ export class PDNavDown extends NavDown {
     children: PDNavDown[] = [];
     root!: Element;
     sibCheck(sib: HTMLElement, c: number) {
-        if ((<any>sib).__aMO) return;
+        //if ((<any>sib).__aMO) return;
         const attr = sib.getAttribute(p_d_if);
         if (attr === null) {
             (<any>sib).__aMO = true;
@@ -19,7 +19,7 @@ export class PDNavDown extends NavDown {
             pdnd.root = this.root;
             this.children.push(pdnd);
             pdnd.init();
-            (<any>sib).__aMO = true;
+            //(<any>sib).__aMO = true;
         }
     }
     getMatches() {
