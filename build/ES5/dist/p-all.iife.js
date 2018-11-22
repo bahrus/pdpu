@@ -408,16 +408,14 @@
     }, {
       key: "attchEvListnrs",
       value: function attchEvListnrs() {
-        var attrFilters = [];
-        var pS = this.getPreviousSib();
-        if (!pS) return;
-
         if (this._bndHndlEv) {
           return;
         } else {
           this._bndHndlEv = this._hndEv.bind(this);
         }
 
+        var pS = this.getPreviousSib();
+        if (!pS) return;
         pS.addEventListener(this._on, this._bndHndlEv);
         var da = pS.getAttribute('disabled');
 
@@ -977,4 +975,33 @@
   }(PDX);
 
   define(PDestal);
+
+  var PS =
+  /*#__PURE__*/
+  function (_PD3) {
+    babelHelpers.inherits(PS, _PD3);
+
+    function PS() {
+      babelHelpers.classCallCheck(this, PS);
+      return babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PS).apply(this, arguments));
+    }
+
+    babelHelpers.createClass(PS, [{
+      key: "getPreviousSib",
+      value: function getPreviousSib() {
+        var parent = this.parentElement;
+        if (!parent) return null; //if(parent.firstChild !== this) return null;
+
+        return parent;
+      }
+    }], [{
+      key: "is",
+      get: function get() {
+        return 'p-s';
+      }
+    }]);
+    return PS;
+  }(PD);
+
+  define(PS);
 })();

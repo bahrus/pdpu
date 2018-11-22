@@ -322,16 +322,14 @@
     }, {
       key: "attchEvListnrs",
       value: function attchEvListnrs() {
-        var attrFilters = [];
-        var pS = this.getPreviousSib();
-        if (!pS) return;
-
         if (this._bndHndlEv) {
           return;
         } else {
           this._bndHndlEv = this._hndEv.bind(this);
         }
 
+        var pS = this.getPreviousSib();
+        if (!pS) return;
         pS.addEventListener(this._on, this._bndHndlEv);
         var da = pS.getAttribute('disabled');
 

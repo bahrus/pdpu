@@ -95,16 +95,13 @@ export abstract class P extends XtallatX(HTMLElement){
         this.doFake();
     };
     attchEvListnrs(){
-        const attrFilters = [];
-        const pS = this.getPreviousSib();
-        if(!pS) return;
-        
         if(this._bndHndlEv){
             return;
         }else{
             this._bndHndlEv = this._hndEv.bind(this);
         }
-
+        const pS = this.getPreviousSib();
+        if(!pS) return;
         pS.addEventListener(this._on, this._bndHndlEv);
         const da = pS.getAttribute('disabled');
         if(da !== null){
