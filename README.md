@@ -286,7 +286,7 @@ I didn't know what to expect when I started on this example, based off this [cod
 ```
 <custom-element-demo>
   <template>
-      <div>
+      <div style="height:750px">
         <xtal-deco><script nomodule>
         ({
             on: {
