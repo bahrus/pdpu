@@ -1,4 +1,4 @@
-[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/bahrus/p-d.p-u)
+[![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/p-d.p-u)
 
 <a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
@@ -83,7 +83,7 @@ Another benefit of making this explicit:  There is likely less overhead from com
 ## Compact notation
 One can't help noticing quite a bit of redundancy in the markup above.  We can reduce this redundancy if we apply some default settings.
 
-1)  If no css specifier is defined, it will pass the property to the next element.
+1)  If no css specifier is defined, it will pass the properties to the next element.
 2)  If no value is specified, it will see if detail.value exists.  If not it will try target.value.  
 
 What we end up with is shown below:
@@ -720,6 +720,7 @@ I didn't know what to expect when I started on this example, based off this [cod
 </custom-element-demo>
 ```
 -->
+
 
 ##  Defining a piping custom element
 
