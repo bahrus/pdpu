@@ -2,7 +2,11 @@
 
 <a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
-<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.86/dist/p-d.iife.min.js?compression=gzip">
+p-d by itself:  <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.89/dist/p-d.iife.min.js?compression=gzip">
+
+p-u by itself:  <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.89/dist/p-u.iife.min.js?compression=gzip">
+
+Together: <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.89/dist/p-d.p-u.iife.min.js?compression=gzip">
 
 # \<p-d\>, \<p-u\>
 
