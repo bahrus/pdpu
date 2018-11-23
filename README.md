@@ -83,7 +83,7 @@ Another benefit of making this explicit:  There is likely less overhead from com
 ## Compact notation
 One can't help noticing quite a bit of redundancy in the markup above.  We can reduce this redundancy if we apply some default settings.
 
-1)  If no css specifier is defined, it will pass the properties to the next element.
+1)  If no css specifier is defined, it will pass the property to the next element.
 2)  If no value is specified, it will see if detail.value exists.  If not it will try target.value.  
 
 What we end up with is shown below:

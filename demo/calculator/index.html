@@ -30,19 +30,20 @@
                         switch(e.target.id){
                             case 'equals':
                                 const oldNum = this.currentNum;
+                                const rhsOperand = parseFloat(oldNum);
                                 this.currentNum = '';
                                 switch(this.lastOp){
                                     case 'plus':
-                                        this.answerNum = this.lhsOperand + parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand + rhsOperand;
                                         break;
                                     case 'times':
-                                        this.answerNum = this.lhsOperand * parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand * rhsOperand;
                                         break;
                                     case 'minus':
-                                        this.answerNum = this.lhsOperand - parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand - rhsOperand;
                                         break;
                                     case 'divided by':
-                                        this.answerNum = this.lhsOperand / parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand / rhsOperand;
                                 }
                                 this.lhsOperand = 0;
                                 break;
