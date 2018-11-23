@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <div style="height:750px;">
+    <div>
         <xtal-deco><script nomodule>
         ({
             on: {
@@ -68,13 +68,13 @@
         })
         </script></xtal-deco>
         <div class="html">
-            <p-d-r on="currentNum-changed" to="#viewer" prop="innerHTML" skip-init m="1"></p-d-r>
-            <p-d-r on="answerNum-changed"  to="#viewer" prop="innerHTML" skip-init m="1"></p-d-r>
-            <div class="body" p-d-if="p-d-r">
+            <p-u on="currentNum-changed" to="viewer" prop="innerHTML" skip-init m="1"></p-u>
+            <p-u on="answerNum-changed"  to="viewer" prop="innerHTML" skip-init m="1"></p-u>
+            <div class="body">
                 <h1>JavaScript Calculator</h1>
                 <p class="warning">Don't divide by zero</p>
     
-                <div id="calculator" class="calculator" p-d-if="p-d-r">
+                <div id="calculator" class="calculator">
     
                     <button id="clear" class="clear">C</button>
                     <div id="viewer" class="viewer">0</div>
@@ -436,7 +436,7 @@
             }
         </style>
         <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-decorator@0.0.31/dist/xtal-decorator.iife.js"></script>
-        <script type="module" src="https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.86/dist/p-all.iife.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.88/dist/p-all.iife.js"></script>
     </div>
 </body>
 </html>

@@ -288,9 +288,9 @@ I didn't know what to expect when I started on this example, based off this [cod
 
 <!--
 ```
-<custom-element-demo>
+<custom-element-demo style="height:750px">
   <template>
-      <div style="height:750px">
+    <div>
         <xtal-deco><script nomodule>
         ({
             on: {
@@ -313,19 +313,20 @@ I didn't know what to expect when I started on this example, based off this [cod
                         switch(e.target.id){
                             case 'equals':
                                 const oldNum = this.currentNum;
+                                const rhsOperand = parseFloat(oldNum);
                                 this.currentNum = '';
                                 switch(this.lastOp){
                                     case 'plus':
-                                        this.answerNum = this.lhsOperand + parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand + rhsOperand;
                                         break;
                                     case 'times':
-                                        this.answerNum = this.lhsOperand * parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand * rhsOperand;
                                         break;
                                     case 'minus':
-                                        this.answerNum = this.lhsOperand - parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand - rhsOperand;
                                         break;
                                     case 'divided by':
-                                        this.answerNum = this.lhsOperand / parseFloat(oldNum);
+                                        this.answerNum = this.lhsOperand / rhsOperand;
                                 }
                                 this.lhsOperand = 0;
                                 break;
@@ -350,13 +351,13 @@ I didn't know what to expect when I started on this example, based off this [cod
         })
         </script></xtal-deco>
         <div class="html">
-            <p-d-r on="currentNum-changed" to="#viewer" prop="innerHTML" skip-init m="1"></p-d-r>
-            <p-d-r on="answerNum-changed"  to="#viewer" prop="innerHTML" skip-init m="1"></p-d-r>
-            <div class="body" p-d-if="p-d-r">
+            <p-u on="currentNum-changed" to="viewer" prop="innerHTML" skip-init m="1"></p-u>
+            <p-u on="answerNum-changed"  to="viewer" prop="innerHTML" skip-init m="1"></p-u>
+            <div class="body">
                 <h1>JavaScript Calculator</h1>
                 <p class="warning">Don't divide by zero</p>
     
-                <div id="calculator" class="calculator" p-d-if="p-d-r">
+                <div id="calculator" class="calculator">
     
                     <button id="clear" class="clear">C</button>
                     <div id="viewer" class="viewer">0</div>
@@ -718,7 +719,7 @@ I didn't know what to expect when I started on this example, based off this [cod
             }
         </style>
         <script type="module" src="https://cdn.jsdelivr.net/npm/xtal-decorator@0.0.31/dist/xtal-decorator.iife.js"></script>
-        <script type="module" src="https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.86/dist/p-all.iife.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.88/dist/p-all.iife.js"></script>
     </div>
   </template>
 </custom-element-demo>
@@ -898,6 +899,8 @@ Sample markup:
 ```
 
 Unlike p-d, p-u doesn't worry about DOM nodes getting created after any passing of data takes place.  If you are using p-u to pass data to previous siblings, or parents of the p-u element,or previous siblings of the parent, etc, then it is quite likely that the DOM element will already have been created, as a natural result of how the browser, and frameworks, typically render DOM.  If, however, you choose to target DOM elements out of this range, it's more of a crapshoot, and do so at your own risk.
+
+Despite its bad code smell, if you look at Example 2 carefully, you will see I couldn't resist using p-u:  It is in fact passing down to some static HTML tag with an id which will surely be present as the HTML is static.  And p-u is on the small side, as you would expect for such simple functionality. 
 
 Another objection to this approach is that there needs to be coordination between  these potentially disparate areas of the DOM, as far as what the agreed ID should be.  This is obviously not a good approach if you are designing a generic component.  Do you really want to tell the person using your component that they need to plop a DOM element with a specific ID, in order to receive the data?  I didn't think you would.  So p-u should probably not be used for this use case (a way of passing information from a generic, reusable component).
 
