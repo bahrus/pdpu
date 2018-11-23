@@ -20,7 +20,7 @@ export class PU extends P {
             targetElement = (<any>self)[cssSel];
         } else {
             const len = cssSel.startsWith('./') ? 0 : split.length;
-            const host = this.getHost(<any>this as HTMLElement, 0, split.length) as HTMLElement;
+            const host = this.getHost(<any>this as HTMLElement, 0, len) as HTMLElement;
             if (host) {
                 if (host.shadowRoot) {
                     targetElement = host.shadowRoot.getElementById(id) as HTMLElement;
@@ -38,7 +38,7 @@ export class PU extends P {
     _host!: HTMLElement
     getHost(el: HTMLElement, level: number, maxLevel: number): HTMLElement | undefined {
         let parent = el as HTMLElement;
-        while (parent = parent.parentElement as HTMLElement) {
+        while (parent = parent.parentNode as HTMLElement) {
             if (parent.nodeType === 11) {
                 const newLevel = level + 1;
                 if (newLevel >= maxLevel) return (<any>parent)['host'];

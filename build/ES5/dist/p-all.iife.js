@@ -857,7 +857,7 @@
           targetElement = self[cssSel];
         } else {
           var len = cssSel.startsWith('./') ? 0 : split.length;
-          var host = this.getHost(this, 0, split.length);
+          var host = this.getHost(this, 0, len);
 
           if (host) {
             if (host.shadowRoot) {
@@ -878,7 +878,7 @@
       value: function getHost(el, level, maxLevel) {
         var parent = el;
 
-        while (parent = parent.parentElement) {
+        while (parent = parent.parentNode) {
           if (parent.nodeType === 11) {
             var newLevel = level + 1;
             if (newLevel >= maxLevel) return parent['host'];
