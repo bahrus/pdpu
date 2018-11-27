@@ -143,7 +143,7 @@ class NavDown {
     sync(c = 0) {
         const isF = typeof this.match === 'function';
         this.matches = [];
-        let ns = this.seed.nextElementSibling;
+        let ns = this._sis ? this.seed : this.seed.nextElementSibling;
         while (ns !== null) {
             if (this.ignore === null || !ns.matches(this.ignore)) {
                 let isG = isF ? this.match(ns) : ns.matches(this.match);

@@ -18,6 +18,7 @@ export class PDNavDown extends NavDown {
             const pdnd = new PDNavDown(fec, this.match, this.notify, this.max, null, this.mutDebounce);
             pdnd.root = this.root;
             this.children.push(pdnd);
+            pdnd._sis = true;
             pdnd.init();
             //(<any>sib).__aMO = true;
         }

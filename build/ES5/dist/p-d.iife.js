@@ -212,7 +212,7 @@
         var c = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
         var isF = typeof this.match === 'function';
         this.matches = [];
-        var ns = this.seed.nextElementSibling;
+        var ns = this._sis ? this.seed : this.seed.nextElementSibling;
 
         while (ns !== null) {
           if (this.ignore === null || !ns.matches(this.ignore)) {
