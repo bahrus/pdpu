@@ -1,7 +1,8 @@
 import { XtallatX } from 'xtal-latx/xtal-latx.js';
 import { define } from 'xtal-latx/define.js';
+import { destruct } from 'xtal-latx/destruct.js';
 export class PDQ {
-    static define(name, fn, adjustClass) {
+    static define(name, fn, adjustClass = null) {
         class newClass extends XtallatX(HTMLElement) {
             constructor() {
                 super();
@@ -59,7 +60,17 @@ export class PDQ {
                     this.setAttribute('value-ish', valueSummary);
             }
         }
-        if (adjustClass) {
+        const p = newClass.prototype;
+        const fnString = fn.toString().trim();
+        if (fnString.startsWith('({')) {
+            const iPos = fnString.indexOf('})', 2);
+            const args = fnString.substring(2, iPos).split(',').map(s => s.trim());
+            //const p = newClass.prototype;
+            args.forEach(arg => {
+                destruct(p, arg, 'input');
+            });
+        }
+        if (adjustClass !== null) {
             if (!adjustClass(newClass))
                 return;
         }

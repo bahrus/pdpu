@@ -22,7 +22,7 @@ Use cases:
 
 These components, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree).  See the section "p-s" for more discussion about this. 
 
-Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.  If no such previous element is found, it tries latching on the event to the parent element.
+Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 
 When this event monitoring is enabled, if the previous element is disabled, the disabled attribute is removed (more on that later).
 
@@ -123,9 +123,9 @@ To keep performance optimal and scalable, the p-d element only tests downstream 
 
 ```html   
     <text-box></text-box>                                                               
-    <p-d-r id="myPassDownTag" on="input" to="url-builder" prop="input"></p-d-r>
+    <p-d-r on="input" to="url-builder" prop="input"></p-d-r>
     <h3>Search Employees</h3>
-    <div p-d-if="#myPassDownTag">
+    <div p-d-if="p-d-r">
         <url-builder></url-builder>
         <my-filter></my-filter>
     </div>
@@ -912,6 +912,7 @@ For that we have:
 <p-unt on="click" dispatch to="myEventName" detail-prop="toggledNode" val="target.node" composed bubbles></p-unt>
 ```
 
+Another way you can make data "cycle" is by placing a p-* element at the beginning -- if no previous non p-* elements are found, the event handler is attached to the parent.
 
 ## Deluxe version [partially untested]
 
@@ -1003,6 +1004,8 @@ For that we have p-s, which stands for "pass sideways".  It relies a little on t
     <div></div>
 </div>
 ```
+
+
 
 
 

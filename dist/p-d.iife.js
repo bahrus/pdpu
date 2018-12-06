@@ -1,7 +1,11 @@
 
     //@ts-check
     (function () {
-    function define(custEl) {
+    const t = ({alpha, beta, gamma}) => {
+    console.warn(alpha + beta + gamma);
+}
+t({alpha: 1, beta: 2, gamma: 3});
+function define(custEl) {
     let tagName = custEl.is;
     if (customElements.get(tagName)) {
         console.warn('Already registered ' + tagName);
