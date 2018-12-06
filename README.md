@@ -750,7 +750,17 @@ This will create a custom element with name "my-pipeline-action".  It applies th
 
 As with all custom element definitions, some care should be taken to ensure that the custom element names are unique.  This could be challenging if generating lots of small custom elements, like shown above, to be used in a large application, especially if that large application combines somewhat loosely coupled content from different teams, who also generate many custom elements.  Hopefully, the "Scoped Custom Element Registries" will help make this issue disappear in the future.
 
-[TODO] Support multiple parameters like [aggregator-fn](https://www.webcomponents.org/element/aggregator-fn).
+PDQ also supports multiple parameters:
+
+```html
+    <script type="module">
+        import {PDQ} from '../PDQ.js';
+        PDQ.define('a-b', ({alpha, beta, gamma}) =>{
+            return alpha + beta + gamma;
+        })
+    </script>
+    <a-b></a-b>
+```
 
 ## Location, Location, Location
 
@@ -909,7 +919,7 @@ For that we have:
 ## Punting [Untested]
 
 ```html
-<p-unt on="click" dispatch to="myEventName" detail-prop="toggledNode" val="target.node" composed bubbles></p-unt>
+<p-unt on="click" dispatch to="myEventName" prop="toggledNode" val="target.node" composed bubbles></p-unt>
 ```
 
 Another way you can make data "cycle" is by placing a p-* element at the beginning -- if no previous non p-* elements are found, the event handler is attached to the parent.

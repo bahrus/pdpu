@@ -87,7 +87,7 @@ function XtallatX(superClass) {
          * @param detail Information to be passed with the event
          * @param asIs If true, don't append event name with '-changed'
          */
-        de(name, detail, asIs) {
+        de(name, detail, asIs = false) {
             const eventName = name + (asIs ? '' : '-changed');
             const newEvent = new CustomEvent(eventName, {
                 detail: detail,
@@ -114,7 +114,7 @@ function XtallatX(superClass) {
     };
 }
 class PDQ {
-    static define(name, fn, adjustClass) {
+    static define(name, fn, adjustClass = null) {
         class newClass extends XtallatX(HTMLElement) {
             constructor() {
                 super();
@@ -172,7 +172,17 @@ class PDQ {
                     this.setAttribute('value-ish', valueSummary);
             }
         }
-        if (adjustClass) {
+        const p = newClass.prototype;
+        const fnString = fn.toString().trim();
+        if (fnString.startsWith('({')) {
+            const iPos = fnString.indexOf('})', 2);
+            const args = fnString.substring(2, iPos).split(',').map(s => s.trim());
+            //const p = newClass.prototype;
+            args.forEach(arg => {
+                destruct(p, arg, 'input');
+            });
+        }
+        if (adjustClass !== null) {
             if (!adjustClass(newClass))
                 return;
         }
