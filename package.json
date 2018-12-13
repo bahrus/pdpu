@@ -1,6 +1,6 @@
 {
   "name": "p-d.p-u",
-  "version": "0.0.93",
+  "version": "0.0.94",
   "description": "Wire DOM and custom elements together",
   "repository": "https://github.com/bahrus/pdpu",
   "author": "bahrus <anderson.bruce.b@gmail.com>",
