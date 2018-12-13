@@ -9,5 +9,7 @@
         ".ts",
         ".html",
         ".scss"
-    ]
+    ],
+    "html.experimental.custom.attributes": ["./web-component-attributes.json"],
+    "html.experimental.custom.tags": ["./web-components.json"]
 }
