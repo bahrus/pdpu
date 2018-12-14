@@ -13,7 +13,7 @@ Together: <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u
 <custom-element-demo>
 <template>
     <div>
-        <wc-info href="https://unpkg.com/p-d.p-u@0.0.94/web-components.json"></wc-info>
+        <wc-info package-name="npm install p-d.p-u" href="https://unpkg.com/p-d.p-u@0.0.96/web-components.json"></wc-info>
         <script type="module" src="https://unpkg.com/wc-info@0.0.13/wc-info.js?module"></script>
     </div>
 </template>
