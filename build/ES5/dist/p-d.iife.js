@@ -1,5 +1,18 @@
 //@ts-check
 (function () {
+  var t = function t(_ref) {
+    var alpha = _ref.alpha,
+        beta = _ref.beta,
+        gamma = _ref.gamma;
+    console.warn(alpha + beta + gamma);
+  };
+
+  t({
+    alpha: 1,
+    beta: 2,
+    gamma: 3
+  });
+
   function define(custEl) {
     var tagName = custEl.is;
 
@@ -108,7 +121,8 @@
 
         }, {
           key: "de",
-          value: function de(name, detail, asIs) {
+          value: function de(name, detail) {
+            var asIs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
             var eventName = name + (asIs ? '' : '-changed');
             var newEvent = new CustomEvent(eventName, {
               detail: detail,

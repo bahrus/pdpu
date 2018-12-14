@@ -108,7 +108,8 @@
 
         }, {
           key: "de",
-          value: function de(name, detail, asIs) {
+          value: function de(name, detail) {
+            var asIs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
             var eventName = name + (asIs ? '' : '-changed');
             var newEvent = new CustomEvent(eventName, {
               detail: detail,
@@ -171,7 +172,9 @@
 
     babelHelpers.createClass(PDQ, null, [{
       key: "define",
-      value: function define(name, fn, adjustClass) {
+      value: function define(name, fn) {
+        var adjustClass = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
         var newClass =
         /*#__PURE__*/
         function (_XtallatX) {
@@ -257,7 +260,21 @@
           return newClass;
         }(XtallatX(HTMLElement));
 
-        if (adjustClass) {
+        var p = newClass.prototype;
+        var fnString = fn.toString().trim();
+
+        if (fnString.startsWith('({')) {
+          var iPos = fnString.indexOf('})', 2);
+          var args = fnString.substring(2, iPos).split(',').map(function (s) {
+            return s.trim();
+          }); //const p = newClass.prototype;
+
+          args.forEach(function (arg) {
+            destruct(p, arg, 'input');
+          });
+        }
+
+        if (adjustClass !== null) {
           if (!adjustClass(newClass)) return;
         }
 
