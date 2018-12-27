@@ -11,21 +11,6 @@
     customElements.define(tagName, custEl);
   }
 
-  var debounce = function debounce(fn, time) {
-    var timeout;
-    return function () {
-      var _this = this,
-          _arguments = arguments;
-
-      var functionCall = function functionCall() {
-        return fn.apply(_this, _arguments);
-      };
-
-      clearTimeout(timeout);
-      timeout = setTimeout(functionCall, time);
-    };
-  };
-
   var disabled = 'disabled';
   /**
    * Base class for many xtal- components
@@ -39,12 +24,12 @@
         babelHelpers.inherits(_class, _superClass);
 
         function _class() {
-          var _this2;
+          var _this;
 
           babelHelpers.classCallCheck(this, _class);
-          _this2 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(_class).apply(this, arguments));
-          _this2._evCount = {};
-          return _this2;
+          _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(_class).apply(this, arguments));
+          _this._evCount = {};
+          return _this;
         }
 
         babelHelpers.createClass(_class, [{
@@ -128,13 +113,13 @@
         }, {
           key: "_upgradeProperties",
           value: function _upgradeProperties(props) {
-            var _this3 = this;
+            var _this2 = this;
 
             props.forEach(function (prop) {
-              if (_this3.hasOwnProperty(prop)) {
-                var value = _this3[prop];
-                delete _this3[prop];
-                _this3[prop] = value;
+              if (_this2.hasOwnProperty(prop)) {
+                var value = _this2[prop];
+                delete _this2[prop];
+                _this2[prop] = value;
               }
             });
           }
@@ -166,6 +151,7 @@
   var NavDown =
   /*#__PURE__*/
   function () {
+    //_debouncer!: any;
     function NavDown(seed, match, notify, max) {
       var ignore = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
       var mutDebounce = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 50;
@@ -182,23 +168,21 @@
     babelHelpers.createClass(NavDown, [{
       key: "init",
       value: function init() {
-        var _this4 = this;
-
-        this._debouncer = debounce(function () {
-          _this4.sync();
-        }, this.mutDebounce);
+        // this._debouncer = debounce(() =>{
+        //     this.sync();
+        // }, this.mutDebounce);
         this.sync();
         this.addMutObs(this.seed.parentElement);
       }
     }, {
       key: "addMutObs",
       value: function addMutObs(elToObs) {
-        var _this5 = this;
+        var _this3 = this;
 
         if (elToObs === null) return;
         var nodes = [];
         this._mutObs = new MutationObserver(function (m) {
-          _this5._inMutLoop = true;
+          _this3._inMutLoop = true;
           m.forEach(function (mr) {
             mr.addedNodes.forEach(function (node) {
               if (node.nodeType === 1) {
@@ -211,9 +195,10 @@
           nodes.forEach(function (node) {
             return delete node.dataset.__pdWIP;
           });
-          _this5._inMutLoop = false;
 
-          _this5._debouncer(true);
+          _this3.sync();
+
+          _this3._inMutLoop = false; //this._debouncer(true);
         });
 
         this._mutObs.observe(elToObs, {
@@ -273,12 +258,12 @@
     babelHelpers.inherits(PDNavDown, _NavDown);
 
     function PDNavDown() {
-      var _this6;
+      var _this4;
 
       babelHelpers.classCallCheck(this, PDNavDown);
-      _this6 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDNavDown).apply(this, arguments));
-      _this6.children = [];
-      return _this6;
+      _this4 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDNavDown).apply(this, arguments));
+      _this4.children = [];
+      return _this4;
     }
 
     babelHelpers.createClass(PDNavDown, [{
@@ -364,12 +349,12 @@
     babelHelpers.inherits(P, _XtallatX);
 
     function P() {
-      var _this7;
+      var _this5;
 
       babelHelpers.classCallCheck(this, P);
-      _this7 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
-      _this7._lastEvent = null;
-      return _this7;
+      _this5 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
+      _this5._lastEvent = null;
+      return _this5;
     }
 
     babelHelpers.createClass(P, [{
@@ -612,15 +597,15 @@
     babelHelpers.inherits(PD, _P);
 
     function PD() {
-      var _this8;
+      var _this6;
 
       babelHelpers.classCallCheck(this, PD);
-      _this8 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
-      _this8._pdNavDown = null; //_hasMax!: boolean;
+      _this6 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PD).apply(this, arguments));
+      _this6._pdNavDown = null; //_hasMax!: boolean;
 
-      _this8._m = Infinity;
-      _this8._iIP = false;
-      return _this8;
+      _this6._m = Infinity;
+      _this6._iIP = false;
+      return _this6;
     }
 
     babelHelpers.createClass(PD, [{
@@ -641,7 +626,7 @@
     }, {
       key: "applyProps",
       value: function applyProps(pd) {
-        var _this9 = this;
+        var _this7 = this;
 
         //if(this._iIP && this.skI()) return;
         if (this._iIP) return 0;
@@ -652,7 +637,7 @@
             if (el.dataset.__pdWIP !== '1') return;
           }
 
-          _this9.setVal(_this9._lastEvent, el);
+          _this7.setVal(_this7._lastEvent, el);
         });
         return matches.length;
       }
@@ -794,7 +779,7 @@
     }, {
       key: "attchEvListnrs",
       value: function attchEvListnrs() {
-        var _this10 = this;
+        var _this8 = this;
 
         if (this._on[0] !== '[') {
           babelHelpers.get(babelHelpers.getPrototypeOf(PDX.prototype), "attchEvListnrs", this).call(this);
@@ -823,7 +808,7 @@
             target: prevSibling
           };
 
-          _this10._hndEv(fakeEvent);
+          _this8._hndEv(fakeEvent);
         });
 
         this._attributeObserver.observe(prevSibling, config);
@@ -933,12 +918,12 @@
     babelHelpers.inherits(PDestal, _PDX);
 
     function PDestal() {
-      var _this11;
+      var _this9;
 
       babelHelpers.classCallCheck(this, PDestal);
-      _this11 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
-      _this11._previousValues = {};
-      return _this11;
+      _this9 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(PDestal).apply(this, arguments));
+      _this9._previousValues = {};
+      return _this9;
     }
 
     babelHelpers.createClass(PDestal, [{
@@ -960,7 +945,7 @@
     }, {
       key: "doFakeEvent",
       value: function doFakeEvent() {
-        var _this12 = this;
+        var _this10 = this;
 
         var split = this._on.split(',');
 
@@ -970,11 +955,11 @@
           var trimmedParam = param.substr(1, param.length - 2);
           var searchParm = searchParams.get(trimmedParam);
 
-          if (!changedVal && searchParm !== _this12._previousValues[trimmedParam]) {
+          if (!changedVal && searchParm !== _this10._previousValues[trimmedParam]) {
             changedVal = true;
           }
 
-          _this12._previousValues[trimmedParam] = searchParm;
+          _this10._previousValues[trimmedParam] = searchParm;
         });
 
         if (changedVal) {
@@ -988,10 +973,10 @@
     }, {
       key: "watchLocation",
       value: function watchLocation() {
-        var _this13 = this;
+        var _this11 = this;
 
         window.addEventListener('popstate', function (e) {
-          _this13.doFakeEvent();
+          _this11.doFakeEvent();
         });
         this.doFakeEvent();
       }

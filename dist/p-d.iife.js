@@ -13,14 +13,6 @@ function define(custEl) {
     }
     customElements.define(tagName, custEl);
 }
-const debounce = (fn, time) => {
-    let timeout;
-    return function () {
-        const functionCall = () => fn.apply(this, arguments);
-        clearTimeout(timeout);
-        timeout = setTimeout(functionCall, time);
-    };
-};
 const disabled = 'disabled';
 /**
  * Base class for many xtal- components
@@ -118,6 +110,7 @@ function XtallatX(superClass) {
     };
 }
 class NavDown {
+    //_debouncer!: any;
     constructor(seed, match, notify, max, ignore = null, mutDebounce = 50) {
         this.seed = seed;
         this.match = match;
@@ -129,9 +122,9 @@ class NavDown {
         //this.init();
     }
     init() {
-        this._debouncer = debounce(() => {
-            this.sync();
-        }, this.mutDebounce);
+        // this._debouncer = debounce(() =>{
+        //     this.sync();
+        // }, this.mutDebounce);
         this.sync();
         this.addMutObs(this.seed.parentElement);
     }
@@ -151,8 +144,9 @@ class NavDown {
                 });
             });
             nodes.forEach(node => delete node.dataset.__pdWIP);
+            this.sync();
             this._inMutLoop = false;
-            this._debouncer(true);
+            //this._debouncer(true);
         });
         this._mutObs.observe(elToObs, { childList: true });
         // (<any>elToObs)._addedMutObs = true;
