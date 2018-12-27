@@ -53,6 +53,10 @@ function (_P) {
       var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
       matches.forEach(function (el) {
+        if (pd._inMutLoop) {
+          if (el.dataset.__pdWIP !== '1') return;
+        }
+
         _this2.setVal(_this2._lastEvent, el);
       });
       return matches.length;

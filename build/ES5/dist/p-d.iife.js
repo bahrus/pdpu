@@ -188,7 +188,8 @@
       this.notify = notify;
       this.max = max;
       this.ignore = ignore;
-      this.mutDebounce = mutDebounce; //this.init();
+      this.mutDebounce = mutDebounce;
+      this._inMutLoop = false; //this.init();
     }
 
     babelHelpers.createClass(NavDown, [{
@@ -208,7 +209,23 @@
         var _this5 = this;
 
         if (elToObs === null) return;
+        var nodes = [];
         this._mutObs = new MutationObserver(function (m) {
+          _this5._inMutLoop = true;
+          m.forEach(function (mr) {
+            mr.addedNodes.forEach(function (node) {
+              if (node.nodeType === 1) {
+                var el = node;
+                el.dataset.__pdWIP = '1';
+                nodes.push(el);
+              }
+            });
+          });
+          nodes.forEach(function (node) {
+            return delete node.dataset.__pdWIP;
+          });
+          _this5._inMutLoop = false;
+
           _this5._debouncer(true);
         });
 
@@ -558,6 +575,10 @@
         var matches = this.getMatches(pd); //const matches = pd.getMatches();
 
         matches.forEach(function (el) {
+          if (pd._inMutLoop) {
+            if (el.dataset.__pdWIP !== '1') return;
+          }
+
           _this8.setVal(_this8._lastEvent, el);
         });
         return matches.length;

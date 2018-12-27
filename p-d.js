@@ -45,6 +45,10 @@ export class PD extends P {
             return 0;
         const matches = this.getMatches(pd); //const matches = pd.getMatches();
         matches.forEach(el => {
+            if (pd._inMutLoop) {
+                if (el.dataset.__pdWIP !== '1')
+                    return;
+            }
             this.setVal(this._lastEvent, el);
         });
         return matches.length;

@@ -8,12 +8,12 @@
   "main": "p-d.js",
   "module": "p-d.js",
   "dependencies": {
-    "xtal-latx": "0.0.85"
+    "xtal-latx": "0.0.87"
   },
   "devDependencies": {
-    "@types/node": "^10.9.1",
-    "@types/tape": "4.2.32",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "@types/node": "10.12.18",
+    "@types/tape": "4.2.33",
+    "@webcomponents/webcomponentsjs": "2.2.1",
     "jiife": "0.0.10",
     "tape": "4.9.1",
     "xtal-test": "0.0.10"
