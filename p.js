@@ -184,4 +184,3 @@ export class P extends XtallatX(HTMLElement) {
             this.detach(pS);
     }
 }
-//# sourceMappingURL=p.js.map

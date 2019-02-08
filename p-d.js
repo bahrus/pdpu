@@ -59,8 +59,6 @@ export class PD extends P {
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
                 }
-                else {
-                }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -88,4 +86,3 @@ export class PD extends P {
     }
 }
 define(PD);
-//# sourceMappingURL=p-d.js.map

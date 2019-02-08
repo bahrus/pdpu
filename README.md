@@ -2,19 +2,15 @@
 
 <a href="https://nodei.co/npm/p-d.p-u/"><img src="https://nodei.co/npm/p-d.p-u.png"></a>
 
-p-d by itself:  <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.99/dist/p-d.iife.min.js?compression=gzip">
-
-p-u by itself:  <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.99/dist/p-u.iife.min.js?compression=gzip">
-
-Together: <img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/p-d.p-u@0.0.99/dist/p-d.p-u.iife.min.js?compression=gzip">
+<img src="https://badgen.net/bundlephobia/minzip/p-d.p-u">
 
 <!--
 ```
 <custom-element-demo>
 <template>
     <div>
-        <wc-info package-name="npm install p-d.p-u" href="https://unpkg.com/p-d.p-u@0.0.96/web-components.json"></wc-info>
-        <script type="module" src="https://unpkg.com/wc-info@0.0.13/wc-info.js?module"></script>
+        <wc-info package-name="npm install p-d.p-u" href="https://unpkg.com/p-d.p-u@0.0.101/html.json"></wc-info>
+        <script type="module" src="https://unpkg.com/wc-info@0.0.26/wc-info.js?module"></script>
     </div>
 </template>
 </custom-element-demo>
@@ -33,7 +29,7 @@ Use cases:
 1.  If you just need to connect some elements of a mostly static or server-rendered web site, these components provide a light weight way of doing that.
 2.  These components allow you to keep code-centric **builds** at bay as much as possible.  Why is this important?  Because browsers can process HTML signicantly faster than JS.  That doesn't mean you have to edit HTML files.  Theoretically, you could edit in JavaScript and benefit from the tooling (type checks, etc), but compile to HTML for optimum performance. 
 
-These components, emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree).  See the section "p-s" for more discussion about this. 
+These components emphasize simplicity and small size -- to be used for 30,000 ft. above the ground component gluing.  Think connecting a TV to a Roku, rather than connecting tightly coupled micro chips together.  Having said that, these components seem to perform adequately in [at least one scenario of a virtual list.](https://www.webcomponents.org/element/xtal-tree).  See the section "p-s" for more discussion about this. 
 
 Both p-d and p-u have an attribute/property, "on" that specifies an event to monitor for.  They both attach an event listener for the specified event to the previous (non p-*) element.
 

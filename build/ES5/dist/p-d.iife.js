@@ -1,18 +1,5 @@
 //@ts-check
 (function () {
-  var t = function t(_ref) {
-    var alpha = _ref.alpha,
-        beta = _ref.beta,
-        gamma = _ref.gamma;
-    console.warn(alpha + beta + gamma);
-  };
-
-  t({
-    alpha: 1,
-    beta: 2,
-    gamma: 3
-  });
-
   function define(custEl) {
     var tagName = custEl.is;
 
@@ -575,7 +562,7 @@
           case m:
             if (newVal !== null) {
               this._m = parseInt(newVal);
-            } else {}
+            }
 
         }
 

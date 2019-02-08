@@ -648,7 +648,7 @@
           case m:
             if (newVal !== null) {
               this._m = parseInt(newVal);
-            } else {}
+            }
 
         }
 

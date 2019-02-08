@@ -81,4 +81,3 @@ export class PDQ {
     }
 }
 customElements['PDQ'] = PDQ; // for ES6 Module challenged browsers.
-//# sourceMappingURL=PDQ.js.map

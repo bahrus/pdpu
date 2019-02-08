@@ -1,11 +1,7 @@
 
     //@ts-check
     (function () {
-    const t = ({alpha, beta, gamma}) => {
-    console.warn(alpha + beta + gamma);
-}
-t({alpha: 1, beta: 2, gamma: 3});
-function define(custEl) {
+    function define(custEl) {
     let tagName = custEl.is;
     if (customElements.get(tagName)) {
         console.warn('Already registered ' + tagName);
@@ -363,6 +359,7 @@ class P extends XtallatX(HTMLElement) {
             this.detach(pS);
     }
 }
+
 const m = 'm';
 /**
  * `p-d`
@@ -421,8 +418,6 @@ class PD extends P {
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
                 }
-                else {
-                }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -450,5 +445,6 @@ class PD extends P {
     }
 }
 define(PD);
+
     })();  
         

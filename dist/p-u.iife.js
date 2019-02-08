@@ -290,6 +290,7 @@ class P extends XtallatX(HTMLElement) {
             this.detach(pS);
     }
 }
+
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -346,5 +347,6 @@ class PU extends P {
     }
 }
 define(PU);
+
     })();  
         

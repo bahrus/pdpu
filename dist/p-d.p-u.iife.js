@@ -207,6 +207,7 @@ class PDNavDown extends NavDown {
         return ret;
     }
 }
+
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';
@@ -392,6 +393,7 @@ class P extends XtallatX(HTMLElement) {
             this.detach(pS);
     }
 }
+
 const m = 'm';
 /**
  * `p-d`
@@ -450,8 +452,6 @@ class PD extends P {
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
                 }
-                else {
-                }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -479,6 +479,7 @@ class PD extends P {
     }
 }
 define(PD);
+
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -535,5 +536,6 @@ class PU extends P {
     }
 }
 define(PU);
+
     })();  
         

@@ -68,7 +68,7 @@ function (_P) {
         case m:
           if (newVal !== null) {
             this._m = parseInt(newVal);
-          } else {}
+          }
 
       }
 
@@ -124,4 +124,4 @@ function (_P) {
   }]);
   return PD;
 }(P);
-define(PD); //# sourceMappingURL=p-d.js.map
+define(PD);

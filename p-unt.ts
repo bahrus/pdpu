@@ -1,4 +1,4 @@
-import { P, ICssPropMap } from './p.js';
+import { P} from './p.js';
 import {define} from 'xtal-latx/define.js';
 
 const bubbles = 'bubbles';

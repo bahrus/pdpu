@@ -48,4 +48,3 @@ export class PDestal extends PDX {
     }
 }
 define(PDestal);
-//# sourceMappingURL=p-destal.js.map

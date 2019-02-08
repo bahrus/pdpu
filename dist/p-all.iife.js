@@ -207,6 +207,7 @@ class PDNavDown extends NavDown {
         return ret;
     }
 }
+
 function createNestedProp(target, pathTokens, val, clone) {
     const firstToken = pathTokens.shift();
     const tft = target[firstToken];
@@ -425,6 +426,7 @@ class P extends XtallatX(HTMLElement) {
             this.detach(pS);
     }
 }
+
 const m = 'm';
 /**
  * `p-d`
@@ -483,8 +485,6 @@ class PD extends P {
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
                 }
-                else {
-                }
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -512,6 +512,7 @@ class PD extends P {
     }
 }
 define(PD);
+
 class PDR extends PD {
     static get is() {
         return 'p-d-r';
@@ -527,6 +528,7 @@ class PDR extends PD {
     }
 }
 define(PDR);
+
 //import { ICssPropMap } from './p.js';
 //const attrib_filter = 'attrib-filter';
 class PDX extends PD {
@@ -590,6 +592,7 @@ class PDX extends PD {
     }
 }
 define(PDX);
+
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere
@@ -646,6 +649,7 @@ class PU extends P {
     }
 }
 define(PU);
+
 class PDestal extends PDX {
     constructor() {
         super(...arguments);
@@ -694,6 +698,7 @@ class PDestal extends PDX {
     }
 }
 define(PDestal);
+
 class PS extends PDR {
     static get is() { return 'p-s'; }
     getPreviousSib() {
@@ -705,5 +710,6 @@ class PS extends PDR {
     }
 }
 define(PS);
+
     })();  
         

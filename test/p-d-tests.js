@@ -15,4 +15,3 @@ async function customTests(page) {
         path: 'demo/dev.html'
     }, customTests);
 })();
-//# sourceMappingURL=p-d-tests.js.map

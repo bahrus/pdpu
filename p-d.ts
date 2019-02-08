@@ -53,12 +53,10 @@ export class PD extends P {
     }
     attributeChangedCallback(name: string, oldVal: string, newVal: string) {
         switch (name) {
-
             case m:
                 if (newVal !== null) {
                     this._m = parseInt(newVal);
-                } else {
-                }
+                } 
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
