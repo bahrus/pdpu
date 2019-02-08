@@ -1,193 +1,193 @@
 {
     "tags": [
         {
-            "label": "p-d",
+            "name": "p-d",
             "description": "Pass down information from previous (non p-*) element to downstream siblings when events fire.",
             "attributes": [
                 {
-                    "label": "on",
+                    "name": "on",
                     "description": "The event name to monitor for, from previous non p-* element."
                 },
                 {
-                    "label": "to",
+                    "name": "to",
                     "description": "css pattern to match for from downstream siblings."
                 },
                 {
-                    "label": "prop",
+                    "name": "prop",
                     "description": "Name of property to set on matching downstream siblings."
                 },
                 {
-                    "label": "val",
+                    "name": "val",
                     "description": "Specifies path to JS object from event, that should be passed to downstream siblings.  Value of '.' passes entire entire object."
                 },
                 {
-                    "label": "skip-init",
+                    "name": "skip-init",
                     "description": "Don't fire initial 'fake event' in order to sync up downstream siblings."
                 },
                 {
-                    "label": "noblock",
+                    "name": "noblock",
                     "description": "Don't block event propagation."
                 },
                 {
-                    "label": "m",
+                    "name": "m",
                     "description": "Maximum number of matching elements expected to be found."
                 }
             ]
         },
         {
-            "label": "p-u",
+            "name": "p-u",
             "description": "Pass information to an element specified by id within a specific Shadow DOM realm",
             "attributes": [
                 {
-                    "label": "to",
+                    "name": "to",
                     "description": "id of element to pass event info to."
                 },
                 {
-                    "label": "prop",
+                    "name": "prop",
                     "description": "Name of property to set on matching downstream siblings."
                 },
                 {
-                    "label": "val",
+                    "name": "val",
                     "description": "Specifies path to JS object from event, that should be passed to downstream siblings.  Value of '.' passes entire entire object."
                 },
                 {
-                    "label": "skip-init",
+                    "name": "skip-init",
                     "description": "Don't fire initial 'fake event' in order to sync up downstream siblings."
                 },
                 {
-                    "label": "noblock",
+                    "name": "noblock",
                     "description": "Don't block event propagation."
                 }
             ]
         },{
-            "label":"p-d-r",
+            "name":"p-d-r",
             "description":"Extension of p-d, that passes down into children recursively, based on p-d-if attribute.",
             "attributes": [
                 {
-                    "label": "on",
+                    "name": "on",
                     "description": "The event name to monitor for, from previous non p-* element."
                 },
                 {
-                    "label": "to",
+                    "name": "to",
                     "description": "css pattern to match for from downstream siblings."
                 },
                 {
-                    "label": "prop",
+                    "name": "prop",
                     "description": "Name of property to set on matching downstream siblings."
                 },
                 {
-                    "label": "val",
+                    "name": "val",
                     "description": "Specifies path to JS object from event, that should be passed to downstream siblings.  Value of '.' passes entire entire object."
                 },
                 {
-                    "label": "skip-init",
+                    "name": "skip-init",
                     "description": "Don't fire initial 'fake event' in order to sync up downstream siblings."
                 },
                 {
-                    "label": "noblock",
+                    "name": "noblock",
                     "description": "Don't block event propagation."
                 },
                 {
-                    "label": "m",
+                    "name": "m",
                     "description": "Maximum number of matching elements expected to be found."
                 }
             ]            
         },{
-            "label":"p-d-x",
+            "name":"p-d-x",
             "description":"Extension of p-d with less used features including nested property setting.",
             "attributes": [
                 {
-                    "label": "on",
+                    "name": "on",
                     "description": "The event name to monitor for, from previous non p-* element."
                 },
                 {
-                    "label": "to",
+                    "name": "to",
                     "description": "css pattern to match for from downstream siblings."
                 },
                 {
-                    "label": "prop",
+                    "name": "prop",
                     "description": "Name of property to set on matching downstream siblings."
                 },
                 {
-                    "label": "val",
+                    "name": "val",
                     "description": "Specifies path to JS object from event, that should be passed to downstream siblings.  Value of '.' passes entire entire object."
                 },
                 {
-                    "label": "skip-init",
+                    "name": "skip-init",
                     "description": "Don't fire initial 'fake event' in order to sync up downstream siblings."
                 },
                 {
-                    "label": "noblock",
+                    "name": "noblock",
                     "description": "Don't block event propagation."
                 },
                 {
-                    "label": "m",
+                    "name": "m",
                     "description": "Maximum number of matching elements expected to be found."
                 }
             ]            
         },{
-            "label":"p-d-s",
+            "name":"p-d-s",
             "description":"Extension of p-d-r that can pass 'sideways'.",
             "attributes": [
                 {
-                    "label": "on",
+                    "name": "on",
                     "description": "The event name to monitor for, from previous non p-* element."
                 },
                 {
-                    "label": "to",
+                    "name": "to",
                     "description": "css pattern to match for from downstream siblings."
                 },
                 {
-                    "label": "prop",
+                    "name": "prop",
                     "description": "Name of property to set on matching downstream siblings."
                 },
                 {
-                    "label": "val",
+                    "name": "val",
                     "description": "Specifies path to JS object from event, that should be passed to downstream siblings.  Value of '.' passes entire entire object."
                 },
                 {
-                    "label": "skip-init",
+                    "name": "skip-init",
                     "description": "Don't fire initial 'fake event' in order to sync up downstream siblings."
                 },
                 {
-                    "label": "noblock",
+                    "name": "noblock",
                     "description": "Don't block event propagation."
                 },
                 {
-                    "label": "m",
+                    "name": "m",
                     "description": "Maximum number of matching elements expected to be found."
                 }
             ]
         },{
-            "label": "p-destal",
+            "name": "p-destal",
             "description": "Extension of p-d-x than can latch onto containing host element or address bar, so a web component can also serve as a standalone page.",
             "attributes": [
                 {
-                    "label": "on",
+                    "name": "on",
                     "description": "The event name to monitor for, from previous non p-* element."
                 },
                 {
-                    "label": "to",
+                    "name": "to",
                     "description": "css pattern to match for from downstream siblings."
                 },
                 {
-                    "label": "prop",
+                    "name": "prop",
                     "description": "Name of property to set on matching downstream siblings."
                 },
                 {
-                    "label": "val",
+                    "name": "val",
                     "description": "Specifies path to JS object from event, that should be passed to downstream siblings.  Value of '.' passes entire entire object."
                 },
                 {
-                    "label": "skip-init",
+                    "name": "skip-init",
                     "description": "Don't fire initial 'fake event' in order to sync up downstream siblings."
                 },
                 {
-                    "label": "noblock",
+                    "name": "noblock",
                     "description": "Don't block event propagation."
                 },
                 {
-                    "label": "m",
+                    "name": "m",
                     "description": "Maximum number of matching elements expected to be found."
                 }
             ]

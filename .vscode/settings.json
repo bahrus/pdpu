@@ -4,12 +4,15 @@
         "**/*.js": {"when": "$(basename).ts"},
         "**/*.js.map" : true
     },
-    "switcher.findSuffixOrder": [
-        ".js",
-        ".ts",
-        ".html",
-        ".scss"
+    "json.schemas": [
+        {
+            "fileMatch": ["/html.json"],
+            "url": "https://raw.githubusercontent.com/Microsoft/vscode-html-languageservice/master/docs/customData.schema.json"
+        },
+        {
+            "fileMatch": ["/css.json"],
+            "url": "https://raw.githubusercontent.com/Microsoft/vscode-css-languageservice/master/docs/customData.schema.json"
+        }
     ],
-    "html.experimental.custom.attributes": ["./web-component-attributes.json"],
-    "html.experimental.custom.tags": ["./web-components.json"]
+    "html.experimental.customData": ["./html.json"],
 }
