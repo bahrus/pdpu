@@ -506,10 +506,7 @@
     }, {
       key: "getProp",
       value: function getProp(val, pathTokens) {
-        var context = val; //let firstToken = true;
-        //const cp = 'composedPath';
-        //const cp_ = cp + '_';
-
+        var context = val;
         pathTokens.forEach(function (token) {
           if (context) {
             switch (babelHelpers.typeof(token)) {
@@ -518,7 +515,7 @@
                 break;
 
               default:
-                context[token[0]].apply(context, token[1]);
+                context = context[token[0]].apply(context, token[1]);
             }
           }
         });

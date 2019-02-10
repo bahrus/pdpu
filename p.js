@@ -168,9 +168,6 @@ export class P extends XtallatX(HTMLElement) {
     // }
     getProp(val, pathTokens) {
         let context = val;
-        //let firstToken = true;
-        //const cp = 'composedPath';
-        //const cp_ = cp + '_';
         pathTokens.forEach(token => {
             if (context) {
                 switch (typeof token) {
@@ -178,7 +175,7 @@ export class P extends XtallatX(HTMLElement) {
                         context = context[token];
                         break;
                     default:
-                        context[token[0]].apply(context, token[1]);
+                        context = context[token[0]].apply(context, token[1]);
                 }
             }
         });
