@@ -57,7 +57,7 @@ export abstract class P extends XtallatX(HTMLElement){
     static get observedAttributes(){
         return super.observedAttributes.concat([on, to, noblock, iff, prop, val]);
     }
-
+    _s: (string | [string, string[]])[] | null = null;
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         const f = '_' + name;
         switch(name){
@@ -71,7 +71,16 @@ export abstract class P extends XtallatX(HTMLElement){
             case noblock:
                 (<any>this)[f] = newVal !== null;
                 break;
-            
+        }
+        if(name === val && newVal !== null){
+            const split = newVal.split('.') as any;
+            split.forEach((s: string, idx: number) =>{
+                const fnCheck = s.split('|');
+                if(fnCheck.length > 1){
+                    split[idx] = [fnCheck[0], fnCheck[1].split(';')];
+                }
+            })
+            this._s = split;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -151,8 +160,8 @@ export abstract class P extends XtallatX(HTMLElement){
         return value;
      }
     setVal(e: Event, target: any){
-        const gpfp = this.getPropFromPath.bind(this);
-        const propFromEvent = this.val ? gpfp(e, this.val) : this.$N(gpfp(e, 'detail.value'), gpfp(e, 'target.value'));
+        const gpfp = this.getProp.bind(this);
+        const propFromEvent = this._s !== null ? gpfp(e, this._s) : this.$N(gpfp(e, ['detail', 'value']), gpfp(e, ['target', 'value']));
         this.commit(target, propFromEvent);
        
     }
@@ -160,29 +169,24 @@ export abstract class P extends XtallatX(HTMLElement){
         if(val===undefined) return;
         (<any>target)[this.prop] = val;
     }
-    getPropFromPath(val: any, path: string){
-        if(!path || path==='.') return val;
-        return this.getProp(val, path.split('.'));
-    }
-    getProp(val: any, pathTokens: string[]){
+    // getPropFromPath(val: any, path: string){
+    //     if(!path || path==='.') return val;
+    //     return this.getProp(val, path.split('.'));
+    // }
+    getProp(val: any, pathTokens: (string | [string, string[]])[]){
         let context = val;
-        let firstToken = true;
-        const cp = 'composedPath';
-        const cp_ = cp + '_';
+        //let firstToken = true;
+        //const cp = 'composedPath';
+        //const cp_ = cp + '_';
         pathTokens.forEach(token => {
             if(context)  {
-                if(firstToken && context[cp]){
-                    firstToken = false;
-                    const cpath = token.split(cp_);
-                    if(cpath.length === 1){
-                        context = context[cpath[0]];
-                    }else{
-                        context = context[cp]()[parseInt(cpath[1])];
-                    }
-                }else{
-                    context = context[token];
+                switch(typeof token){
+                    case 'string':
+                        context = context[token];
+                        break;
+                    default:
+                        context[token[0]].apply(null, token[1]);
                 }
-                
             }
         });
         return context;

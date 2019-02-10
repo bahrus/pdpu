@@ -114,6 +114,7 @@ const val = 'val';
 class P extends XtallatX(HTMLElement) {
     constructor() {
         super();
+        this._s = null;
         this._lastEvent = null;
     }
     get on() {
@@ -162,6 +163,16 @@ class P extends XtallatX(HTMLElement) {
             case noblock:
                 this[f] = newVal !== null;
                 break;
+        }
+        if (name === val && newVal !== null) {
+            const split = newVal.split('.');
+            split.forEach((s, idx) => {
+                const fnCheck = s.split('|');
+                if (fnCheck.length > 1) {
+                    split[idx] = [fnCheck[0], fnCheck[1].split(';')];
+                }
+            });
+            this._s = split;
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -243,8 +254,8 @@ class P extends XtallatX(HTMLElement) {
         return value;
     }
     setVal(e, target) {
-        const gpfp = this.getPropFromPath.bind(this);
-        const propFromEvent = this.val ? gpfp(e, this.val) : this.$N(gpfp(e, 'detail.value'), gpfp(e, 'target.value'));
+        const gpfp = this.getProp.bind(this);
+        const propFromEvent = this._s !== null ? gpfp(e, this._s) : this.$N(gpfp(e, ['detail', 'value']), gpfp(e, ['target', 'value']));
         this.commit(target, propFromEvent);
     }
     commit(target, val) {
@@ -252,30 +263,23 @@ class P extends XtallatX(HTMLElement) {
             return;
         target[this.prop] = val;
     }
-    getPropFromPath(val, path) {
-        if (!path || path === '.')
-            return val;
-        return this.getProp(val, path.split('.'));
-    }
+    // getPropFromPath(val: any, path: string){
+    //     if(!path || path==='.') return val;
+    //     return this.getProp(val, path.split('.'));
+    // }
     getProp(val, pathTokens) {
         let context = val;
-        let firstToken = true;
-        const cp = 'composedPath';
-        const cp_ = cp + '_';
+        //let firstToken = true;
+        //const cp = 'composedPath';
+        //const cp_ = cp + '_';
         pathTokens.forEach(token => {
             if (context) {
-                if (firstToken && context[cp]) {
-                    firstToken = false;
-                    const cpath = token.split(cp_);
-                    if (cpath.length === 1) {
-                        context = context[cpath[0]];
-                    }
-                    else {
-                        context = context[cp]()[parseInt(cpath[1])];
-                    }
-                }
-                else {
-                    context = context[token];
+                switch (typeof token) {
+                    case 'string':
+                        context = context[token];
+                        break;
+                    default:
+                        context[token[0]].apply(null, token[1]);
                 }
             }
         });
