@@ -69,11 +69,19 @@ p-d  passes information from that previous sibling's event down the p-d instance
 
 "prop" refers to the name of a property on the matching elements which need setting.  
 
-"val" is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  For example "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  If the path is a single ., then it will pass the entire event object.  Limited expressions are allowed using notation:  a.b.c.fn|param1;param2.d.  fn is a name of a function, and the values to the rigth of the | are the arguments.  E.g.
+"val" is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  For example "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  If the path is a single ., then it will pass the entire event object.  Limited expressions are allowed using notation:  a.b.c.fn(param1,param2).d.  fn is a name of a function, and the values inside the paranthesis are converted to strings.  E.g.
 
 ```html
-<p-d on="value-changed" val="target.value.querySelector|FahrenheitToCelsiusResult"></p-d>
+<p-d on="value-changed" to="textContent" val="target.value.querySelector(FahrenheitToCelsiusResult).textContent"></p-d>
 ```
+
+is equivalent to:
+
+```JavaScript
+nextElement.textContent = event.target.value.querySelector('FahrenheitToCelsiusResult').textContent
+```
+
+If any of the sub-expressions evaluate to null, then the target element(s) aren't modified.
 
 All the components described in this document support an attribute (not a property), "debug".  If the attribute is present, the code will break everytime the event it is monitoring for fires.
 

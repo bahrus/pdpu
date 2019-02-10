@@ -78,9 +78,13 @@ export abstract class P extends XtallatX(HTMLElement){
             }else{
                 const split = newVal.split('.') as any;
                 split.forEach((s: string, idx: number) =>{
-                    const fnCheck = s.split('|');
-                    if(fnCheck.length > 1){
-                        split[idx] = [fnCheck[0], fnCheck[1].split(';')];
+                    const fnCheck = s.split('(');
+                    if(fnCheck.length === 2){
+                        const args = fnCheck[1].split(',');
+                        const lenMinus1 = args.length - 1;
+                        const lastEl = args[lenMinus1];
+                        args[lenMinus1] = args[lenMinus1].substr(0, lastEl.length - 1);
+                        split[idx] = [fnCheck[0], args];
                     }
                 })
                 this._s = split;

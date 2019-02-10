@@ -383,10 +383,14 @@
           } else {
             var split = newVal.split('.');
             split.forEach(function (s, idx) {
-              var fnCheck = s.split('|');
+              var fnCheck = s.split('(');
 
-              if (fnCheck.length > 1) {
-                split[idx] = [fnCheck[0], fnCheck[1].split(';')];
+              if (fnCheck.length === 2) {
+                var args = fnCheck[1].split(',');
+                var lenMinus1 = args.length - 1;
+                var lastEl = args[lenMinus1];
+                args[lenMinus1] = args[lenMinus1].substr(0, lastEl.length - 1);
+                split[idx] = [fnCheck[0], args];
               }
             });
             this._s = split;
