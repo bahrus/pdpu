@@ -73,14 +73,19 @@ export abstract class P extends XtallatX(HTMLElement){
                 break;
         }
         if(name === val && newVal !== null){
-            const split = newVal.split('.') as any;
-            split.forEach((s: string, idx: number) =>{
-                const fnCheck = s.split('|');
-                if(fnCheck.length > 1){
-                    split[idx] = [fnCheck[0], fnCheck[1].split(';')];
-                }
-            })
-            this._s = split;
+            if(newVal === '.'){
+                this._s = [];
+            }else{
+                const split = newVal.split('.') as any;
+                split.forEach((s: string, idx: number) =>{
+                    const fnCheck = s.split('|');
+                    if(fnCheck.length > 1){
+                        split[idx] = [fnCheck[0], fnCheck[1].split(';')];
+                    }
+                })
+                this._s = split;
+            }
+
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -185,7 +190,7 @@ export abstract class P extends XtallatX(HTMLElement){
                         context = context[token];
                         break;
                     default:
-                        context[token[0]].apply(null, token[1]);
+                        context[token[0]].apply(context, token[1]);
                 }
             }
         });

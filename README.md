@@ -10,7 +10,7 @@
 <template>
     <div>
         <wc-info package-name="npm install p-d.p-u" href="https://unpkg.com/p-d.p-u@0.0.101/html.json"></wc-info>
-        <script type="module" src="https://unpkg.com/wc-info@0.0.26/wc-info.js?module"></script>
+        <script type="module" src="https://unpkg.com/wc-info@0.0.29/wc-info.js?module"></script>
     </div>
 </template>
 </custom-element-demo>
@@ -69,7 +69,11 @@ p-d  passes information from that previous sibling's event down the p-d instance
 
 "prop" refers to the name of a property on the matching elements which need setting.  
 
-"val" is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  Only very simple "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  If the path is a single ., then it will pass the entire event object.
+"val" is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  For example "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  If the path is a single ., then it will pass the entire event object.  Limited expressions are allowed using notation:  a.b.c.fn|param1;param2.d.  fn is a name of a function, and the values to the rigth of the | are the arguments.  E.g.
+
+```html
+<p-d on="value-changed" val="target.value.querySelector|FahrenheitToCelsiusResult"></p-d>
+```
 
 All the components described in this document support an attribute (not a property), "debug".  If the attribute is present, the code will break everytime the event it is monitoring for fires.
 

@@ -353,6 +353,7 @@
 
       babelHelpers.classCallCheck(this, P);
       _this5 = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(P).call(this));
+      _this5._s = null;
       _this5._lastEvent = null;
       return _this5;
     }
@@ -374,6 +375,22 @@
           case noblock:
             this[f] = newVal !== null;
             break;
+        }
+
+        if (name === val && newVal !== null) {
+          if (newVal === '.') {
+            this._s = [];
+          } else {
+            var split = newVal.split('.');
+            split.forEach(function (s, idx) {
+              var fnCheck = s.split('|');
+
+              if (fnCheck.length > 1) {
+                split[idx] = [fnCheck[0], fnCheck[1].split(';')];
+              }
+            });
+            this._s = split;
+          }
         }
 
         babelHelpers.get(babelHelpers.getPrototypeOf(P.prototype), "attributeChangedCallback", this).call(this, name, oldVal, newVal);
@@ -472,8 +489,8 @@
     }, {
       key: "setVal",
       value: function setVal(e, target) {
-        var gpfp = this.getPropFromPath.bind(this);
-        var propFromEvent = this.val ? gpfp(e, this.val) : this.$N(gpfp(e, 'detail.value'), gpfp(e, 'target.value'));
+        var gpfp = this.getProp.bind(this);
+        var propFromEvent = this._s !== null ? gpfp(e, this._s) : this.$N(gpfp(e, ['detail', 'value']), gpfp(e, ['target', 'value']));
         this.commit(target, propFromEvent);
       }
     }, {
@@ -481,33 +498,27 @@
       value: function commit(target, val) {
         if (val === undefined) return;
         target[this.prop] = val;
-      }
-    }, {
-      key: "getPropFromPath",
-      value: function getPropFromPath(val, path) {
-        if (!path || path === '.') return val;
-        return this.getProp(val, path.split('.'));
-      }
+      } // getPropFromPath(val: any, path: string){
+      //     if(!path || path==='.') return val;
+      //     return this.getProp(val, path.split('.'));
+      // }
+
     }, {
       key: "getProp",
       value: function getProp(val, pathTokens) {
-        var context = val;
-        var firstToken = true;
-        var cp = 'composedPath';
-        var cp_ = cp + '_';
+        var context = val; //let firstToken = true;
+        //const cp = 'composedPath';
+        //const cp_ = cp + '_';
+
         pathTokens.forEach(function (token) {
           if (context) {
-            if (firstToken && context[cp]) {
-              firstToken = false;
-              var cpath = token.split(cp_);
+            switch (babelHelpers.typeof(token)) {
+              case 'string':
+                context = context[token];
+                break;
 
-              if (cpath.length === 1) {
-                context = context[cpath[0]];
-              } else {
-                context = context[cp]()[parseInt(cpath[1])];
-              }
-            } else {
-              context = context[token];
+              default:
+                context[token[0]].apply(context, token[1]);
             }
           }
         });
