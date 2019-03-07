@@ -1,4 +1,4 @@
-import {XtallatX} from 'xtal-latx/xtal-latx.js';
+import {XtallatX} from 'xtal-element/xtal-latx.js';
 
 
 const on = 'on';

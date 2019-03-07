@@ -1,5 +1,5 @@
 import { P } from './p.js';
-import { define } from 'xtal-latx/define.js';
+import { define } from 'xtal-element/define.js';
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere

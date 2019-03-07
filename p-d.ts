@@ -1,7 +1,7 @@
 import { P} from './p.js';
-import { define } from 'xtal-latx/define.js';
+import { define } from 'xtal-element/define.js';
 
-import {NavDown} from 'xtal-latx/NavDown.js';
+import {NavDown} from 'xtal-element/NavDown.js';
 
 const m = 'm';
 

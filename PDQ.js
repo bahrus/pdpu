@@ -1,6 +1,6 @@
-import { XtallatX } from 'xtal-latx/xtal-latx.js';
-import { define } from 'xtal-latx/define.js';
-import { destruct } from 'xtal-latx/destruct.js';
+import { XtallatX } from 'xtal-element/xtal-latx.js';
+import { define } from 'xtal-element/define.js';
+import { destruct } from 'xtal-element/destruct.js';
 export class PDQ {
     static define(name, fn, adjustClass = null) {
         class newClass extends XtallatX(HTMLElement) {

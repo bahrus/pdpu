@@ -1,5 +1,5 @@
 import { PDX } from './p-d-x.js';
-import {define} from 'xtal-latx/define.js';
+import {define} from 'xtal-element/define.js';
 
 export class PDestal extends PDX {
     static get is() { return 'p-destal'; }

@@ -1,7 +1,7 @@
 import { PD } from './p-d.js';
 //import { ICssPropMap } from './p.js';
-import { define } from 'xtal-latx/define.js';
-import { createNestedProp } from 'xtal-latx/createNestedProp.js';
+import { define } from 'xtal-element/define.js';
+import { createNestedProp } from 'xtal-element/createNestedProp.js';
 //const attrib_filter = 'attrib-filter';
 export class PDX extends PD {
     static get is() { return 'p-d-x'; }

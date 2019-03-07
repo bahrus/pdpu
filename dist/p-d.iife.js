@@ -9,6 +9,7 @@
     }
     customElements.define(tagName, custEl);
 }
+
 const disabled = 'disabled';
 /**
  * Base class for many xtal- components
@@ -105,6 +106,7 @@ function XtallatX(superClass) {
         }
     };
 }
+
 class NavDown {
     //_debouncer!: any;
     constructor(seed, match, notify, max, ignore = null, mutDebounce = 50) {
@@ -174,6 +176,7 @@ class NavDown {
         this._mutObs.disconnect();
     }
 }
+
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';

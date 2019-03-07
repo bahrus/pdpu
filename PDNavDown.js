@@ -1,4 +1,4 @@
-import { NavDown } from 'xtal-latx/NavDown.js';
+import { NavDown } from 'xtal-element/NavDown.js';
 const p_d_if = 'p-d-if';
 export class PDNavDown extends NavDown {
     constructor() {

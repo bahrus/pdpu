@@ -1,5 +1,5 @@
 import { PD } from './p-d.js';
-import { define } from 'xtal-latx/define.js';
+import { define } from 'xtal-element/define.js';
 import { PDNavDown } from './PDNavDown.js';
 export class PDR extends PD {
     static get is() {

@@ -9,6 +9,7 @@
     }
     customElements.define(tagName, custEl);
 }
+
 const disabled = 'disabled';
 /**
  * Base class for many xtal- components
@@ -105,6 +106,7 @@ function XtallatX(superClass) {
         }
     };
 }
+
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';

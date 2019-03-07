@@ -1,5 +1,5 @@
 const jiife = require('jiife');
-const xl = 'node_modules/xtal-latx/';
+const xl = 'node_modules/xtal-element/';
 const define = xl + 'define.js';
 const deb = xl + 'debounce.js';
 const xlxl = xl + 'xtal-latx.js';

@@ -9,6 +9,7 @@
     }
     customElements.define(tagName, custEl);
 }
+
 const debounce = (fn, time) => {
     let timeout;
     return function () {
@@ -17,6 +18,7 @@ const debounce = (fn, time) => {
         timeout = setTimeout(functionCall, time);
     };
 };
+
 const disabled = 'disabled';
 /**
  * Base class for many xtal- components
@@ -113,6 +115,7 @@ function XtallatX(superClass) {
         }
     };
 }
+
 class PDQ {
     static define(name, fn, adjustClass = null) {
         class newClass extends XtallatX(HTMLElement) {
