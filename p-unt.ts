@@ -29,10 +29,12 @@ export class PUnt extends P {
         const host = this.getHost();
         if( host!== null){
             host.dispatchEvent(customEventInit);
+            host.incAttr(this.to);
         }else{
             this.dispatchEvent(customEventInit);
+            this.incAttr(this.to);
         }
-        this.incAttr(this.to);
+        
     }
     _bubbles!: boolean;
     get bubbles() {
