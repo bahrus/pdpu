@@ -32,6 +32,7 @@ export class PUnt extends P {
         }else{
             this.dispatchEvent(customEventInit);
         }
+        this.incAttr(this.to);
     }
     _bubbles!: boolean;
     get bubbles() {
