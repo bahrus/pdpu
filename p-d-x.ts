@@ -16,17 +16,24 @@ export class PDX extends PD {
             return;
         }
         const targetPath = this.prop;
-        if (targetPath.startsWith('.')) {
-            const cssClass = targetPath.substr(1);
-            const method = val ? 'add' : 'remove';
-            target.classList[method](cssClass);
-        } else if (targetPath.indexOf('.') > -1) {
-            const pathTokens = targetPath.split('.');
-            // const lastToken = pathTokens.pop();
-            createNestedProp(target, pathTokens, val, true);
-        } else {
-            (<any>target)[targetPath] = val;
+        switch(typeof targetPath){
+            case 'symbol':
+                (<any>target)[targetPath] = val;
+                break;
+            default:
+                if (targetPath.startsWith('.')) {
+                    const cssClass = targetPath.substr(1);
+                    const method = val ? 'add' : 'remove';
+                    target.classList[method](cssClass);
+                } else if (targetPath.indexOf('.') > -1) {
+                    const pathTokens = targetPath.split('.');
+                    // const lastToken = pathTokens.pop();
+                    createNestedProp(target, pathTokens, val, true);
+                } else {
+                    (<any>target)[targetPath] = val;
+                }
         }
+        
 
     }
 

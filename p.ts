@@ -42,10 +42,17 @@ export abstract class P extends XtallatX(HTMLElement){
         this.attr(iff, val);
     }
 
-    _prop!: string;
+    _prop!: string | symbol;
     get prop(){return this._prop;}
     set prop(val){
-        this.attr(prop, val);
+        switch(typeof val){
+            case 'symbol':
+                this._prop = val;
+                break;
+            default:
+                this.attr(prop, val);
+        }
+        
     }
 
     _val!: string;

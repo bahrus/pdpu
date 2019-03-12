@@ -1,24 +1,11 @@
 import { P } from './p.js';
 import { define } from 'xtal-element/define.js';
+import { getHost } from 'xtal-element/getHost.js';
 const bubbles = 'bubbles';
 const composed = 'composed';
 const dispatch = 'dispatch';
 export class PUnt extends P {
     static get is() { return 'p-unt'; }
-    getHost() {
-        let parent = this;
-        while (parent = parent.parentNode) {
-            if (parent.nodeType === 11) {
-                return parent['host'];
-            }
-            else if (parent.tagName.indexOf('-') > -1) {
-                return parent;
-            }
-            else if (parent.tagName === 'HTML') {
-                return null;
-            }
-        }
-    }
     pass(e) {
         const detail = {};
         this.setVal(e, detail);
@@ -27,10 +14,11 @@ export class PUnt extends P {
             composed: this._composed,
             detail: detail,
         });
-        const host = this.getHost();
+        const host = getHost(this);
         if (host !== null) {
             host.dispatchEvent(customEventInit);
-            host.incAttr(this.to);
+            if (host.incAttr)
+                host.incAttr(this.to);
         }
         else {
             this.dispatchEvent(customEventInit);

@@ -35,7 +35,13 @@ export class P extends XtallatX(HTMLElement) {
     }
     get prop() { return this._prop; }
     set prop(val) {
-        this.attr(prop, val);
+        switch (typeof val) {
+            case 'symbol':
+                this._prop = val;
+                break;
+            default:
+                this.attr(prop, val);
+        }
     }
     get val() { return this._val; }
     set val(val) {
