@@ -1,11 +1,11 @@
 import {XtallatX} from 'xtal-element/xtal-latx.js';
-import {up} from 'trans-render/hydrate.js';
+import {up, hydrate} from 'trans-render/hydrate.js';
 import {define} from 'trans-render/define.js';
 import {destruct} from 'xtal-element/destruct.js';
 export class PDQ{
     static define(name: string, fn: (input: any) => any, adjustClass: ((newClass: any) => boolean) | null =  null){
   
-        class newClass extends XtallatX(HTMLElement) {
+        class newClass extends XtallatX(hydrate(HTMLElement)) {
             static get is(){return name;}
             constructor(){
                 super();

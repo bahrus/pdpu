@@ -1,12 +1,12 @@
 import { XtallatX } from 'xtal-element/xtal-latx.js';
-import { up } from 'trans-render/hydrate.js';
+import { up, hydrate } from 'trans-render/hydrate.js';
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';
 const to = 'to';
 const prop = 'prop';
 const val = 'val';
-export class P extends XtallatX(HTMLElement) {
+export class P extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super();
         this._s = null;
