@@ -1,5 +1,5 @@
 import { P } from './p.js';
-import { define } from 'xtal-element/define.js';
+import { define } from 'trans-render/define.js';
 /**
  * `p-u`
  *  Pass data from one element to a targeted DOM element elsewhere

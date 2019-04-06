@@ -1,5 +1,5 @@
 import { PDX } from './p-d-x.js';
-import { define } from 'xtal-element/define.js';
+import { define } from 'trans-render/define.js';
 export class PDestal extends PDX {
     constructor() {
         super(...arguments);

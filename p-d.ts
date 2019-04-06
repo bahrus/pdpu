@@ -1,6 +1,6 @@
 import { P} from './p.js';
-import { define } from 'xtal-element/define.js';
-
+import { define } from 'trans-render/define.js';
+import {up} from 'trans-render/hydrate.js';
 import {NavDown} from 'xtal-element/NavDown.js';
 
 const m = 'm';
@@ -67,7 +67,7 @@ export class PD extends P {
     _iIP = false;
     connectedCallback() {
         
-        this._upgradeProperties([m]);
+        this[up]([m]);
         this.attr('pds', '📞');
         if(!this.to){
             //apply to next only

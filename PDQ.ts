@@ -1,5 +1,6 @@
 import {XtallatX} from 'xtal-element/xtal-latx.js';
-import {define} from 'xtal-element/define.js';
+import {up} from 'trans-render/hydrate.js';
+import {define} from 'trans-render/define.js';
 import {destruct} from 'xtal-element/destruct.js';
 export class PDQ{
     static define(name: string, fn: (input: any) => any, adjustClass: ((newClass: any) => boolean) | null =  null){
@@ -13,7 +14,7 @@ export class PDQ{
             _connected = false;
             value!: any;
             connectedCallback() {
-                this._upgradeProperties(['input', 'disabled']);
+                this[up](['input', 'disabled']);
                 this._connected = true;
             }
             _input: any;

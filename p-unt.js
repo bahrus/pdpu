@@ -1,5 +1,6 @@
 import { P } from './p.js';
-import { define } from 'xtal-element/define.js';
+import { define } from 'trans-render/define.js';
+import { incAttr } from 'xtal-element/xtal-latx.js';
 import { getHost } from 'xtal-element/getHost.js';
 const bubbles = 'bubbles';
 const composed = 'composed';
@@ -22,7 +23,7 @@ export class PUnt extends P {
         }
         else {
             this.dispatchEvent(customEventInit);
-            this.incAttr(this.to);
+            this[incAttr](this.to);
         }
     }
     get bubbles() {

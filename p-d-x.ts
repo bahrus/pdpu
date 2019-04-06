@@ -1,6 +1,6 @@
 import { PD } from './p-d.js';
 //import { ICssPropMap } from './p.js';
-import { define } from 'xtal-element/define.js';
+import { define } from 'trans-render/define.js';
 import {createNestedProp} from 'xtal-element/createNestedProp.js';
 
 //const attrib_filter = 'attrib-filter';

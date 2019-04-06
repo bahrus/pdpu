@@ -1,5 +1,5 @@
 import {XtallatX} from 'xtal-element/xtal-latx.js';
-
+import {up} from 'trans-render/hydrate.js';
 
 const on = 'on';
 const noblock = 'noblock';
@@ -62,7 +62,7 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     
     static get observedAttributes(){
-        return super.observedAttributes.concat([on, to, noblock, iff, prop, val]);
+        return (<any>super.observedAttributes).concat([on, to, noblock, iff, prop, val]);
     }
     _s: (string | [string, string[]])[] | null = null;
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
@@ -113,7 +113,7 @@ export abstract class P extends XtallatX(HTMLElement){
     }
     connectedCallback(){
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, iff, prop, val]);
+        this[up]([on, to, noblock, iff, prop, val]);
         this.init();
     }
     init(){

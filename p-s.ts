@@ -1,5 +1,5 @@
 import {PDR} from './p-d-r.js';
-import {define} from 'xtal-element/define.js';
+import {define} from 'trans-render/define.js';
 export class PS extends PDR{
     static get is(){return 'p-s';}
 
