@@ -8,7 +8,7 @@
   "main": "p-d.js",
   "module": "p-d.js",
   "dependencies": {
-    "xtal-element": "0.0.50"
+    "xtal-element": "0.0.52"
   },
   "devDependencies": {
     "@types/node": "11.13.0",

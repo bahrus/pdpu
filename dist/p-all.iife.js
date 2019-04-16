@@ -10,46 +10,26 @@
     customElements.define(tagName, custEl);
 }
 
-const disabled = 'disabled';
+const evCount = Symbol('evCount');
+const to$ = Symbol('to$');
+const incAttr = Symbol('incAttr');
 /**
  * Base class for many xtal- components
  * @param superClass
  */
 function XtallatX(superClass) {
+    var _a;
     return class extends superClass {
         constructor() {
             super(...arguments);
-            this._evCount = {};
+            this[_a] = {};
         }
-        static get observedAttributes() {
-            return [disabled];
-        }
-        /**
-         * Any component that emits events should not do so if it is disabled.
-         * Note that this is not enforced, but the disabled property is made available.
-         * Users of this mix-in should ensure not to call "de" if this property is set to true.
-         */
-        get disabled() {
-            return this._disabled;
-        }
-        set disabled(val) {
-            this.attr(disabled, val, '');
-        }
-        /**
-         * Set attribute value.
-         * @param name
-         * @param val
-         * @param trueVal String to set attribute if true.
-         */
-        attr(name, val, trueVal) {
-            const v = val ? 'set' : 'remove'; //verb
-            this[v + 'Attribute'](name, trueVal || val);
-        }
+        static get observedAttributes() { return [disabled]; }
         /**
          * Turn number into string with even and odd values easy to query via css.
          * @param n
          */
-        to$(n) {
+        [(_a = evCount, to$)](n) {
             const mod = n % 2;
             return (n - mod) / 2 + '-' + mod;
         }
@@ -57,22 +37,15 @@ function XtallatX(superClass) {
          * Increment event count
          * @param name
          */
-        incAttr(name) {
-            const ec = this._evCount;
+        [incAttr](name) {
+            const ec = this[evCount];
             if (name in ec) {
                 ec[name]++;
             }
             else {
                 ec[name] = 0;
             }
-            this.attr('data-' + name, this.to$(ec[name]));
-        }
-        attributeChangedCallback(name, oldVal, newVal) {
-            switch (name) {
-                case disabled:
-                    this._disabled = newVal !== null;
-                    break;
-            }
+            this.attr('data-' + name, this[to$](ec[name]));
         }
         /**
          * Dispatch Custom Event
@@ -88,21 +61,8 @@ function XtallatX(superClass) {
                 composed: false,
             });
             this.dispatchEvent(newEvent);
-            this.incAttr(eventName);
+            this[incAttr](eventName);
             return newEvent;
-        }
-        /**
-         * Needed for asynchronous loading
-         * @param props Array of property names to "upgrade", without losing value set while element was Unknown
-         */
-        _upgradeProperties(props) {
-            props.forEach(prop => {
-                if (this.hasOwnProperty(prop)) {
-                    let value = this[prop];
-                    delete this[prop];
-                    this[prop] = value;
-                }
-            });
         }
     };
 }
@@ -251,7 +211,7 @@ const iff = 'if';
 const to = 'to';
 const prop = 'prop';
 const val = 'val';
-class P extends XtallatX(HTMLElement) {
+class P extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super();
         this._s = null;
@@ -281,7 +241,13 @@ class P extends XtallatX(HTMLElement) {
     }
     get prop() { return this._prop; }
     set prop(val) {
-        this.attr(prop, val);
+        switch (typeof val) {
+            case 'symbol':
+                this._prop = val;
+                break;
+            default:
+                this.attr(prop, val);
+        }
     }
     get val() { return this._val; }
     set val(val) {
@@ -339,7 +305,7 @@ class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, iff, prop, val]);
+        this[up]([on, to, noblock, iff, prop, val]);
         this.init();
     }
     init() {
@@ -507,7 +473,7 @@ class PD extends P {
         return new NavDown(this, this.to, bndApply, this.m);
     }
     connectedCallback() {
-        this._upgradeProperties([m]);
+        this[up]([m]);
         this.attr('pds', '📞');
         if (!this.to) {
             //apply to next only
@@ -555,18 +521,24 @@ class PDX extends PD {
             return;
         }
         const targetPath = this.prop;
-        if (targetPath.startsWith('.')) {
-            const cssClass = targetPath.substr(1);
-            const method = val ? 'add' : 'remove';
-            target.classList[method](cssClass);
-        }
-        else if (targetPath.indexOf('.') > -1) {
-            const pathTokens = targetPath.split('.');
-            // const lastToken = pathTokens.pop();
-            createNestedProp(target, pathTokens, val, true);
-        }
-        else {
-            target[targetPath] = val;
+        switch (typeof targetPath) {
+            case 'symbol':
+                target[targetPath] = val;
+                break;
+            default:
+                if (targetPath.startsWith('.')) {
+                    const cssClass = targetPath.substr(1);
+                    const method = val ? 'add' : 'remove';
+                    target.classList[method](cssClass);
+                }
+                else if (targetPath.indexOf('.') > -1) {
+                    const pathTokens = targetPath.split('.');
+                    // const lastToken = pathTokens.pop();
+                    createNestedProp(target, pathTokens, val, true);
+                }
+                else {
+                    target[targetPath] = val;
+                }
         }
     }
     attchEvListnrs() {

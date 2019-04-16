@@ -783,6 +783,10 @@ PDQ also supports multiple parameters:
     <a-b></a-b>
 ```
 
+Note:  VS Code's TypeScript Editor (at least) seems to have a bug -- it gets thrown by a "dot" in a package name.  Since the package name is p-d.p-u, VS Code provides no assistance.
+
+A similar function is available at npm xtal-element/refract.js.
+
 ## Location, Location, Location
 
 If the issue of mixing JavaScript script tags inside markup is *not* a serious concern for you, but you do want to reap the benefits from making the data flow unidirectionally, without having to jump away to see the code for one of these piping custom elements, you can "inline" the code quite close to where it is needed.  For now, this will only work if you essentially "hard code" the location of PDQ to a CDN with support for bare import specifiers:
