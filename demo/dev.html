@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
   <title>xtal-json-merge demo</title>
-  <script type="module" src="https://unpkg.com/templ-mount@0.0.37/templ-mount.js?module"></script>
-  <template data-activate data-ua="HeadlessChrome">
-    <script src="../dist/p-d.iife.js"></script>
-  </template>
-  <template data-activate data-exclude data-ua="HeadlessChrome" >
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script type="module" src="../p-d.js"></script>
-    <!-- <script type="module" src="../p-d-x.js"></script>
-    <script type="module" src="../p-destal.js"></script> -->
-  </template>
+  <script type="importmap">
+      {
+        "imports": {
+          "xtal-element/": [ "../node_modules/xtal-element/" ],
+          "trans-render/": ["../node_modules/trans-render/"]
+        }
+      }
+      
+  </script>
+  <script type="module" src="../p-d.js"></script>
   <script async src="https://unpkg.com/xtal-json-editor@0.0.19/xtal-json-editor.js"></script>
   <script type="module" src="https://unpkg.com/xtal-json-merge@0.2.32/xtal-insert-json.js?module"></script>
 </head>
