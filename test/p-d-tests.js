@@ -1,6 +1,7 @@
 const xt = require('xtal-test/index');
 const test = require('tape');
 async function customTests(page) {
+    await page.waitFor(4000);
     const textContent = await page.$eval('#secondEditor', (c) => c.input);
     const TapeTestRunner = {
         test: test

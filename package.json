@@ -20,6 +20,6 @@
     "xtal-test": "0.0.13"
   },
   "scripts": {
-    "test": "node test/p-d-tests.js"
+    "test": "node createIIFE.js && tape test/*.js"
   }
 }

@@ -4,7 +4,9 @@ const test = require('tape');
 import { Page } from "puppeteer"; //typescript
 import { Test } from "tape";
 async function customTests(page: Page) {
+    await page.waitFor(4000);
     const textContent = await page.$eval('#secondEditor', (c: any) => c.input);
+    
     const TapeTestRunner = {
         test: test
     } as Test;
