@@ -17,10 +17,10 @@
     "@webcomponents/webcomponentsjs": "2.2.10",
     "jiife": "0.0.12",
     "tape": "4.10.1",
-    "xtal-test": "0.0.16"
+    "xtal-test": "0.0.18"
   },
   "scripts": {
     "test": "node createIIFE.js && tape test/*.js",
-    "serve": "node serve.js"
+    "serve": "node node_modules/xtal-test/serve.js"
   }
 }
