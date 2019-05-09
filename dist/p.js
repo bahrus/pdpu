@@ -1,5 +1,5 @@
 import { XtallatX } from 'xtal-element/xtal-latx.js';
-import { up, hydrate } from 'trans-render/hydrate.js';
+import { hydrate } from 'trans-render/hydrate.js';
 const on = 'on';
 const noblock = 'noblock';
 const iff = 'if';
@@ -100,7 +100,7 @@ export class P extends XtallatX(hydrate(HTMLElement)) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this[up]([on, to, noblock, iff, prop, val]);
+        this.propUp([on, to, noblock, iff, prop, val]);
         this.init();
     }
     init() {

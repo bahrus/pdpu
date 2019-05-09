@@ -12,7 +12,7 @@
 
 <body>
   <div class="vertical-section-container centered">
-    <xtal-sip selector="[data-imp]"></xtal-sip>
+    <xtal-sip><script nomodule>["xtal-json-merge", "p-d", "xtal-json-editor"]</script></xtal-sip>
     <h3>Basic xtal-json-merge demo</h3>
 
     <!-- <div> -->
@@ -83,16 +83,16 @@
       "imports": {
         "xtal-element/": "../node_modules/xtal-element/",
         "trans-render/": "../node_modules/trans-render/",
-        "xtal-sip/xtal-sip.js": "https://cdn.jsdelivr.net/npm/xtal-sip@0.0.66/xtal-sip.js",
-        "xtal-json-merge/xtal-json-merge.js": "https://cdn.jsdelivr.net/npm/xtal-json-merge@0.2.35/xtal-json-merge.js",
-        "xtal-json-editor/xtal-json-editor.js": "https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.34/xtal-json-editor.js"
+        "xtal-sip": "https://cdn.jsdelivr.net/npm/xtal-sip@0.0.80/xtal-sip.js",
+        "xtal-json-merge": "https://cdn.jsdelivr.net/npm/xtal-json-merge@0.2.37/xtal-json-merge.js",
+        "xtal-json-editor": "https://cdn.jsdelivr.net/npm/xtal-json-editor@0.0.35/xtal-json-editor.js",
+        "p-d": "../p-d.js"
       }
     }
     </script>
     <!-- <script type="module" src="../p-d.js"></script> -->
     <script  type="module-shim">
-        import '../p-d.js';
-        import 'xtal-sip/xtal-sip.js';
+        import 'xtal-sip';
     </script>
   </div>
 </body>
