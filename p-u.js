@@ -16,7 +16,7 @@ export class PU extends P {
         const id = split[split.length - 1];
         let targetElement;
         if (cssSel.startsWith('/')) {
-            targetElement = self[cssSel];
+            targetElement = self[cssSel.substr(1)];
         }
         else {
             const len = cssSel.startsWith('./') ? 0 : split.length;
