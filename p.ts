@@ -65,6 +65,13 @@ export abstract class P extends XtallatX(hydrate(HTMLElement)){
         return (<any>super.observedAttributes).concat([on, to, noblock, iff, prop, val]);
     }
     _s: (string | [string, string[]])[] | null = null;
+    getSplit(newVal: string){
+        if(newVal === '.'){
+            return [];
+        }else{
+            return newVal.split('.') as any;
+        }
+    }
     attributeChangedCallback(name: string, oldVal: string, newVal: string){
         const f = '_' + name;
         switch(name){
@@ -80,22 +87,7 @@ export abstract class P extends XtallatX(hydrate(HTMLElement)){
                 break;
         }
         if(name === val && newVal !== null){
-            if(newVal === '.'){
-                this._s = [];
-            }else{
-                const split = newVal.split('.') as any;
-                split.forEach((s: string, idx: number) =>{
-                    const fnCheck = s.split('(');
-                    if(fnCheck.length === 2){
-                        const args = fnCheck[1].split(',');
-                        const lenMinus1 = args.length - 1;
-                        const lastEl = args[lenMinus1];
-                        args[lenMinus1] = args[lenMinus1].substr(0, lastEl.length - 1);
-                        split[idx] = [fnCheck[0], args];
-                    }
-                })
-                this._s = split;
-            }
+            this._s = this.getSplit(newVal);
 
         }
         super.attributeChangedCallback(name, oldVal, newVal);

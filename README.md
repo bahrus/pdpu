@@ -69,11 +69,7 @@ p-d  passes information from that previous sibling's event down the p-d instance
 
 "prop" refers to the name of a property on the matching elements which need setting.  
 
-"val" is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  For example "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  If the path is a single ., then it will pass the entire event object.  Limited expressions are allowed using notation:  a.b.c.fn(param1,param2).d.  fn is a name of a function, and the values inside the paranthesis are converted to strings.  E.g.
-
-```html
-<p-d on="value-changed" to="textContent" val="target.value.querySelector(FahrenheitToCelsiusResult).textContent"></p-d>
-```
+"val" is a JavaScript path / expression for where to get the value used for setting.  The path is evaluated from the JavaScript event that gets fired.  For example "a.b.c" type expressions are allowed.  No ! or other JavaScript expressions is currently supported.  If the path is a single ., then it will pass the entire event object.  
 
 is equivalent to:
 
@@ -365,6 +361,11 @@ Another custom element, p-d-x, extends p-d and adds these additional features;
 3)  You can  specify multiple properties that need setting on the same element, more compactly (tested).
 4)  You can observe attribute changes, in lieu of listening for an event (tested).
 5)  You can copy all properties of the source to the target if you specify to="{.:.}" (partly tested).
+6)  For attribute val, more extended expressions are allowed using notation:  a.b.c.fn(param1,param2).d.  fn is a name of a function, and the values inside the paranthesis are converted to strings.  E.g.
+
+```html
+<p-d on="value-changed" to="textContent" val="target.value.querySelector(FahrenheitToCelsiusResult).textContent"></p-d>
+```
 
 
 There is a special string used to refer to an element of [composedPath()](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath):
