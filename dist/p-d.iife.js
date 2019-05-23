@@ -15,14 +15,27 @@ const disabled = 'disabled';
  * Base class for many xtal- components
  * @param superClass
  */
-function XtallatX(superClass) {
+function hydrate(superClass) {
     return class extends superClass {
-        constructor() {
-            super(...arguments);
-            this._evCount = {};
-        }
         static get observedAttributes() {
             return [disabled];
+        }
+        attributeChangedCallback(name, oldVal, newVal) {
+            switch (name) {
+                case disabled:
+                    this._disabled = newVal !== null;
+                    break;
+            }
+        }
+        /**
+         * Set attribute value.
+         * @param name
+         * @param val
+         * @param trueVal String to set attribute if true.
+         */
+        attr(name, val, trueVal) {
+            const v = val ? 'set' : 'remove'; //verb
+            this[v + 'Attribute'](name, trueVal || val);
         }
         /**
          * Any component that emits events should not do so if it is disabled.
@@ -36,15 +49,32 @@ function XtallatX(superClass) {
             this.attr(disabled, val, '');
         }
         /**
-         * Set attribute value.
-         * @param name
-         * @param val
-         * @param trueVal String to set attribute if true.
+         * Needed for asynchronous loading
+         * @param props Array of property names to "upgrade", without losing value set while element was Unknown
          */
-        attr(name, val, trueVal) {
-            const v = val ? 'set' : 'remove'; //verb
-            this[v + 'Attribute'](name, trueVal || val);
+        propUp(props) {
+            props.forEach(prop => {
+                if (this.hasOwnProperty(prop)) {
+                    let value = this[prop];
+                    delete this[prop];
+                    this[prop] = value;
+                }
+            });
         }
+    };
+}
+
+/**
+ * Base class for many xtal- components
+ * @param superClass
+ */
+function XtallatX(superClass) {
+    return class extends superClass {
+        constructor() {
+            super(...arguments);
+            this.evCount = {};
+        }
+        static get observedAttributes() { return [disabled]; }
         /**
          * Turn number into string with even and odd values easy to query via css.
          * @param n
@@ -58,7 +88,7 @@ function XtallatX(superClass) {
          * @param name
          */
         incAttr(name) {
-            const ec = this._evCount;
+            const ec = this.evCount;
             if (name in ec) {
                 ec[name]++;
             }
@@ -66,13 +96,6 @@ function XtallatX(superClass) {
                 ec[name] = 0;
             }
             this.attr('data-' + name, this.to$(ec[name]));
-        }
-        attributeChangedCallback(name, oldVal, newVal) {
-            switch (name) {
-                case disabled:
-                    this._disabled = newVal !== null;
-                    break;
-            }
         }
         /**
          * Dispatch Custom Event
@@ -90,19 +113,6 @@ function XtallatX(superClass) {
             this.dispatchEvent(newEvent);
             this.incAttr(eventName);
             return newEvent;
-        }
-        /**
-         * Needed for asynchronous loading
-         * @param props Array of property names to "upgrade", without losing value set while element was Unknown
-         */
-        _upgradeProperties(props) {
-            props.forEach(prop => {
-                if (this.hasOwnProperty(prop)) {
-                    let value = this[prop];
-                    delete this[prop];
-                    this[prop] = value;
-                }
-            });
         }
     };
 }
@@ -183,7 +193,7 @@ const iff = 'if';
 const to = 'to';
 const prop = 'prop';
 const val = 'val';
-class P extends XtallatX(HTMLElement) {
+class P extends XtallatX(hydrate(HTMLElement)) {
     constructor() {
         super();
         this._s = null;
@@ -213,7 +223,13 @@ class P extends XtallatX(HTMLElement) {
     }
     get prop() { return this._prop; }
     set prop(val) {
-        this.attr(prop, val);
+        switch (typeof val) {
+            case 'symbol':
+                this._prop = val;
+                break;
+            default:
+                this.attr(prop, val);
+        }
     }
     get val() { return this._val; }
     set val(val) {
@@ -221,6 +237,14 @@ class P extends XtallatX(HTMLElement) {
     }
     static get observedAttributes() {
         return super.observedAttributes.concat([on, to, noblock, iff, prop, val]);
+    }
+    getSplit(newVal) {
+        if (newVal === '.') {
+            return [];
+        }
+        else {
+            return newVal.split('.');
+        }
     }
     attributeChangedCallback(name, oldVal, newVal) {
         const f = '_' + name;
@@ -237,23 +261,7 @@ class P extends XtallatX(HTMLElement) {
                 break;
         }
         if (name === val && newVal !== null) {
-            if (newVal === '.') {
-                this._s = [];
-            }
-            else {
-                const split = newVal.split('.');
-                split.forEach((s, idx) => {
-                    const fnCheck = s.split('(');
-                    if (fnCheck.length === 2) {
-                        const args = fnCheck[1].split(',');
-                        const lenMinus1 = args.length - 1;
-                        const lastEl = args[lenMinus1];
-                        args[lenMinus1] = args[lenMinus1].substr(0, lastEl.length - 1);
-                        split[idx] = [fnCheck[0], args];
-                    }
-                });
-                this._s = split;
-            }
+            this._s = this.getSplit(newVal);
         }
         super.attributeChangedCallback(name, oldVal, newVal);
     }
@@ -271,7 +279,7 @@ class P extends XtallatX(HTMLElement) {
     }
     connectedCallback() {
         this.style.display = 'none';
-        this._upgradeProperties([on, to, noblock, iff, prop, val]);
+        this.propUp([on, to, noblock, iff, prop, val]);
         this.init();
     }
     init() {
@@ -334,10 +342,12 @@ class P extends XtallatX(HTMLElement) {
             return ifnull;
         return value;
     }
-    setVal(e, target) {
+    propFromEvent(e) {
         const gpfp = this.getProp.bind(this);
-        const propFromEvent = this._s !== null ? gpfp(e, this._s) : this.$N(gpfp(e, ['detail', 'value']), gpfp(e, ['target', 'value']));
-        this.commit(target, propFromEvent);
+        return this._s !== null ? gpfp(e, this._s) : this.$N(gpfp(e, ['detail', 'value']), gpfp(e, ['target', 'value']));
+    }
+    setVal(e, target) {
+        this.commit(target, this.propFromEvent(e));
     }
     commit(target, val) {
         if (val === undefined)
@@ -439,7 +449,7 @@ class PD extends P {
         return new NavDown(this, this.to, bndApply, this.m);
     }
     connectedCallback() {
-        this._upgradeProperties([m]);
+        this.propUp([m]);
         this.attr('pds', '📞');
         if (!this.to) {
             //apply to next only
