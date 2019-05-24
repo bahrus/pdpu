@@ -95,3 +95,16 @@ export class PDX extends PD {
 
 }
 define(PDX);
+
+export interface ExtensionParams{
+    propFromEvent: (e: Event) => any;
+}
+
+export function extend(name: string, params: ExtensionParams){
+    class Extension extends PDX{
+        propFromEvent(e: Event){
+            params.propFromEvent(e);
+        }
+    }
+    customElements.define('p-d-x-' + name, Extension);
+}

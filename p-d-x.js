@@ -89,3 +89,11 @@ export class PDX extends PD {
     }
 }
 define(PDX);
+export function extend(name, params) {
+    class Extension extends PDX {
+        propFromEvent(e) {
+            params.propFromEvent(e);
+        }
+    }
+    customElements.define('p-d-x-' + name, Extension);
+}
