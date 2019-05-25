@@ -4,6 +4,8 @@
 
 <img src="https://badgen.net/bundlephobia/minzip/p-d.p-u">
 
+**NB**  Due to a bug in VS Code, which can't handle periods in package names, these web components have moved [here](https://github.com/bahrus/p-et-alia).
+
 <!--
 ```
 <custom-element-demo>
