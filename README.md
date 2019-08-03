@@ -112,7 +112,7 @@ One can't help noticing quite a bit of redundancy in the markup above.  We can r
 What we end up with is shown below:
 
 ```html
-<!-- abreviated syntax -->
+<!-- abbreviated syntax -->
 <style>
 [nv]{
     display:none;
